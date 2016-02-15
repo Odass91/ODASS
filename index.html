@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="game">
+	<head>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css"/>
+	</head>
+
+	<body>
+		
+		
+		<!-- GAME PANEL -->
+		<div ng-controller="GameController as game">
+			<!-- HEADER -->
+			<div>
+				<p>Icon</p>
+				<p>Theme</p>
+				<p>{{ game.turn.question }}</p>
+			</div>
+			
+			<!-- USER MENU -->
+			<div> 
+				<p>O</p>
+				<p>U</p>
+				<p>?</p>
+			</div>
+			
+			<!-- CARD -->
+			<ul>
+				<p>{{ game.turn.choices[0] }}</p>
+				<p>{{ game.turn.choices[1] }}</p>
+				<p>{{ game.turn.choices[2] }}</p>
+				<p>{{ game.turn.choices[3] }}</p>
+			</ul>
+			
+			<!-- FOOTER-->
+			<div>
+				<p>{{ game.player.name}} - </p>
+				<p>{{ game.quizz.turn}} / 6</p>
+				<p>legal mentions</p>
+			</div>
+		
+		</div>
+		
+		
+		<!-- CONFIGURATION PANEL -->
+		<div>
+		</div>
+		
+		
+		<script type="text/javascript" src="angular.js"></script>
+		<script type="text/javascript" src="arena.js"></script>
+	</body>
+</html>

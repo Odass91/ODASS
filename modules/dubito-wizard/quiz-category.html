@@ -1,0 +1,37 @@
+<div class="modal fade" id="quiz-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content panel-default">
+	   <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Sélectionner une catégorie pour les 12 prochaines questions</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+			<p>{{wizard.quizConfig.categories}}</p>
+			
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-arrow-right" ></span> Etape suivante : ajouter les cartes
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

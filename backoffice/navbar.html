@@ -1,0 +1,123 @@
+<nav class="navbar navbar-inverse" ng-show="odass.user.loggedIn">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+				aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="http://demo.odass.org"></a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+
+			<!--  MODULES ODASS -->
+			<ul id="menu-odass-backoffice" class="nav navbar-nav">
+				<li class="active"><a id="dashboard-item" href="#"
+					ng-click="odass.changeModule('dashboard')"
+					style="padding-top: 7px !important; padding: 5px;"> <img
+						src="images/odass-logo_gris_clair_e7e7e7.png"
+						class="img-responsive" alt="LOGO ODASS" width="32" height="32"></img>
+						<span class="sr-only">(current)</span>
+				</a></li>
+
+				<!-- TODO module panneau d'affichage -->
+				<!--  li><a id="newsletter-item" href="" ng-click="odass.changeModule('newsletter')">INFO</a></li-->
+				<!--  li><a id="newsletter-item" href="" ng-click="odass.changeModule('newsletter')">liste des initiatives qu'on équipe</a></li-->
+
+				<li><a id="dubito-item" href=""
+					ng-click="odass.changeModule('dubito')">DUBITO</a></li>
+				<li><a id="annuaire-item" href=""
+					ng-click="odass.changeModule('annuaire')">CAC</a></li>
+
+				<!-- ORGANIZIO -->
+				<!-- >li class="dropdown">
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ORGANIZIO <span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+				<li><a id="annuaire-item" href="" ng-click="odass.changeModule('annuaire')">REPERTO</a></li>
+				<li><a id="calendrier-item" href="" ng-click="odass.changeModule('calendrier')">CALENDO</a></li>
+				<li><a id="evenementiel-item" href="" ng-click="odass.changeModule('evenementiel')">AGENDO</a></li>
+	        </ul>
+        </li-->
+
+				<!-- CORTEXO -->
+				<!--li class="dropdown">
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CORTEXO <span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+				<li><a id="abonnement-item" href="" ng-click="odass.changeModule('projet')">PROJECTO</a></li>
+				<li><a id="ressource-item" href="" ng-click="odass.changeModule('ressource')">RESSOURZO</a></li--> 
+				<!-- gestion salle, matos mis à dispo -->
+				<!-- li><a id="newsletter-item" href="" ng-click="odass.changeModule('newsletter')">NIOUZO</a></li>
+	        </ul>
+        </li-->
+
+				<!--  TRESO -->
+				<!-- >li class="dropdown">
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRESO <span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+				<li><a id="abonnement-item" href="" ng-click="odass.changeModule('abonnement')">PANAMO</a></li>
+				<li><a id="budget-item" href="" ng-click="odass.changeModule('budget')">BUDGETO</a></li>
+				<li><a id="facturation-item" href="" ng-click="odass.changeModule('facturation')">FACTURO</a></li>
+	        </ul>
+        </li-->
+
+
+				<!--  SOCIALO -->
+				<!--li class="dropdown">
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">SOCIALO <span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+				<li><a id="forum-item" href="" ng-click="odass.changeModule('forum')">AGORO</a></li>
+				<li><a id="collaboratif-item" href="" ng-click="odass.changeModule('collaboratif')">COLLABO</a></li>
+				<li><a id="votation-item" href="" ng-click="odass.changeModule('votation')">VOTATIO</a></li>
+	        </ul>
+        </li-->
+
+				<!-- MAGAZINO -->
+				<!--li class="dropdown">
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MAGAZINO <span class="caret"></span></a>
+          	<ul class="dropdown-menu">
+				<li><a id="stock-item" href="" ng-click="odass.changeModule('stock')">STOCKO</a></li>
+				<li><a id="catalogue-item" href="" ng-click="odass.changeModule('catalogue')">CATALOGO</a></li>
+				<li><a id="boutique-item" href="" ng-click="odass.changeModule('boutique')">BOUTICO</a></li>
+          	</ul>
+        </li-->
+			</ul>
+
+
+			<!--  USER MENU -->
+			<ul class="nav navbar-nav navbar-right">
+				<li ng-show="odass.debug"><a href="#" data-toggle="modal"
+					data-target="#login-popup"><span
+						class="glyphicon glyphicon-wrench"></span></a></li>
+				<li ng-hide="odass.user.loggedIn"><a href="#"
+					data-toggle="modal" data-target="#login-popup"><span
+						class="glyphicon glyphicon-log-in"></span> Connexion</a></li>
+				<li ng-show="odass.user.loggedIn" class="dropdown"><a href="#"
+					class="dropdown-toggle" data-toggle="dropdown" role="button"
+					aria-haspopup="true" aria-expanded="false"> <span
+						class="glyphicon glyphicon-cog"></span> {{odass.user.name}} <span
+						class="caret"></span>
+				</a>
+					<ul class="dropdown-menu">
+						<li><a href="#"><span class="glyphicon glyphicon-user"></span>
+								Votre compte</a></li>
+						<li><a href="#"><span
+								class="glyphicon glyphicon-envelope"></span> Messages <span
+								class="badge">1</span></a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-wrench"></span>
+								Préférences</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#" ng-click="odass.logout()"><span
+								class="glyphicon glyphicon-log-out"></span> Se déconnecter</a></li>
+					</ul></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container-fluid -->
+</nav>

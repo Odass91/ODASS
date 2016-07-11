@@ -1,0 +1,79 @@
+{
+	"thesaurus":
+	[
+	 	{
+	 		"id": "1",
+	 		"label": "Que faire personnellement ?",
+	 		"geoloc": [],
+	 		"keywords": [],
+	 		"description":"Des modes de vie, d’échanges et de consommation responsables et solidaires <br/>« Sois le changement que tu veux voir dans le monde » (Gandhi). Il est possible, par nos choix de consommation, d’agir sur le changement climatique et la transition écologique. En tant que consommateurs, le choix des produits que nous achetons, la manière dont nous consommons, mais également les quantités consommées ont un impact sur l’avenir de la planète.",
+	 		"subdirectories":
+	 		[
+	 		 	{
+	 		 		"id": "1.1",
+			 		"label": "Manger autrement c’est possible",
+			 		"geoloc": [],
+			 		"keywords": [],
+			 		"description":"La consommation «  prêt en 5 minutes » a pris une grande ampleur. Mais manger autrement c’est possible ! N’ayez pas peur du changement. Vous serez gagnant car vous serez en accord avec la nature et avec votre organisme, et de plus vous ferez des économies, avec un rapport plus équilibré au temps. Au cours des dernières années la pression des bio-consommateurs a été telle que les grandes surfaces ont dû se résoudre à mettre en place des rayons bio. Mais il n’est pas suffisant d’acheter bio aveuglément car le bio peut provenir des antipodes ou de personnes sous-payées. D’où les quelques propositions qui suivent : ",
+			 		"subdirectories":
+			 		[
+			 		 	{
+			 		 		"id": "1.1.1",
+					 		"label": "Cuisinez par vous-même",
+					 		"geoloc": ["national"],
+					 		"keywords": ["Consommation", "légumes", "fruits"],
+					 		"description":"Face aux injonctions de la publicité pour les plats préparés, il est possible, même pour des gens très occupés, de cuisiner par soi-même. Cela revient beaucoup moins cher (une soupe maison revient 3 à 6 fois moins chères qu’une brique de soupe), et la quantité de sucre, de sel, de matières grasses et d’additifs que nous ingérons diminue radicalement. Cela permet aussi de retrouver des saveurs authentiques, et de goûter le plaisir de faire soi-même est de choisir les produits qu’on mange. Il est possible de regrouper les temps de cuisiner de congeler ou de garder au frais ce que l’on a préparé. ",
+					 		"initiatives": 
+					 		[
+					 		 	{
+					 		 		"id": "1.1.1.1",
+					 		 		"label": "Recettes végétariennes",
+							 		"geoloc": ["national"],
+							 		"keywords": ["Consommation", "légumes", "fruits"],
+					 		 		"description": "Pour des idées de recettes végétariennes",
+					 		 		"references": [{"label": "http://www.sosbouffe.fr/recettes-vegetariennes/potages-soupes.html", "href": "http://www.sosbouffe.fr/recettes-vegetariennes/potages-soupes.html"}],
+					 		 	}
+					 		]
+			 		 	},
+			 		 	{
+			 		 		"id": "1.1.2",
+					 		"label": "Privilégier les marchés, les ventes directes et les cueillettes",
+					 		"geoloc": [],
+					 		"keywords": ["Consommation", "légumes", "fruits", "bio"],
+					 		"description":"D’une manière générale, la grande distribution fait perdre de temps dans des longs trajets en voiture, payer plus cher un grand nombre de produits en dehors de quelques produits d’appel, et nous rend prisonniers d’une spirale d’achats non contrôlés. Pour y échapper, les marchés et les ventes directes sont à privilégier. Ils permettent d’acheter des produits frais, à des producteurs locaux, avec un choix et une possibilité de comparaisons. Il existe en Île-de-France plus de 70 marchés bio.",
+				 			"initiatives": 
+						 	[
+								{
+					 		 		"id": "1.1.2.1",
+					 		 		"label": "Répertoire des marchés bio",
+							 		"geoloc": ["national"],
+							 		"keywords": ["Consommation", "légumes", "fruits", "bio"],
+					 		 		"description": "On pourra se reporter au répertoire",
+					 		 		"references": [{"label": "http://www.marches-bio.org/marches.html", "href": "http://www.marches-bio.org/marches.html"}],
+					 		 	},
+								{
+					 		 		"id": "1.1.2.2",
+					 		 		"label": "Cueillettes bio",
+							 		"geoloc": ["haut-de-seine"],
+							 		"keywords": ["Consommation", "légumes", "fruits", "bio"],
+					 		 		"description": "Les cueillettes aussi peuvent être un moyen très utile pour une découverte et une initiation pour apprendre à apprécier la maturation, la couleur, l’odeur, La provenance ",
+					 		 		"references": [
+										{"label": "Cueillettes bio dans les Hauts de Seine", "href": " http://www.bioconsomacteurs.org/association/relais-locaux/sophie-watkins/les-fermes-des-yvelines-78"},
+										{"label": "Cueillettes bio en Ile de France", "href": "https://amapidf.wordpress.com/vente-de-bio-a-la-ferme/"}
+									],
+					 		 	}
+							]
+			 		 	}
+			 		 ]
+	 		 	}
+	 		 ]
+	 	},
+		{
+	 		"id": "2",
+	 		"label": "Que faire concrètement à plusieurs ?",
+	 		"geoloc": [],
+	 		"keywords": [],
+	 		"description":""
+		}
+	] 	
+}

@@ -1,0 +1,131 @@
+<section class="row" ng-show="odass.isModule('dashboard')">
+
+	<div class="col-md-4">
+
+		<section>
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">Présentation</h3>
+				</div>
+				<div class="panel-body">
+					<p>DUBITO est un jeu multiformat de déconstruction
+						intellectuelle et de culture générale développé par l’équipe
+						ODASS. DUBITO contribue à l’Éducation Populaire par le jeu en
+						proposant un ensemble de questions à choix multiple sur des sujets
+						de société regroupées en six catégories : Économie, Droit et
+						Justice, Social, Éducation et Culture, Écologie, Santé.</p>
+				</div>
+			</div>
+		</section>
+
+		<div class="clear"></div>
+
+		<section ng-show="odass.user.loggedIn">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Votre reseau</h3>
+				</div>
+				<div class="panel-body">
+					<p>
+						<span class="glyphicon glyphicon-user"></span> <strong>Kim</strong>
+						a joué au quiz <a href="">Etat d'urgence</a> et a fait un score de
+						5%
+					</p>
+					<p>
+						<span class="glyphicon glyphicon-comment"></span> <strong>Frédérique</strong>
+						vous a envoyé un message !
+					</p>
+					<p>
+						<span class="glyphicon glyphicon-fire"></span> <strong>Olivier</strong>
+						vous a battu sur le quiz <a href="">Loi travail</a> !
+					</p>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+	<div class="col-md-4">
+		<section ng-show="odass.user.loggedIn">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Bienvenue <strong>{{odass.user.name}}</strong>
+					</h3>
+				</div>
+				<div class="panel-body">
+					<p>
+						<span class="glyphicon glyphicon-log-in"></span> Dernière
+						connexion le 08/04/2016 à 12:12
+					</p>
+					<p>
+						<span class="glyphicon glyphicon-education"></span> Vous avez
+						remporté le badge <strong>Night Owl</strong>
+					</p>
+					<p>
+						<span class="glyphicon glyphicon-star"></span> Vous êtes <strong>42e</strong>
+						au classement général
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<div class="clear"></div>
+
+		<section ng-show="odass.user.loggedIn">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Boite à discussion</h3>
+				</div>
+				<div class="panel-body">
+					<p>Module transverse permettant de discuter en temps réel</p>
+				</div>
+			</div>
+		</section>
+
+	</div>
+
+
+
+	<div class="col-md-3">
+		<section ng-show="false">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<strong>Nous soutenir</strong>
+					</h3>
+				</div>
+				<div class="panel-body">
+					<p class="text-center">
+						<button class="btn btn-success" data-toggle="modal"
+							data-target="#donate-popup">
+							<span class="glyphicon glyphicon-piggy-bank"> </span> FAIRE UN
+							DON
+						</button>
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<div class="clear"></div>
+
+		<section ng-show="odass.user.loggedIn">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">Actualité</h3>
+				</div>
+				<div class="panel-body">
+					<p>
+						<strong>CAC : </strong>Publication du répertoire "Ecologie au
+						quotidien"
+					</p>
+					<p>
+						<strong>ODASS : </strong>Mise en ligne d'un nouvel outil !
+					</p>
+				</div>
+			</div>
+		</section>
+
+
+	</div>
+</section>

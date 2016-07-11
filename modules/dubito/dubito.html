@@ -1,0 +1,60 @@
+<div ng-controller="DubitoController as dubito">
+	<section id="dubito" class="row" ng-show="odass.isModule('dubito')">
+		<div class="col-md-4">
+			<section>
+				<div class="panel panel-warning">
+				  <div class="panel-heading"><h3 class="panel-title">Présentation</h3></div>
+				  <div class="panel-body">
+						<p>DUBITO est un jeu multiformat de déconstruction intellectuelle et de culture générale développé par l’équipe ODASS. DUBITO contribue à l’Éducation Populaire par le jeu en proposant un ensemble de questions à choix multiple sur des sujets de société regroupées en six catégories : Économie, Droit et Justice, Social, Éducation et Culture, Écologie, Santé.</p>
+					</div>
+				</div>
+			</section>
+		</div>
+	
+		<div class="col-md-4">
+			<section>
+				<div class="panel panel-primary">
+				  <div class="panel-heading"><h3 class="panel-title">Commencer une nouvelle partie</h3></div>
+				  <div class="panel-body">
+					<p>Nous avons actuellement {{dubito.quizzes.length}} quiz disponibles pour nos abonnés. Les quizzes comportent 12 questions. Répondez correctement aux différentes questions pour progresser dans le classement général et obtenir des badges exclusifs.</p> 
+					<p class="text-center" >
+						<!-- button class="btn btn-primary" ng-click="dubito.loadQuiz()">Démarrer le quiz !</button-->
+						<button class="btn btn-primary" data-target="#quiz-choice" data-toggle="modal">Choisir un quiz !</button>
+					</p>
+				  </div>
+				</div>
+			</section>
+			
+			<div class="clear"></div>
+			
+			<wizard>
+				<p>'sup bitches?</p>
+			</wizard>
+		</div>	
+		
+		<div class="col-md-3">
+			<section ng-show="odass.user.loggedIn">
+				<div class="panel panel-warning">
+				  <div class="panel-heading">
+					<h3 class="panel-title">Statistique de vos parties</h3>
+				  </div>
+				  <div class="panel-body">
+					<canvas id="myChart" width="400" height="300"></canvas>
+				  </div>
+				</div>
+			</section>
+		</div>
+	</section>
+	
+	<!-- DUBITO POPUPS  -->
+	<quiz-choice></quiz-choice>
+	<quiz-screen></quiz-screen>
+	<card></card>
+	<card-result></card-result>
+	<score-screen></score-screen>
+
+	<script type="text/javascript">
+	
+	</script>
+
+</div>

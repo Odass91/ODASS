@@ -1,0 +1,28 @@
+<div class="modal fade" id="quiz-screen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog odass-modal" role="document">
+		<div class="modal-content panel-default">
+		  	<div class="modal-header panel-heading">
+				<h4 class="modal-title" id="exampleModalLabel">{{ dubito.quiz.title }}</h4>
+		 	</div>
+		  	<div class="modal-body">
+		  	
+				<p ng-bind-html="dubito.quiz.description"></p>
+				<p>Ce quiz comporte {{dubito.quiz.questions}} questions.</p>
+				<p>{{dubito.quiz.players}} personnes ont déjà joué à ce quiz.</p>
+				<p>Performance moyenne : {{dubito.quiz.averageScore * 100 | number:2}} %</p>
+		  	</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-click="dubito.quit()" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" ></span> Quitter
+				</button>
+				<!--button class="btn btn-primary btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#quiz-choice">
+					<span class="glyphicon glyphicon-arrow-left"></span> Retour
+				</button-->
+				<button class="btn btn-primary btn-success" ng-click="dubito.startQuiz()" data-dismiss="modal" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#quiz-card">
+					<span class="glyphicon glyphicon-ok"></span> Démarrer la partie !
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+

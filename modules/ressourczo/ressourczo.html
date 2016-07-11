@@ -1,0 +1,42 @@
+<div ng-show="odass.isModule('ressource')">
+	<section id="calendrier" class="row">
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-4">
+			<p>Réservation de salle. Quoi est où emprunté par qui.</p>
+
+			<div class="clear"></div>
+			
+			
+		</div>
+	</section>
+	<script>
+		$(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+			"header": {
+				"left": "prev,next today",
+				"center": "title",
+				"right": "month,basicWeek,basicDay"
+			},
+			defaultDate: '2016-05-12',
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			events: [
+				{
+					id: 999,
+					title: 'Odass meeting',
+					start: '2016-05-09T10:00:00'
+				},
+				{
+					title: 'Concert',
+					start: '2016-05-18T20:00:00',
+					end: '2016-05-18T23:00:00'
+				}
+			]
+		});
+		
+	});
+	
+	</script>
+</div>

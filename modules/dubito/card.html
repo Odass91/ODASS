@@ -1,0 +1,31 @@
+<div class="modal fade" id="quiz-card" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content panel-default">
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">{{ dubito.card.enonce }}</h4>
+	  </div>
+	  <div class="modal-body">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="answer" ng-repeat="choice in dubito.card.propositions" ng-class="{active: dubito.isCorrectAnswer(dubito.card, $index)}" >
+				<a href="#" ng-click="dubito.checkAnswer(dubito.card, choice.id)" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#result-success" ng-bind-html="choice.enonce"></a>
+			</li>
+		</ul>
+	  </div>
+	  <div class="modal-footer">
+	  	<p class="col-xs-4 col-lg-4 text-left vcenter">
+	  		<button type="button" class="btn btn-primary" ng-click="dubito.quit()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+	  	</p>
+	  	<p class="col-xs-4 col-lg-4 text-center vcenter"><span class="btn">Tour {{ dubito.turn + 1}} / {{ dubito.quiz.questions}}</span></p>
+	  	
+	  	<p class="col-xs-4 col-lg-4 text-right vcenter">
+		  	<button type="button" class="btn btn-primary" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#send-contact"> 
+		  				<span class="glyphicon glyphicon-envelope" ></span><span class="hidden-xs"> Recommander</span>
+		  			</button>
+			<a class="twitter-share-button glyphicon icon-twitter-t" href="https://twitter.com/intent/tweet?text={{dubito.card.intitule}}"></a>
+		</p>
+	  </div>
+	</div>
+  </div>
+</div>

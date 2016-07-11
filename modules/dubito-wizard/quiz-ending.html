@@ -1,0 +1,104 @@
+<div class="modal fade" id="quiz-ending" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content panel-default">
+	   <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Finaliser le quiz</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+	  		<div class="row">
+	  		
+				 <form class="col-lg-5">
+					<div class="form-group">
+						<label for="email">Message personnalisé : </label>
+						
+						<div class="input-group">
+						  	<span class="input-group-addon label-success text-success" id="result-success">
+						  		<span class="glyphicon glyphicon-star text-success"></span>
+						  		<span class="glyphicon glyphicon-star text-success"></span>
+						  		<span class="glyphicon glyphicon-star text-success"></span>
+						  	</span>
+							<input ng-model="wizard.brouillon.quiz.messages.good" type="text" class="form-control" placeholder="ex: Félicitations !" aria-describedby="result-good"></input>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+						  	<span class="input-group-addon label-warning text-warning" id="result-average">
+						  		<span class="glyphicon glyphicon-star text-warning"></span>
+						  		<span class="glyphicon glyphicon-star text-warning"></span>
+						  	</span>
+							<input ng-model="wizard.brouillon.quiz.messages.average" type="text" class="form-control" placeholder="ex: C'est pas trop mal !" aria-describedby="result-average"></input>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+						  	<span class="input-group-addon label-danger text-danger" id="result-poor">
+						  		<span class="glyphicon glyphicon-star text-danger"></span>
+						  	</span>
+							<input ng-model="wizard.brouillon.quiz.messages.poor" type="text" class="form-control" placeholder="ex: Heuuu..." aria-describedby="result-average"></input>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="renvoi">Renvoi final : </label>
+						<div class="input-group">
+							<span class="input-group-addon" id="result-average">
+								<span class="glyphicon glyphicon-link"></span>
+							</span>
+							<input ng-model="wizard.brouillon.quiz.renvoi" type="text" class="form-control" placeholder="http://votresite.info"></input>
+						</div>
+					</div>
+				
+				</form>
+				
+				<div class="col-lg-7 alert alert-info">
+					<p>
+						Les informations affichées ici seront visible dans le dernier écran du quiz.
+					</p>
+					<p>
+						<dl class="dl">
+							<dt>Message personnalisé</dt>
+							<dd>Le texte à afficher en fonction des résultats de l'utilisateur</dd>
+						</dl>
+					</p>
+					<p>
+						<dl class="dl">
+							<dt>Renvoi final</dt>
+							<dd>Le lien vers lequel renvoyer l'utilisateur quand il décide de partir du quiz</dd>
+						</dl>
+					</p>
+				</div>
+			</div>
+			
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-default" ng-click="wizard.setupOrder()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-random" ></span> Modifier l'ordre des cartes
+		  		</button>
+				<button type="button" class="btn btn-warning" ng-click="wizard.saveAndQuit()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-save" ></span> Terminer
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

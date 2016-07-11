@@ -1,0 +1,82 @@
+<div class="modal fade" id="quiz-type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content panel-default">
+	  
+	  <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Configuration du quiz</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+		  <form>
+				<div class="form-group">
+					<label for="email">Nom du quiz : </label>
+					<input ng-model="wizard.brouillon.quiz.name" type="text" class="form-control"></input>
+				</div>
+				
+				
+				<div class="form-group">
+					<label for="email">Choisissez une catégorie : </label>
+					<select name="quizCategory" id="quizCategory" ng-model="wizard.brouillon.quiz.category">
+      					<option ng-repeat="option in wizard.quizConfig.categories" value="{{option}}">{{option}}</option>
+    				</select>
+				</div>
+				
+				
+				
+				<div class="form-group">
+					<label for="email">Combien de questions comporte ce quiz ? </label>
+					<input type="range" min="6" max="102" value="6" step="6" ng-model="wizard.brouillon.quiz.length"/><label>{{wizard.brouillon.quiz.length}}</label>
+
+				</div>
+				
+				
+				<div class="form-group">
+					<label for="email">Ajoutez des mots-clefs : </label> (optionnel)
+					<p>
+						<span ng-repeat="keyword in wizard.brouillon.quiz.keywords">
+							<span class="label label-default">
+								<span class="glyphicon glyphicon-tag"> </span>  {{keyword}}
+								<span style="cursor:pointer" class="glyphicon glyphicon-remove" ng-click="wizard.removeKeyword(keyword)"> </span>
+							</span>
+							&nbsp;
+						</span>
+					</p>
+					
+					<div class="input-group">
+				      	<input type="text" class="form-control" id="add-keyword" placeholder="ex: loi travail"></input>
+			      		<span class="input-group-btn">
+				        	<button class="btn btn-success" type="button" ng-click="wizard.addKeyword()">
+				        		<span class="glyphicon glyphicon-plus"> </span>
+				        	</button>
+				      	</span>
+				    </div><!-- /input-group -->
+					
+				</div>
+			</form>
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-arrow-right" ></span>
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

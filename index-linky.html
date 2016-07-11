@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html ng-app="odass">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="libs/fullcalendar/fullcalendar.min.css"/>
+		<link rel="stylesheet" type="text/css" href="libs/fullcalendar/fullcalendar.print.css"/>
+		<link rel="stylesheet" type="text/css" href="css/odass.css"/>
+		<style></style>
+	</head>
+
+	<body ng-controller="OdassController as odass">
+	
+		<div class="container-fluid">
+			<nav class="navbar navbar-default">
+			  <div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+				  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				  <a class="navbar-brand" href="http://demo.odass.org">ODASS</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				  
+				  <!--  MODULES ODASS -->
+				  <ul id="menu-odass" class="nav navbar-nav">
+					<li class="active"><a id="dubito-item" href="" ng-click="odass.changeModule('dubito')">DUBITO</a></li>
+				  </ul>
+				  
+				  
+				  <!--  USER MENU -->
+				  <ul class="nav navbar-nav navbar-right">
+					<li ng-hide="odass.user.loggedIn">
+						<a href="#" data-toggle="modal" data-target="#login-popup" ><span class="glyphicon glyphicon-log-in"></span> Connexion</a>
+					</li>
+					<li ng-show="odass.user.loggedIn" class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					  	<span class="glyphicon glyphicon-cog"></span> {{odass.user.name}} <span class="caret"></span>
+					  </a>
+					  <ul class="dropdown-menu">
+						<li><a href="#"><span class="glyphicon glyphicon-user"></span> Votre compte</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-envelope"></span> Messages <span class="badge">1</span></a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-wrench"></span> Préférences</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#" ng-click="odass.logout()"><span class="glyphicon glyphicon-log-out"></span> Se déconnecter</a></li>
+					  </ul>
+					</li>
+				  </ul>
+				</div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>
+
+			<section class="row" ng-show="odass.isModule('dashboard')">
+				
+				<div class="col-md-4">
+				
+					<section>
+						<div class="panel panel-warning">
+						  <div class="panel-heading"><h3 class="panel-title">Présentation</h3></div>
+						  <div class="panel-body">
+								<p>DUBITO est un jeu multiformat de déconstruction intellectuelle et de culture générale développé par l’équipe ODASS. DUBITO contribue à l’Éducation Populaire par le jeu en proposant un ensemble de questions à choix multiple sur des sujets de société regroupées en six catégories : Économie, Droit et Justice, Social, Éducation et Culture, Écologie, Santé.</p>
+							</div>
+						</div>
+					</section>
+					
+					<div class="clear"></div>
+					
+					<section ng-show="odass.user.loggedIn" >
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+							<h3 class="panel-title">Votre reseau</h3>
+						  </div>
+						  <div class="panel-body">
+							<p><span class="glyphicon glyphicon-user"></span> <strong>Kim</strong> a joué au quiz <a href="">Etat d'urgence</a> et a fait un score de 5%</p>
+							<p><span class="glyphicon glyphicon-comment"></span> <strong>Frédérique</strong> vous a envoyé un message !</p>
+							<p><span class="glyphicon glyphicon-fire"></span> <strong>Olivier</strong> vous a battu sur le quiz <a href="">Loi travail</a> !</p>
+						  </div>
+						</div>
+					</section>
+				</div>
+			
+			
+				<div class="col-md-4">
+					<section ng-show="odass.user.loggedIn">
+						<div class="panel panel-warning">
+						  <div class="panel-heading"><h3 class="panel-title">Bienvenue <strong>{{odass.user.name}}</strong></h3></div>
+						  <div class="panel-body">
+							<p><span class="glyphicon glyphicon-log-in"></span> Dernière connexion le 08/04/2016 à 12:12</p> 
+							<p><span class="glyphicon glyphicon-education"></span> Vous avez remporté le badge <strong>Night Owl</strong>
+							<p><span class="glyphicon glyphicon-star"></span> Vous êtes <strong>42e</strong> au classement général</p>
+						  </div>
+						</div>
+					</section>
+					
+					<div class="clear"></div>
+					
+					<section>
+						<div class="panel panel-warning">
+						  <div class="panel-heading">
+							<h3 class="panel-title"></h3>
+						  </div>
+						  <div class="panel-body">
+							<p class="text-center">copyright 2016 - ODASS</p>
+						  </div>
+						</div>
+					</section>
+				</div>
+				
+				
+				
+				<div class="col-md-3">
+					<section ng-show="false">
+						<div class="panel panel-success">
+						  <div class="panel-heading">
+							<h3 class="panel-title"><strong>Nous soutenir</strong></h3>
+						  </div>
+						  <div class="panel-body">
+							<p class="text-center" ><button class="btn btn-success" data-toggle="modal" data-target="#donate-popup"><span class="glyphicon glyphicon-piggy-bank"> </span> FAIRE UN DON</button></p>
+						  </div>
+						</div>
+					</section>
+				
+					<div class="clear"></div>
+				</div>
+			</section>
+			
+			<!--  POPUPS  -->
+			<reco-popup></reco-popup>
+			<donate-popup></donate-popup>
+			<login-popup></login-popup>
+			
+			<!-- ODASS MODULES -->
+			
+			
+			<!-- DUBITO -->
+			<dubito></dubito>
+			
+			<!-- CALENDRIER -->
+			<calendrier></calendrier>
+			
+			<!-- RESERVATION DE SALLE -->
+			
+			<!-- BASE DOCUMENTAIRE -->
+			
+		
+			<div class="navbar navbar-fixed-bottom" role="navigation">
+				<div class="container">					
+					<p class="col-lg-4" style="width:350px; height:83px">
+						<!--a href="http://www.odass.org">mentions légales</a-->
+					</p>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="libs/jquery.js"></script>
+		<script type="text/javascript" src="libs/moment.js"></script>
+		<script type="text/javascript" src="libs/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="libs/angular.js"></script>
+		<script type="text/javascript" src="libs/angular-sanitize.js"></script>
+		<script type="text/javascript" src="libs/Chart.js"></script>
+		<script type="text/javascript" src="libs/fullcalendar/fullcalendar.js"></script>
+		
+		<script type="text/javascript" src="odass.js"></script>
+		<script type="text/javascript" src="modules/dubito/dubito.js"></script>
+		<!-- script type="text/javascript" src="backoffice/backoffice.js"></script>
+		
+		<script type="text/javascript" src="wizard/wizard.js"></script-->
+		
+		<script type="text/javascript">
+			$(function () {
+			  $('[data-toggle="tooltip"]').tooltip()
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,98 @@
+<div ng-show="odass.isModule('annuaire')">
+	<div ng-controller="RepertoController as reperto">
+
+
+		<section id="annuaire-header" class="row">
+			<div class="col-md-4">
+				<section>
+					<div class="media">
+						<div class="media-left">
+							<a href="http://www.associations-citoyennes.net/"> 
+								<img src="images/logo-CAC.jpg" alt="Responsive image" height="75px" width="500px"> </img>
+							</a>
+						</div>
+					</div>
+				</section>
+			</div>
+			
+			<div class="col-md-4">
+				<p ng-show="reperto.activeFilters.geoloc.length > 0 || reperto.activeFilters.keywords.length > 0">
+					Filtres actifs :
+					<span ng-show="reperto.activeFilters.keywords.length > 0">
+						<span
+							ng-repeat="filter in reperto.activeFilters.keywords"> <span
+							class="label label-info"> {{filter}} <span
+								style="cursor: pointer" class="glyphicon glyphicon-remove"
+								ng-click="reperto.removeFilter('keywords', filter)"> </span>
+						</span> &nbsp;
+						</span>
+					</span>
+				</p>
+			</div>
+			
+			<div class="col-md-3">
+				<filters-box></filters-box>
+			</div>
+			
+			<div class="col-md-1">
+				<a class="btn btn-info icon-action" ng-click="reperto.init()">
+					<span class="glyphicon glyphicon-refresh"></span>
+				</a>
+				<a class="btn btn-info icon-action" ng-click="reperto.displaySavedInitiatives()">
+					<span class="glyphicon glyphicon-star"></span>
+				</a>
+			</div>
+			
+		</section>
+
+		<section id="annuaire-body" class="row">
+			<div class="col-md-4">
+
+				<!-- THESAURUS ECOLOGIE  -->
+				<section>
+					<div class="panel panel-success thesaurus-item">
+					  	<div class="panel-heading">
+							<h3 class="panel-title"><span class="glyphicon glyphicon-folder-open"> </span> Répertoire national écologie</h3>
+					  	</div>
+					  	<div class="panel-body">
+							<div id="thesaurus-ecologie-tree">
+							</div>
+						</div>
+					</div>
+				</section>
+				<div class="clearfix"></div>
+
+				<section style="width: 100%; height: 300px;">
+					<div id="map"></div>
+				</section>
+			</div>
+
+
+			<!--  COLONNE PRINCIPALE  -->
+			<div class="col-md-7">
+				<section id="thesaurus_metadata" class="">
+					<div class="panel-body">
+						<div>
+							{{ reperto.data.thesaurus[0].description}}
+						</div>
+						<h3 id="titre_partie"></h3>
+						<p id="contenu_partie"></p>
+						<h4 id="titre_chapitre"></h4>
+						<p id="contenu_chapitre"></p>
+						<h5 id="titre_idee"></h5>
+						<p id="contenu_idee"></p>
+					</div>
+				</section>
+			</div>
+			
+			<div class="col-md-8" id="initiatives-area">
+				<initiatives-box></initiatives-box>
+			</div>
+			
+		</section>
+		<script>
+		</script>
+	</div>
+	<p></p>
+	<p></p>
+</div>

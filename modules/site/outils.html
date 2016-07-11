@@ -1,0 +1,124 @@
+<div class="container" ng-show="odass.isModule('page-outils')">
+	<section class="row">
+		<div style="padding:25px; padding-left: 100px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size: 24px">
+			<p>Nos outils / logiciels</p>
+		</div>
+	</section>
+	<!-- DEBUG -->
+	<section class="row module-description">
+		<div class="col-lg-4">
+			<div class="media"
+	  			ng-mouseenter="odass.displayModuleDetail = 'petition'"
+	  			ng-mouseleave="odass.displayModuleDetail = ''">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-petition.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Petitio</h4>
+				  	<p>Créez et mettez en ligne votre pétition.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-8">
+			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'petition'">
+				<p>Un outil pour</p>    
+				<dl class="dl-horizontal">
+					<dt>créer et héberger</dt>
+					<dd>vos pétitions</dd>
+					
+					<dt>permettre <br/>leur signature</dt>
+					<dd>selon des paramètres choisis par le soumissionnaire</dd>
+					
+					<dt>traiter les données</dt>
+					<dd>des signataires uniquement par le soumissionnaire, en toute transparence</dd>
+				</dl>   
+			
+				
+			</div>
+		</div>
+	</section>
+	<section class="row module-description">
+		<div class="col-lg-5">
+			<div class="media"
+	  			ng-mouseenter="odass.displayModuleDetail = 'repertoire'"
+	  			ng-mouseleave="odass.displayModuleDetail = ''">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-repertoire.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Reperto</h4>
+				  	<p>Naviguez dans un répertoire hiérarchique de données.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-7">
+			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'repertoire'">
+				<p>Un outil pour</p>
+				<dl class="dl-horizontal">
+					<dt>créer et héberger</dt>
+					<dd>un répertoire de données</dd>
+					
+					<dt>classer</dt>
+					<dd>les données selon des thésaurus choisis et/ou créés par l’utilisateur</dd>
+					
+					<dt>découvrir et <br/>rechercher</dt>
+					<dd>les données grâce à des filtres choisis et/ou créés par l’utilisateur</dd>
+					
+				</dl>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="row module-description">
+		<div class="col-lg-4">
+			<div class="media"
+	  			ng-mouseenter="odass.displayModuleDetail = 'dubito'"
+	  			ng-mouseleave="odass.displayModuleDetail = ''"
+	  		>
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-quiz.png" class="media-object" alt="LOGO DUBITO" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Dubito</h4>
+				  	<p>Le jeu multiformat de déconstruction intellectuelle et de culture générale.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'dubito'">
+				<style>
+					.dl-horizontal dd {margin-bottom: 12px;}
+				</style>
+				<p>Découvrez nos quiz. Créez vos propres quiz.</p>
+				<dl class="dl-horizontal">
+					<dt>multiformat</dt>
+					<dd>on peut jouer sur un PC, une tablette, un smartphone, avec des cartes… </dd>
+					
+					<dt>de culture générale</dt>
+					<dd>avec des questions à choix multiple sur des sujets de société concrets et des réponses argumentées et documentées</dd>
+					
+					<dt>de déconstruction <br/>intellectuelle</dt>
+					<dd>les questions-réponses contribuent à la déconstruction des idées reçues et rendent plus clair la cohérence du système capitaliste global et ses conséquences</dd>
+					
+					<dt>coopératif</dt>
+					<dd>les joueurs coopèrent avec leurs amis pour gagner mieux</dd>
+					
+					<dt>contributif</dt>
+					<dd>les joueurs proposent des questions pour enrichir la base de donnée ou même créer de nouveaux jeux sur un thème de leur choix</dd>
+					
+					<dt>et d’utilité sociale</dt>
+					<dd>les joueurs améliorent leurs connaissances et leur compréhension des enjeux de société et favorise leur prise de conscience de leur puissance d’agir sur la société</dd>
+				</dl>
+			</div>
+		</div>
+	</section>
+</div>

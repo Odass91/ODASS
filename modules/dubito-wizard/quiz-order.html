@@ -1,0 +1,163 @@
+<style>
+
+.column {
+    float: left;
+    margin: 5px 5px 0px 0px;
+    text-align: center;
+    cursor: move;
+}
+
+</style>
+
+
+<div class="modal fade" id="quiz-order" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  	<div class="modal-dialog" role="document">
+		<div class="modal-content panel-default modal-lg">
+		   <!-- HEADER -->
+		  
+		  <div class="modal-header panel-heading">
+			<h4 class="modal-title" id="exampleModalLabel">Modifier l'ordre des questions</h4>
+		  </div>
+		  
+		  
+		  <!-- BODY -->
+		  
+		  <div class="modal-body" style="position:relative;">
+				<ul id="ordering-tabs" class="nav nav-tabs">
+<!-- 			  		<li role="presentation" ng-click="wizard.orderingMethod = 0"><a href="#default-order">Ordre par défaut</a></li> -->
+			  		<li role="presentation" ng-click="wizard.orderingMethod = 1" class="active"><a href="#basic-sequencing">Réordonner séquenciellement</a></li>
+<!-- 			  		<li role="presentation"><a href="#basic-sequencing-2">Réordonner séquenciellement [alt]</a></li> -->
+<!-- 			  		<li role="presentation"><a href="#constraint-sequencing">Rajouter des contraintes</a></li> -->
+				</ul>
+				
+				<div class="tab-content">
+				    <div role="tabpanel" class="tab-pane" id="default-order">
+				    	<p>Dans l'ordre de création :</p>
+				    	<div class="" ng-repeat="carte in wizard.brouillon.quiz.cartes" title="{{carte.intitule}}">
+						    <p class="handle"><span>#{{carte.id}}.&nbsp;</span>{{carte.intitule}}</p>
+						</div>
+				    </div>
+				    
+				    
+				    
+				    
+				    <div role="tabpanel" class="tab-pane active" id="basic-sequencing" style="position: relative">
+				    	<p>
+				    		Réorganisez les questions par glisser / déposer
+				    	</p>
+				    	
+				    	<div class="col-lg-12">
+				    	
+					    	<div class="col-lg-8 columns" html-sortable="sortable_option" ng-model="wizard.brouillon.quiz.cartesOrdonnees">
+							  	
+							  	<div class="column carte" 
+							  		ng-repeat="carte in wizard.brouillon.quiz.cartesOrdonnees" 
+							  		title="{{carte.intitule}}" 
+							  		data-toggle="tooltip" data-placement="top" title="{{wizard.displayedCard.intitule}}"
+							  		ng-mouseenter="wizard.displayedCard = carte"
+							  		ng-mouseleave="wizard.displayedCard = null"
+							  	>
+								    
+								    <span class="handle" title="carte.intitule">
+								    	<img src="images/drag-handle.png"></img>
+								    </span>
+								    
+								    <span class="corps">{{carte.id}}</span>
+								    
+								    <div ng-show="wizard.displayedCard && wizard.displayedCard == carte" class="tooltip bottom" role="tooltip"> 
+										<div class="tooltip-arrow"></div> 
+										<div class="tooltip-inner"> {{wizard.displayedCard.intitule}}</div> 
+									</div>
+									<span style="cursor:pointer" ng-click="carte.anchored = !carte.anchored">
+									    <img ng-hide="carte.anchored" src="images/module-wizard-pin-empty.png" width="10" height="18"></img>
+									    <img ng-show="carte.anchored" src="images/module-wizard-pin-full.png" width="10" height="18"></img>
+									</span>
+								    
+							  	</div>
+							</div>
+							
+							<div class="col-lg-4" style="position:absolute; top:-50px; bottom:-50px; right: -15px; width: 275px;">
+								<h4>Récapitulatif</h4>
+								<ul class="list-group">
+									<li class="list-group-item carte_preview" ng-repeat="carte in wizard.brouillon.quiz.cartesOrdonnees">
+    									<span class="badge">#{{carte.id}}</span>
+										<span ng-hide="carte.anchored">{{carte.intitule | limitTo: 35}}</span>
+									    <span ng-show="carte.anchored"><strong>{{carte.intitule | limitTo: 35}}</strong></span>
+									</li>
+								</ul>
+							</div>
+				    	
+				    	
+				    	</div>
+				    </div>
+				    
+				    
+				    
+				    
+				    <div role="tabpanel" class="tab-pane" id="basic-sequencing-2">
+				    	<p></p>
+				    	
+				    	<p>
+				    		Faites passer les questions de droite à gauche
+				    	</p>
+				    
+				    	<div class="columns pull-left" style="width: 48%; height: 100%">
+				    		<span class="btn-group-vertical" role="group" style="width: 100%">
+					        	<button  ng-repeat="carte in wizard.quiz.cartes" class="btn btn-default btn-block" type="button" ng-click="wizard.addCard(carte)">
+					        		<span style="width:90%" class="align-left">{{carte.id}}. {{carte.intitule |  limitTo:35}} &nbsp;</span>
+					        		<span style="width:10%" class="glyphicon glyphicon-arrow-right"> </span>
+					        	</button>
+					      	</span>
+						</div>
+						
+						
+						<div class="columns pull-right" style="width: 48%; height: 100%">
+							<span class="btn-group-vertical" role="group" style="width: 100%">
+					        	<button ng-repeat="carte in wizard.quiz.cartesOrdonnees" class="btn btn-default btn-block" type="button" ng-click="wizard.removeCard(carte)">
+						        	<span class="glyphicon glyphicon-arrow-left align-left"> </span>{{carte.id}}. {{carte.intitule |  limitTo:35}} &nbsp;
+						        </button>
+					      	</span>
+						</div>
+						
+						<div class="clearfix"></div>
+
+				    </div>
+				    
+				    
+				    
+				    
+				    
+				    
+				    <div role="tabpanel" class="tab-pane" id="constraint-sequencing">
+				    	YOU
+				    </div>
+				</div>
+		  </div>
+		 
+		  
+		  
+		  <!-- FOOTER -->
+		  
+		<div class="modal-footer">
+	  		<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" ></span> Quitter
+				</button>
+				<button type="button" class="btn btn-warning" ng-click="wizard.saveAndQuit()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-save" ></span> Terminer
+		  		</button>
+		  	</p>
+		</div>
+	</div>
+</div>
+<script>
+$('#ordering-tabs a').click(function (e) {
+	  e.preventDefault()
+	  $(this).tab('show')
+	})
+	
+	$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+</div>

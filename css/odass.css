@@ -1,0 +1,372 @@
+@media screen and (max-width: 990px)
+{
+	.odass-modal 
+	{
+   	 width: 95%; /* either % (e.g. 60%) or px (400px) */
+    }
+}
+
+
+html 
+{
+	height: 100%;
+}
+
+body
+{
+	position: relative;
+	
+	min-height: 100%;
+ 	margin: 0px;
+  	padding: 0px;
+  	margin-bottom: 100px;
+
+	background: url("../images/odass-logo-gris-clair.png") !important;
+	background-size: cover;
+}
+
+.footer 
+{
+	position: fixed; 
+	bottom: 0px; 
+	left: 0px; 
+	right: 0px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	
+	background-color: #f8f8f8;
+	border: 1px solid #e7e7e7;
+}
+
+*
+{
+	font-family: sans-serif, arial;
+	font-size: 1em;
+}
+
+p
+{
+	font-family: sans-serif, arial;
+	font-size: 1em;
+}
+
+h1, h2, h3, h4
+{
+	font-family: sans-serif, arial;
+	text-transform: uppercase;
+}
+
+.media
+{
+	margin-top: 45px;
+}
+
+.module-description-text
+{
+	padding: 10px;
+	background: url("../images/module-dubito-screenshot");
+}
+.module-description:hover
+{
+	border: 1px solid #e7e7e7;
+	border-radius: 8px;
+	background-color: #fefefe;
+	
+}
+
+li.answer.active 
+{
+	background-color: #dff0d8 !important;
+}
+
+.score
+{
+	font-size: 1.2em;
+	margin-bottom: 20px;
+}
+
+.glyphicon
+{
+	font-size: 14px;
+}
+
+.modal-footer
+{
+	text-align: center;
+}
+
+.modal-footer .glyphicon
+{
+	font-size: 25px;
+	cursor: pointer;
+}
+
+.modal-footer button .glyphicon, .modal-footer a .glyphicon
+{
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.modal-body
+{
+	min-height: 275px;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+    display: block;
+}
+
+.vcenter 
+{
+    
+}
+.horizontal-separator
+{
+	height: 4px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+    margin-top: 16px;
+    overflow: hidden;
+    position: relative;
+    top: 8px;
+    background-color: #000;
+}
+
+.navbar-fixed-bottom .horizontal-separator
+{
+    top: -1px;
+}
+
+.horizontal-separator.blue
+{
+    background-color: #09F;
+}
+
+.horizontal-separator.blue + h1, .horizontal-separator.blue + h2, .horizontal-separator.blue + h3, .horizontal-separator.blue + h4
+{
+    color: #09F;
+}
+
+p.green
+{
+    color: #1D9E24;
+}
+p.blue
+{
+    color: #09F;
+}
+p.red
+{
+    color: #FB511F;
+}
+
+.horizontal-separator.green
+{
+    background-color: #1D9E24;
+}
+
+.horizontal-separator.green + h1, .horizontal-separator.green + h2, .horizontal-separator.green + h3, .horizontal-separator.green + h4
+{
+    color: #1D9E24;
+}
+
+.horizontal-separator.red
+{
+    background-color: #FB511F;
+}
+
+.horizontal-separator.red + h1, .horizontal-separator.red + h2, .horizontal-separator.red + h3, .horizontal-separator.red + h4
+{
+    color: #FB511F;
+}
+
+.ldh-footer
+{
+	
+	padding-top: 20px;
+
+}
+
+.row.quizz-description, .row.card, .row.score
+{
+	margin-top: 25px;
+}
+
+.card-answer
+{
+	padding-left: 20px;
+	margin-top: 15px;
+}
+
+.panel-header.panel-success
+{
+	color: rgb(35, 144, 64);
+}
+
+.label .glyphicon
+{
+	font-size: 10px;
+}
+
+.icon-action
+{
+	cursor: pointer;
+}
+
+/** DUBITO */
+.tab-content
+{
+	padding-top: 20px;
+}
+.carte
+{
+	
+   -webkit-border-top-right-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-moz-border-radius-topright: 3px;
+	-moz-border-radius-bottomright: 3px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px; 
+	
+	border: 1px rgba(0,0,0,1) solid;
+  	box-shadow: 0px 6px 12px #aaa;
+    
+    padding: 5px;
+    position: relative;
+}
+
+.carte.over
+{
+	
+	border: 2px rgba(0,0,0,1) solid;
+	opacity:0.2;
+	background-color: rgba(0,0,0,0.1);
+}
+
+
+.carte .handle
+{
+	
+}
+.carte .corps
+{
+	padding: 20px;
+	padding-right: 25px;
+}
+
+.carte .tooltip
+{
+	max-height: 40px;
+	height: 40px;
+	width: 200px !important;
+	max-width: 400px !important;
+	position:absolute;
+	bottom: -40px;
+	opacity: 0.9;
+}
+
+.carte .tooltip .tooltip-arrow
+{
+	left: 15px;
+}
+
+.carte_preview
+{
+	font-size: 10px;
+	padding: 5px !important;
+}
+
+
+
+
+/** CAC */
+
+.thesaurus-item .panel-body
+{
+	height: 350px;
+	max-height: 350px;
+	overflow: auto;
+}
+
+.initiative-item-summary .panel-body
+{
+	background: rgba(255,255,0,0.1);
+}
+
+.initiative-item .panel-body p.ellipsed-text {
+  white-space: nowrap;
+  width: 100%;                   
+  overflow: hidden;              
+  /* "overflow" doit être différent
+  de "visible" */ 
+
+  text-overflow: ellipsis;
+}
+
+ .list-select
+ {
+ 	position: absolute;
+ 	max-height: 250px;
+ 	width: 100%;
+ 	overflow: auto;
+ 	z-index: 10000;
+ }
+ 
+ .filter-match
+ {
+ 	font-weight: bold;
+ }
+ 
+ /** MAIN SITE */
+ 
+ #menu-odass>li.active:first-child
+ {
+ 	border-right: 1px #cccccc solid;
+ }
+ 
+ .media
+ {
+	padding:25px; 
+	padding-left: 100px;
+ }
+
+ .media-left img
+ {
+ 	opacity: 0.5;
+ }
+ 
+ /** CAC REPERTOIRE */
+ 
+ #thesaurus-ecologie-tree
+ {
+ 	padding: 5px;
+ 	margin: 5px;
+ }
+ 
+ #thesaurus-ecologie-tree a
+{
+	font-size: 12px !important;
+}
+
+#thesaurus_metadata p
+{
+	font-size: 12px !important;
+	font-family: times;
+}
+.initiative-item .panel-heading
+{
+	min-height: 40px;
+	padding: 5px !important;
+}
+.initiative-item .panel-heading h4
+{
+
+	font-size: 12px !important;
+}
+
+#initiatives-area .initiative-title
+{
+	font-size: 14px;
+}

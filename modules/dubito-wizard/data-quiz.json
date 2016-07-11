@@ -1,0 +1,29 @@
+{
+	"id": "1",
+	"intitule": "Qui se cache derrière l'empereur ?",
+	"choix": [
+	          {"id": "1", "intitule": "Darth Vader"}, 
+	          {"id": "2", "intitule": "Le sénateur Palpatine"}, 
+	          {"id": "3", "intitule": "Jar-Jar Bink"}, 
+	          {"id": "4", "intitule": "Obiwan Kenobi"}
+	],
+	"reponse": "2",
+	"reponseCourte": "C'est le sénateur Palpatine",
+	"reponseLongue": "C'est dans les dernières heures de la République que Darth Sidious se révèle derrière le Sénateur Palpatine. Sur le point de se voire confier les pleins pouvoirs par le sénat, une équipe de Jedi dont fait partie Anakin Skywalker le confronte et échoue à le vaincre suite à la trahison de Skywalker basculant dans le côté obscure de la force.",
+	"questionSuivante": "2"
+		
+},
+{
+	"id": "2",
+	"intitule": "Qui est le père de Luke Skywalker ?",
+	"choix": [
+	          {"id": "1", "intitule": "Darth Vader"}, 
+	          {"id": "2", "intitule": "La force"}, 
+	          {"id": "3", "intitule": "Jar-Jar Bink"}, 
+	          {"id": "4", "intitule": "Obiwan Kenobi"}
+	],
+	"reponse": "1",
+	"reponseCourte": "C'est Darth Vader",
+	"reponseLongue": "C'est Anakin Skywalker, qui, avant de devenir Darth Vader, enfanta avec la Sénatrice Padmé Amidala des jumeaux dont le garçon fut appelé Luke et la fille Leïa. Les deux enfants furent soustrait à l'influence néfaste de leur père à leur naissance.",
+	"questionSuivante": "fin"
+}

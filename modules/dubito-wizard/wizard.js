@@ -5,93 +5,29 @@
 		/** Data Structure */
 		this.quiz = null;
 		
-		this.availableQuiz = 
-		[
-		 	{
-		 		"name": "La guerre des étoiles",
-				"length": 9,
-				"category": "culture",
-				"keywords": ["starwars", "sf"],
-				"options":
-				{
-					"vibility": "public",
-					"social": ["twitter", "facebook", "mail"]
-				},
-				"cartesOrdonnees":
-				[
-					
-				],
-				"cartes":
-				[
-				 	{
-				 		"id": "1",
-						"intitule": "Qui est le maître d'Obiwan Kenobi ?",
-						"choix":
-						[
-						 	{
-						 		"id": "1",
-						 		"intitule": "Anakin Skywalker."
-						 	},
-						 	{
-						 		"id": "2",
-						 		"intitule": "Yoda."
-						 	},
-						 	{
-						 		"id": "3",
-						 		"intitule": "Qui Gon Jin."
-						 	},
-						 	{
-						 		"id": "4",
-						 		"intitule": "Mace Windu."
-						 	}
-						],
-						"reponse": "3",
-						"reponseCourte": "C'est Qui Gon Jon !",
-						"reponseLongue": "Lui même a été l'apprenti de Maître Yoda.",
-						"references": []
-				 	},
-					{
-				 		"id": "2",
-						"intitule": "Qui se cache derrière les traits de Darth Sidious ?",
-						"choix":
-						[
-						 	{
-						 		"id": "1",
-						 		"intitule": "Obiwan Kenobi"
-						 	},
-						 	{
-						 		"id": "2",
-						 		"intitule": "Le sénateur Palpatine"
-						 	},
-						 	{
-						 		"id": "3",
-						 		"intitule": "Anakin Skywalker"
-						 	},
-						 	{
-						 		"id": "4",
-						 		"intitule": "Le comte Dooku"
-						 	}
-						],
-						"reponse": "2",
-						"reponseCourte": "C'est le sénateur de l'Ancienne République Palpatine",
-						"reponseLongue": "De sénateur, il a été élu chancelier puis s'est fait couronner Empereur entraînant la galaxie dans une période de terreur et de désespoir sous le joug Sith.",
-						"references": []
-					}
-				],
-				"renvoi": "",
-				"messages":
-				{
-					"good": "Maitre Jedi : félicitation, la force n'a plus de mystère pour toi !", 
-					"average": "Chevalier Jedi : votre maitrise de la force vous permet de manier le sabre laser sans risquer de perdre la tête.", 
-					"poor": "Padawan : long à parcourir le chemin reste..."
-				}
-		 	}
-		]
+		 
+		var wizard = this;
+		
+		$http.get("data/quiz.json").
+	    success(function(data, status) 
+	    {
+	    	wizard.availableQuiz = data;
+	    }).
+	    error(function(data, status) 
+	    {
+	    	console.log("Erreur lors de la recuperation du fichier json")
+	    });
 		
 		this.quizConfig = 
 		{
 			"name": "nouveau quiz",
-			"length": [12, 24, 36, 48, 60, 72, 84, 96, 108],
+			"length":  
+			{
+				"floor": 12,
+				"ceil": 108,
+			    "step": 12,
+		        "noSwitching": true
+			},
 			"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"],
 			"social": ["facebook", "twitter", "email"]
 		};
@@ -107,12 +43,19 @@
 			$("#edit-quiz-choice").modal();
 		};
 		
-		this.editQuiz = function()
+		this.editQuiz = function(quiz)
 		{
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
 			
-			this.brouillon.quiz = this.selectedQuiz;
+			if (!quiz) 
+			{
+				this.brouillon.quiz = this.selectedQuiz;
+			}
+			else
+			{
+				this.brouillon.quiz = quiz;
+			}
 			this.mode = "edit";
 			
 			$("#quiz-type").modal();
@@ -128,7 +71,7 @@
 			this.brouillon.quiz = 
 			{
 				"name": "nouveau quiz",
-				"length": 6,
+				"length": 12,
 				"category": "société",
 				"keywords": [],
 				"options":
@@ -202,33 +145,92 @@
 		};
 		
 		this.addCard = function()
-		{
-			/** Save old one or make the popup appear */
-			$("#quiz-category").modal("hide");
-			$("#wizard-quiz-card").modal();
+		{			
+			this.initNewCard();
 			
-			if (this.mode == "create")
+			if (this.mode == "edit")
 			{
-				this.initNewCard();
+				this.brouillon.quiz.cartes.push(this.brouillon.carte);
+				this.brouillon.quiz.cardIndex = this.brouillon.quiz.cartes.length - 1;
 			}
-			else
-			{
-				this.brouillon.quiz.cardIndex = 0;
-				this.brouillon.carte = this.brouillon.quiz.cartes[0];
-			}
+			
 		};
 		
 
+		this.previousCard = function()
+		{
+			if (this.brouillon.quiz.cardIndex > 0)
+			{
+				this.brouillon.quiz.cardIndex--;
+			}
+			
+			this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
+		};
+		
 		this.nextCard = function()
 		{
 			this.brouillon.quiz.cardIndex++;
 			this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
 		};
 
-		this.editCard = function(index)
+		this.editCard = function(options)
 		{
-			this.brouillon.quiz.cardIndex = index;
-			this.brouillon.carte = this.brouillon.quiz.cartes[index];
+
+			/** Save old one or make the popup appear */
+			$("#quiz-category").modal("hide");
+			$("#quiz-order").modal("hide");
+			$("#wizard-quiz-card").modal();
+			
+			if (this.brouillon.quiz.cartes.length == 0)
+			{
+				this.initNewCard();
+				this.brouillon.quiz.cartes.push(this.brouillon.carte);
+				this.brouillon.quiz.cardIndex = 0;
+			}
+			else
+			{
+				
+				if (options.index != undefined)
+				{
+					console.log("edit card from given index");
+					this.brouillon.quiz.cardIndex = options.index;
+					this.brouillon.carte = this.brouillon.quiz.cartes[options.index];
+				}
+				
+				if (options.id != undefined)
+				{
+					console.log("edit card from given id");
+					var index = -1;
+				
+					this.brouillon.quiz.cartes.forEach(function (carte)
+					{
+						index = (carte.id == options.id) ? this.brouillon.quiz.cartes.indexOf(carte) : index;
+					}, this);
+					
+					if (index != -1)
+					{
+						this.editCard({"index": index});
+					}
+				}
+			}
+		};
+
+
+		this.deleteCard = function()
+		{
+			var deletedIndex = this.brouillon.quiz.cardIndex;
+			if (this.brouillon.quiz.cardIndex == 0)
+			{
+				this.brouillon.carte = this.brouillon.quiz.cartes[1];
+			}
+			else
+			{
+				this.brouillon.quiz.cardIndex--;
+				this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
+			}
+			this.brouillon.quiz.cartes.splice(deletedIndex, 1);
+			console.log(this.brouillon.quiz.cartes);
+			
 		};
 		
 		this.saveAndAddCard = function()

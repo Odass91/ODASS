@@ -31,7 +31,10 @@
 				
 				<div class="form-group">
 					<label for="email">Combien de questions comporte ce quiz ? </label>
-					<input type="range" min="6" max="102" value="6" step="6" ng-model="wizard.brouillon.quiz.length"/><label>{{wizard.brouillon.quiz.length}}</label>
+					
+
+					<rzslider rz-slider-model="wizard.brouillon.quiz.length" rz-slider-options="wizard.quizConfig.length"></rzslider>
+					<label>{{wizard.brouillon.quiz.length}}</label>
 
 				</div>
 				
@@ -72,7 +75,8 @@
 			</button>
 		  	</p>
 		  	<p class="col-xs-6 col-lg-6 text-right">
-		  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" data-dismiss="modal">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.editCard({index:0})" data-dismiss="modal">
+		  			suivant
 		  			<span class="glyphicon glyphicon-arrow-right" ></span>
 		  		</button>
 			</p>

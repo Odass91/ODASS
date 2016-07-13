@@ -257,8 +257,11 @@
 					}
         		];
 
-	        	var countries = document.getElementById("myChart").getContext("2d");
-	        	new Chart(countries).Pie(data, {});
+        		if (document.getElementById("myChart"))
+	        	{
+        			var countries = document.getElementById("myChart").getContext("2d");
+    	        	new Chart(countries).Pie(data, {});
+	        	}
         	}
         }
         

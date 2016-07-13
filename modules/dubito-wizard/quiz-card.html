@@ -4,7 +4,8 @@
 	   <!-- HEADER -->
 	  
 	  <div class="modal-header panel-heading">
-		<h4 class="modal-title" id="exampleModalLabel">Ajoutez une question au quiz</h4>
+		<h4 class="modal-title" id="exampleModalLabel" ng-show="wizard.mode == 'create'">Ajoutez une question au quiz</h4>
+		<h4 class="modal-title" id="exampleModalLabel" ng-hide="wizard.mode == 'create'">Editer ou ajouter une question</h4>
 	  </div>
 	  
 	  
@@ -12,6 +13,15 @@
 	  <!-- BODY -->
 	  
 	  <div class="modal-body row">
+	  
+			<div class="col-sm-12">
+				<div class="alert alert-info" role="alert">
+					<strong>Carte #{{wizard.brouillon.quiz.cardIndex + 1}}.</strong> 
+					Vous avez créé <strong>{{wizard.brouillon.quiz.cartes.length}}</strong> cartes sur {{wizard.brouillon.quiz.length}}.
+					
+				</div>
+			</div>
+			
 	  		<div class="col-sm-6">
 				<div class="form-group">
 					<label for="intituleQuestion">Intitulé de la question : </label>
@@ -28,6 +38,7 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label for="reponseCourte">Explication courte (140 caractères) : </label>
@@ -61,11 +72,6 @@
 				    </div>
 				</div>
 			</div>
-			<div class="clearfix"></div>
-			
-			<div class="alert alert-info" role="alert">
-				Carte #{{wizard.brouillon.quiz.cardIndex + 1}}. Vous avez créé <strong>{{wizard.brouillon.quiz.cartes.length}}</strong> cartes sur {{wizard.brouillon.quiz.length}}.
-			</div>
 	  </div>
 	 
 	  
@@ -84,23 +90,23 @@
 	  		<button type="button" class="btn btn-info" ng-click="wizard.previousCard()" ng-disabled="wizard.brouillon.quiz.cardIndex == 0">
 	  			<span class="glyphicon glyphicon-arrow-left" ></span>
 	  		</button>
-	  		<button type="button" class="btn btn-success" ng-click="wizard.deleteCard()">
-	  			<span class="glyphicon glyphicon-minus" ></span>
+	  		<button type="button" class="btn btn-warning" ng-click="wizard.deleteCard()">
+	  			<span class="glyphicon glyphicon-trash" ></span>
 	  		</button>
-	  		<button type="button" class="btn btn-success" ng-click="wizard.saveAndAddCard()" ng-show="wizard.brouillon.quiz.cardIndex == wizard.brouillon.quiz.cartes.length - 1">
+	  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" ng-disabled="wizard.brouillon.quiz.cartes.length == wizard.brouillon.quiz.length">
 	  			<span class="glyphicon glyphicon-plus" ></span>
 	  		</button>
-	  		<button type="button" class="btn btn-info" ng-click="wizard.nextCard()" ng-hide="wizard.brouillon.quiz.cardIndex == wizard.brouillon.quiz.cartes.length - 1">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.nextCard()" ng-disabled="wizard.brouillon.quiz.cardIndex == wizard.brouillon.quiz.cartes.length - 1">
 	  			<span class="glyphicon glyphicon-arrow-right" ></span>
 	  		</button>
 		</p>
 		
 	  	<p class="col-xs-4 col-lg-4">
 	  	
-	  		<button type="button" class="btn btn-warning" ng-click="wizard.setupEnding()" data-dismiss="modal">
+	  		<button type="button" class="btn btn-success" ng-click="wizard.setupEnding()" data-dismiss="modal">
 	  			<span class="glyphicon glyphicon-forward" ></span> Finaliser
 	  		</button>
-			<button type="button" class="btn btn-warning" ng-click="wizard.saveAndQuit()" data-dismiss="modal">
+			<button type="button" class="btn btn-danger" ng-click="wizard.saveAndQuit()" data-dismiss="modal">
 	  			<span class="glyphicon glyphicon-save" ></span> Terminer
 	  		</button>
 	  	</p>

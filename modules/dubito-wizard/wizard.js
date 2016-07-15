@@ -2,12 +2,9 @@
 {
 	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', function($http, $location)
 	{
-		/** Data Structure */
-		this.quiz = null;
+		/** GET FAKE DATA */
 		
-		 
 		var wizard = this;
-		
 		$http.get("data/quiz.json").
 	    success(function(data, status) 
 	    {
@@ -17,6 +14,18 @@
 	    {
 	    	console.log("Erreur lors de la recuperation du fichier json")
 	    });
+		
+		
+		/** DATA STRUCTURE */
+		var wizard = this;
+		this.quiz = null;
+		this.sortableOptions = 
+		{
+			"stop": function(list, dropped_index)
+			{
+				wizard.updateQuizOnServer();
+			}	
+		};
 		
 		this.quizConfig = 
 		{
@@ -92,6 +101,8 @@
 				"cardIndex": 0
 				
 			};
+			
+			this.createQuizOnServer();
 		};
 		
 		
@@ -137,6 +148,8 @@
 				"reponseLongue": "Explication longue",
 				"references": []
 			};
+			
+			this.createCardOnServer();
 		};
 		
 		this.selectCorrectAnswer = function(carte, choix)
@@ -153,6 +166,8 @@
 				this.brouillon.quiz.cartes.push(this.brouillon.carte);
 				this.brouillon.quiz.cardIndex = this.brouillon.quiz.cartes.length - 1;
 			}
+			
+			this.updateQuizOnServer();
 			
 		};
 		
@@ -213,12 +228,15 @@
 					}
 				}
 			}
+			
+			this.updateQuizOnServer();
 		};
 
 
 		this.deleteCard = function()
 		{
 			var deletedIndex = this.brouillon.quiz.cardIndex;
+			var deletedCardId = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex].id;
 			if (this.brouillon.quiz.cardIndex == 0)
 			{
 				this.brouillon.carte = this.brouillon.quiz.cartes[1];
@@ -229,25 +247,10 @@
 				this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
 			}
 			this.brouillon.quiz.cartes.splice(deletedIndex, 1);
-			console.log(this.brouillon.quiz.cartes);
 			
-		};
-		
-		this.saveAndAddCard = function()
-		{
-			var clonedCard = jQuery.extend(true, {}, this.brouillon.carte);
-			console.log(clonedCard);
+			this.deleteCardOnServer(deletedCardId);
+			this.updateQuizOnServer();
 			
-			this.brouillon.quiz.cartes.push(clonedCard);
-			this.brouillon.quiz.cardIndex++;
-			
-			
-			$http.post(" http://jeu.odass.org/api/updatecard/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
-			{
-				//
-			});
-			
-			this.initNewCard();
 		};
 		
 		this.setupEnding = function()
@@ -348,8 +351,15 @@
 		
 		
 		/** ORDERING */
+		this.toggleAnchor = function(carte)
+		{
+			carte.anchored = !carte.anchored;
+			this.updateQuizOnServer();
+		}
+		
 		this.updateOrder = function()
 		{
+			/** Ordre de création */
 			for (var i=0; i < this.brouillon.quiz.cartes.length - 1; i++)
 			{
 				var currentCarte = this.brouillon.quiz.cartes[i];
@@ -358,9 +368,12 @@
 				
 			}
 			
-			this.brouillon.quiz.ordonnancement = [];
+			/** Gestion des contraintes */
 			
-			for (var i=0; i < this.brouillon.quiz.cartesOrdonnees.length - 1; i++)
+			this.brouillon.quiz.ordonnancement = [[]];
+			var currentPushIndex = 0;
+			
+			for (var i=0; i < this.brouillon.quiz.cartesOrdonnees.length; i++)
 			{
 				var currentCarte = this.brouillon.quiz.cartesOrdonnees[i];
 				
@@ -368,13 +381,125 @@
 				{
 					this.brouillon.quiz.ordonnancement.push(currentCarte);
 					this.brouillon.quiz.ordonnancement.push([]);
+					currentPushIndex += 2;
 				}
 				else
 				{
-					this.brouillon.quiz.ordonnancement[this.brouillon.quiz.ordonnancement.length - 1].push(currentCarte);
+					this.brouillon.quiz.ordonnancement[currentPushIndex].push(currentCarte);
 				}
 			}
 			
+		};
+		
+		/** COMMUNICATION AVEC LE SERVEUR */
+		
+		this.createQuizOnServer = function()
+		{
+			
+			var wizard = this;
+			
+			$http.post("http://jeu.odass.org/api/creerquiz", {"nom": wizard.brouillon.quiz.name}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					wizard.brouillon.quiz = response.donnees.id;
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.updateQuizOnServer = function()
+		{
+			var wizard = this;
+			
+			this.updateOrder();
+			console.log(wizard.brouillon.quiz);
+			
+			$http.post("http://jeu.odass.org/api/modifierquiz", wizard.brouillon.quiz).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Modification du quiz, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.updateCardOnServer = function()
+		{
+			var wizard = this;
+			
+			$http.post("http://jeu.odass.org/api/modifierquiz", wizard.brouillon.carte).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Modification d'une carte, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.createCardOnServer = function()
+		{
+			var wizard = this;
+			
+			$http.post("http://jeu.odass.org/api/creercarte", {"id": wizard.brouillon.quiz.id}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Creation d'une carte du quiz, reponse du serveur : ", response);
+					wizard.brouillon.carte.id = response.donnees.id;
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.deleteCardOnServer = function(index)
+		{
+			var wizard = this;
+			var cardId = index ? index : wizard.brouillon.carte.id;
+			
+			$http.post("http://jeu.odass.org/api/supprimercarte", {"id": cardId}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Suppression d'une carte du quiz, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.deleteQuizOnServer = function(index)
+		{
+			var wizard = this;
+			var quizId = index ? index : wizard.brouillon.quiz.id;
+			
+			$http.post("http://jeu.odass.org/api/supprimerquiz", {"id": quizId}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Suppression d'un quiz, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
 		};
 	
 	}]);

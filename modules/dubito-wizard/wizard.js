@@ -431,23 +431,6 @@
 			);
 		};
 		
-		this.updateCardOnServer = function()
-		{
-			var wizard = this;
-			
-			$http.post("http://jeu.odass.org/api/modifierquiz", wizard.brouillon.carte).then(
-				/**   SERVER ANSWER  */
-				function(response)
-				{
-					console.log("Modification d'une carte, reponse du serveur : ", response);
-				},
-				function (response)
-				{
-					console.log("Error serveur");
-				}
-			);
-		};
-		
 		this.createCardOnServer = function()
 		{
 			var wizard = this;
@@ -458,6 +441,23 @@
 				{
 					console.log("Creation d'une carte du quiz, reponse du serveur : ", response);
 					wizard.brouillon.carte.id = response.donnees.id;
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+		this.updateCardOnServer = function()
+		{
+			var wizard = this;
+			
+			$http.post("http://jeu.odass.org/api/modifiercarte", wizard.brouillon.carte).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					console.log("Modification d'une carte, reponse du serveur : ", response);
 				},
 				function (response)
 				{

@@ -5,6 +5,7 @@
 		/** GET FAKE DATA */
 		
 		var wizard = this;
+		this._debugTmpId = 1;
 		$http.get("data/quiz.json").
 	    success(function(data, status) 
 	    {
@@ -30,6 +31,7 @@
 		this.quizConfig = 
 		{
 			"name": "nouveau quiz",
+			"description": "",
 			"length":  
 			{
 				"floor": 12,
@@ -72,7 +74,7 @@
 		
 		this.createQuiz = function()
 		{
-			$("#quiz-type").modal();
+			$("#quiz-category").modal();
 			
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
@@ -161,11 +163,9 @@
 		{			
 			this.initNewCard();
 			
-			if (this.mode == "edit")
-			{
-				this.brouillon.quiz.cartes.push(this.brouillon.carte);
-				this.brouillon.quiz.cardIndex = this.brouillon.quiz.cartes.length - 1;
-			}
+			this.brouillon.quiz.cartes.push(this.brouillon.carte);
+			this.brouillon.quiz.cardIndex = this.brouillon.quiz.cartes.length - 1;
+			this.setupOrder();
 			
 			this.updateQuizOnServer();
 			
@@ -232,10 +232,57 @@
 			this.updateQuizOnServer();
 		};
 
-
-		this.deleteCard = function()
+		this.deleteSelectedCards = function()
 		{
-			var deletedIndex = this.brouillon.quiz.cardIndex;
+			console.log("deleteSelectedCards");
+			this.brouillon.quiz.cartesOrdonnees.forEach(function(carte)
+			{
+				if (carte.selected)
+				{
+					console.log("Carte a supprimer trouvée !", carte);
+					this.deleteCardWithId(carte.id);
+				}
+			}, this);
+			
+			this.setupOrder();
+		};
+
+		
+		this.deleteCardWithId = function(id)
+		{
+			console.log("Suppression de la carte ", id);
+			var index = 0;
+			var selectedCard = null;
+			var selectedIndex = 0;
+		
+			this.brouillon.quiz.cartes.forEach(function(carte)
+			{
+				if (carte.id == id)
+				{
+					selectedCard = carte;
+					selectedIndex = index;
+				}
+				index++;
+			});
+			
+			if (selectedCard)
+			{
+				this.deleteCardWithIndex(selectedIndex);
+				
+			}
+			else
+			{
+				
+			}
+		};
+		
+		this.deleteCardWithIndex = function(index)
+		{
+			if (! index)
+			{
+				index = this.brouillon.quiz.cardIndex;
+			}
+			var deletedIndex = index;
 			var deletedCardId = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex].id;
 			if (this.brouillon.quiz.cardIndex == 0)
 			{
@@ -273,15 +320,27 @@
 			this.brouillon.quiz.cartesOrdonnees = [];
 			
 			var wizard = this;
+			
 			this.brouillon.quiz.cartes.forEach(function(carte)
 			{
 				var clonedCard = jQuery.extend(true, {}, carte);
 				wizard.brouillon.quiz.cartesOrdonnees.push(carte);
 			});
 			
-			$("#quiz-ending").modal("hide");
-			$("#quiz-order").modal();
+//			$("#quiz-ending").modal("hide");
+//			$("#quiz-order").modal();
 		};
+		
+		this.returnToTitleScreen = function()
+		{
+			$("#quiz-type").modal("hide");
+			$("#quiz-setup").modal("hide");
+			$("#wizard-quiz-card").modal("hide");
+			$("#quiz-ending").modal("hide");
+			$("#quiz-order").modal("hide");
+			
+			$("#quiz-category").modal();
+		}
 		
 		this.leave = function()
 		{
@@ -445,6 +504,8 @@
 				function (response)
 				{
 					console.log("Error serveur");
+					wizard.brouillon.carte.id = wizard._debugTmpId;
+					wizard._debugTmpId++;
 				}
 			);
 		};

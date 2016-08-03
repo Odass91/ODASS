@@ -5,30 +5,41 @@
 	text-align: center;
 	cursor: move;
 }
+
+.carte-add {
+	float: left;
+	margin: 5px 5px 0px 0px;
+	text-align: center;
+	background-color: #5cb85c;
+	font-size: 10px;
+	font-weight: bold;
+	color: white;
+}
 </style>
 
 
-<div class="modal fade" id="quiz-order" tabindex="-1" role="dialog"
-	aria-labelledby="exampleModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content panel-default modal-lg">
 
-
-			<!-- HEADER -->
-
-			<div class="modal-header panel-heading">
-				<h4 class="modal-title" id="exampleModalLabel">Modifier l'ordre
-					des questions</h4>
-			</div>
 
 
 			<!-- BODY -->
-
-			<div class="modal-body">
 				<div class="row">
 
-					<p class="col-lg-12">Réorganisez les questions par glisser /
-						déposer</p>
+					<p ng-hide="wizard.brouillon.quiz.cartes.length == 0"  class="col-lg-12">
+						Réorganisez les questions par glisser /
+						déposer {{wizard.brouillon.quiz.cartes.length}}
+					</p>
+						
+					<p class="col-lg-12" ng-hide="wizard.brouillon.quiz.cartes.length == 0" >
+						<a href="" ng-click="wizard.interactiveMode = 'select'" ng-show="wizard.interactiveMode != 'select'"> Sélectionner des cartes</a>
+						&nbsp;
+						<a href="" ng-click="wizard.interactiveMode = 'dragdrop'" ng-show="wizard.interactiveMode == 'select'"> 
+							<span class="glyphicon glyphicon-random"></span> Réorganiser les cartes
+						</a>
+						&nbsp;
+						<a href="" ng-show="wizard.interactiveMode == 'select'" ng-click="wizard.deleteSelectedCards()"> 
+							<span class="glyphicon glyphicon-trash"></span> Supprimer les cartes sélectionnées
+						</a>
+					</p>
 
 					<div class="col-lg-12">
 
@@ -42,9 +53,18 @@
 								ng-mouseenter="wizard.displayedCard = carte"
 								ng-mouseleave="wizard.displayedCard = null">
 
-								<span class="handle" title="carte.intitule"> <img
-									src="images/drag-handle.png"></img>
-								</span> <span class="corps">{{carte.id}}</span>
+								<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
+									<img src="images/drag-handle.png"></img>
+								</span>
+								
+								<span ng-show="wizard.interactiveMode == 'select'" class="checkbox" style="display: inline-block" ng-click="carte.selected = !carte.selected">
+								    <label>
+								      	<input type="checkbox"></input>
+								    </label>
+								</span>
+								
+								
+								<span class="corps">{{carte.id}}</span>
 
 								<div
 									ng-show="wizard.displayedCard && wizard.displayedCard == carte"
@@ -66,9 +86,22 @@
 								</span>
 
 							</div>
+							
+							<div ng-show="wizard.brouillon.quiz.cartes.length == 0" class="alert alert-info">
+								Votre quiz ne contient pas encore de cartes, ajoutez en une en cliquant sur le bouton +
+							</div>
+							
+							<div class="carte-add carte" style="padding: 7px;">
+								<div>
+									<span ng-click="wizard.addCard()"> 
+										<span class="glyphicon glyphicon-plus" style="cursor: pointer;"></span>
+									</span>
+								</div>
+
+							</div>
 						</div>
 
-						<div class="col-lg-4">
+						<div class="col-lg-4" ng-show="wizard.brouillon.quiz.cartes.length > 0">
 							<h4>Récapitulatif</h4>
 							<ul class="list-group"
 								style="overflow-y: scroll; max-height: 175px;">
@@ -94,26 +127,6 @@
 					</div>
 				</div>
 
-			</div>
-
-
-
-			<!-- FOOTER -->
-
-			<div class="modal-footer">
-				<p class="col-xs-6 col-lg-6 text-left">
-					<button type="button" class="btn btn-primary"
-						ng-click="wizard.leave()" data-dismiss="modal">
-						<span class="glyphicon glyphicon-remove"></span> Quitter
-					</button>
-					<button type="button" class="btn btn-warning"
-						ng-click="wizard.saveAndQuit()" data-dismiss="modal">
-						<span class="glyphicon glyphicon-save"></span> Terminer
-					</button>
-				</p>
-			</div>
-		</div>
-	</div>
 	<script>
 $('#ordering-tabs a').click(function (e) {
 	  e.preventDefault()

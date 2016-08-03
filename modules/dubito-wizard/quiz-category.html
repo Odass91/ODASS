@@ -1,10 +1,11 @@
+<!-- A RENOMMER : CATEGORY ==> SYNTHESE -->
 <div class="modal fade" id="quiz-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content panel-default">
 	   <!-- HEADER -->
 	  
 	  <div class="modal-header panel-heading">
-		<h4 class="modal-title" id="exampleModalLabel">Sélectionner une catégorie pour les 12 prochaines questions</h4>
+		<h4 class="modal-title" id="exampleModalLabel">Récapitulatif du Jeu</h4>
 	  </div>
 	  
 	  
@@ -12,7 +13,54 @@
 	  <!-- BODY -->
 	  
 	  <div class="modal-body">
-			<p>{{wizard.quizConfig.categories}}</p>
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+			    	<div class="panel-heading" role="tab" id="headingOne">
+			      		<h4 class="panel-title">
+			        		<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			          			<span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">1.</span> Informations générales
+			        		</a>
+			      		</h4>
+			    	</div>
+			    	<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			      		<div class="panel-body">
+			        		<h3>{{wizard.brouillon.quiz.name}}</h3>
+			        		<h3>{{wizard.brouillon.quiz.description}}</h3>
+			        		<p>
+			        			<rzslider rz-slider-model="wizard.brouillon.quiz.length" rz-slider-options="wizard.quizConfig.length"></rzslider>
+			        		</p>
+			      		</div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingTwo">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			          <span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">2.</span> Gestion des cartes
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      <div class="panel-body">
+						<quiz-order></quiz-order>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			          <span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">3.</span> Fin de jeu
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      <div class="panel-body">
+						<quiz-ending></quiz-ending>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 			
 	  </div>
 	 

@@ -1,6 +1,6 @@
 (function()
 {
-	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree']);
+	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree', 'xeditable']);
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', function($http, $location)
 	{

@@ -31,13 +31,16 @@
 		this.quizConfig = 
 		{
 			"name": "nouveau quiz",
-			"description": "",
+			"description": "Texte introductif",
 			"length":  
 			{
-				"floor": 12,
-				"ceil": 108,
-			    "step": 12,
-		        "noSwitching": true
+				"showTicksValues": true,
+			    "stepsArray": 
+			    [
+			      	{value: 12, legend: 'Quiz - 12 questions'},
+			      	{value: 36, legend: 'Mini-jeu - 36 questions'},
+			      	{value: 108, legend: 'Jeu - 108 questions'}
+			    ]
 			},
 			"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"],
 			"social": ["facebook", "twitter", "email"]
@@ -74,7 +77,7 @@
 		
 		this.createQuiz = function()
 		{
-			$("#quiz-category").modal();
+			$("#quiz-dashboard").modal();
 			
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
@@ -116,7 +119,7 @@
 		
 		this.setupCategory = function()
 		{
-			$("#quiz-category").modal();
+			$("#quiz-dashboard").modal();
 			$("#quiz-setup").modal("hide");
 		};
 		
@@ -192,7 +195,7 @@
 		{
 
 			/** Save old one or make the popup appear */
-			$("#quiz-category").modal("hide");
+			$("#quiz-dashboard").modal("hide");
 			$("#quiz-order").modal("hide");
 			$("#wizard-quiz-card").modal();
 			
@@ -339,14 +342,14 @@
 			$("#quiz-ending").modal("hide");
 			$("#quiz-order").modal("hide");
 			
-			$("#quiz-category").modal();
+			$("#quiz-dashboard").modal();
 		}
 		
 		this.leave = function()
 		{
 			$("#quiz-type").modal("hide");
 			$("#quiz-setup").modal("hide");
-			$("#quiz-category").modal("hide");
+			$("#quiz-dashboard").modal("hide");
 			$("#wizard-quiz-card").modal("hide");
 			$("#quiz-ending").modal("hide");
 			$("#quiz-order").modal("hide");
@@ -568,7 +571,7 @@
 	odass.directive("editQuiz", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-choice.html'};});
 	odass.directive("quizType", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-type.html'};});
 	odass.directive("quizSetup", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-setup.html'};});
-	odass.directive("quizCategory", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-category.html'};});
+	odass.directive("quizDashboard", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-dashboard.html'};});
 	odass.directive("quizCard", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-card.html'};});
 	odass.directive("quizEnding", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-ending.html'};});
 	odass.directive("quizOrder", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-order.html'};});

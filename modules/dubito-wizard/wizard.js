@@ -13,12 +13,25 @@
 	    }).
 	    error(function(data, status) 
 	    {
-	    	console.log("Erreur lors de la recuperation du fichier json")
+	    	console.log("Erreur lors de la recuperation du fichier json");
 	    });
 		
 		
+		this.library = [];
+		$http.get("data/librairie.json").
+	    success(function(data, status) 
+	    {
+	    	wizard.library = data.cartes;
+	    }).
+	    error(function(data, status) 
+	    {
+	    	console.log("Erreur lors de la recuperation du fichier json");
+	    });
+		
+		
+		
+		
 		/** DATA STRUCTURE */
-		var wizard = this;
 		this.quiz = null;
 		this.sortableOptions = 
 		{
@@ -110,17 +123,23 @@
 			this.createQuizOnServer();
 		};
 		
+		this.initArrayFromMissingCards = function()
+		{
+			
+			var length = this.brouillon.quiz.length - (this.brouillon.quiz.cartes ? this.brouillon.quiz.cartes.length : 0 );
+			return (new Array(length));
+		}
 		
 		this.setupOptions = function()
 		{
 			$("#quiz-type").modal("hide");
-			$("#quiz-setup").modal();
+			$("#quiz-library").modal();
 		};
 		
 		this.setupCategory = function()
 		{
 			$("#quiz-dashboard").modal();
-			$("#quiz-setup").modal("hide");
+			$("#quiz-library").modal("hide");
 		};
 		
 		this.initNewCard = function()
@@ -172,6 +191,18 @@
 			
 			this.updateQuizOnServer();
 			
+		};
+		
+		this.openLibrary = function()
+		{
+			$("#wizard-library").modal();
+			$("#quiz-dashboard").modal("hide");
+		};
+		
+		this.loadCard = function()
+		{
+			$("#wizard-library").modal("hide");
+			$("#quiz-dashboard").modal();
 		};
 		
 
@@ -337,7 +368,7 @@
 		this.returnToTitleScreen = function()
 		{
 			$("#quiz-type").modal("hide");
-			$("#quiz-setup").modal("hide");
+			$("#quiz-library").modal("hide");
 			$("#wizard-quiz-card").modal("hide");
 			$("#quiz-ending").modal("hide");
 			$("#quiz-order").modal("hide");
@@ -348,7 +379,7 @@
 		this.leave = function()
 		{
 			$("#quiz-type").modal("hide");
-			$("#quiz-setup").modal("hide");
+			$("#quiz-library").modal("hide");
 			$("#quiz-dashboard").modal("hide");
 			$("#wizard-quiz-card").modal("hide");
 			$("#quiz-ending").modal("hide");
@@ -570,7 +601,7 @@
 
 	odass.directive("editQuiz", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-choice.html'};});
 	odass.directive("quizType", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-type.html'};});
-	odass.directive("quizSetup", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-setup.html'};});
+	odass.directive("quizLibrary", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-library.html'};});
 	odass.directive("quizDashboard", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-dashboard.html'};});
 	odass.directive("quizCard", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-card.html'};});
 	odass.directive("quizEnding", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-ending.html'};});

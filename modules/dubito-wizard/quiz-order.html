@@ -18,6 +18,18 @@
 	{
 		margin-top: 10px;
 	}
+	
+	.ghost
+	{
+		background-color: rgba(0,0,0,0.1);
+		opacity: 0.3;
+	}
+	
+	.ghost:hover
+	{
+		background-color: rgba(25,100,75,0.1);
+		opacity: 1;
+	}
 </style>
 
 
@@ -96,15 +108,35 @@
 	
 								</div>
 								
-								<button class="btn btn-success add-card" ng-click="wizard.addCard()" ng-disabled="wizard.brouillon.quiz.cartes.length == wizard.brouillon.quiz.length"> 
-									<span class="glyphicon glyphicon-plus" style="cursor: pointer;"></span>
-								</button>
-							
-								<button class="btn btn-info add-card" ng-click="wizard.addCard()" ng-disabled="wizard.brouillon.quiz.cartes.length == wizard.brouillon.quiz.length"> 
-									<span class="glyphicon glyphicon-open" style="cursor: pointer;"></span>
-								</button>
-							</div>
+								<div ng-repeat="carte in wizard.initArrayFromMissingCards() track by $index" class="column carte ghost">
+									<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
+										<img src="images/drag-handle.png"></img>
+									</span>
+									
+									
+									<span class="corps"> ?? </span>
 	
+									<div ng-show="wizard.displayedCard && wizard.displayedCard == carte" class="tooltip bottom" role="tooltip">
+										
+										<div class="tooltip-arrow"></div>
+										<div class="tooltip-inner">
+											Créez une nouvelle carte ou chargez une carte existante depuis la librairie de cartes
+										</div>
+									</div>
+									
+									<span style="cursor: pointer" ng-click="wizard.addCard()"> 
+										<span class="glyphicon glyphicon-plus"></span>
+									</span>
+									
+									<span style="cursor: pointer" ng-click="wizard.openLibrary()"> 
+										<span class="glyphicon glyphicon-open"></span>
+									</span>
+									
+								</div>
+	
+							</div>
+							
+							
 						</div>
 					</div>
 						

@@ -1,0 +1,149 @@
+<style>
+	
+	.column 
+	{
+		float: left;
+		margin: 10px 5px 0px 0px;
+		text-align: center;
+		cursor: move;
+	}
+	
+	.column.carte .corps
+	{
+		min-width: 45px !important;
+		display: inline-block;
+	}
+	
+	.ghost
+	{
+		background-color: rgba(0,0,0,0.1);
+		opacity: 0.3;
+	}
+	
+	.ghost:hover
+	{
+		background-color: rgba(25,100,75,0.1);
+		opacity: 1;
+	}
+	
+	.selected
+	{
+		border: 2px solid rgba(0,0,0,0.4);
+		opacity: 1;
+	}
+
+</style>
+
+<div class="modal fade" id="wizard-library" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog  modal-lg" role="document">
+	<div class="modal-content panel-default">
+	   <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Sélectionner les cartes à rajouter à votre quiz</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+			<div class="row">
+				
+				
+				<div class="category col-lg-4" style="min-height:250px">
+				
+					<h3>Catégories</h3>
+
+					<div class="btn-group-vertical btn-group-lg" role="group" aria-label="Vertical button group">
+						<button type="button" class="btn btn-default" ng-repeat="categorie in wizard.quizConfig.categories" ng-click="wizard.displayCardsMatchingCategory(category)">
+							{{categorie}}
+						</button>
+					</div>
+				
+				</div>
+				
+				
+				
+				
+				<div class="cards col-lg-8" style="min-height:250px">
+					<h3>Cartes disponibles</h3>
+					<div ng-repeat="carte in wizard.library" class="column carte ghost" ng-click="wizard.detailedCard = carte" ng-class="{'selected': carte.selected, 'ghost': !carte.selected}">
+					
+						<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
+							<img src="images/drag-handle.png"></img>
+						</span>
+						
+						<span class="corps glyphicon glyphicon-info-sign" style="cursor:pointer"> </span>
+
+						<div ng-show="wizard.displayedCard && wizard.displayedCard == carte" class="tooltip bottom" role="tooltip">
+							
+							<div class="tooltip-arrow"></div>
+							<div class="tooltip-inner">
+								{{carte.intitule}}
+							</div>
+						</div>
+						
+						<span style="cursor: pointer" ng-click="carte.selected = true" ng-show="!carte.selected"> 
+							<span class="glyphicon glyphicon-plus"></span>
+						</span>
+						
+						<span style="cursor: pointer" ng-click="carte.selected = false" ng-show="carte.selected"> 
+							<span class="glyphicon glyphicon-minus"></span>
+						</span>
+						
+						
+					</div>
+				</div>
+				
+				<div class="clearfix"></div>
+				
+				<div class="col-lg-12" ng-show="true">
+
+						<div class="panel panel-default">
+							<div class="panel-heading"><span class="corps glyphicon glyphicon-info-sign" style="cursor:pointer"> </span> Détail de la carte</div>
+							<table class="table">
+								<thead>
+									<tr >
+										<th>INTITULE</th>
+										<th>CHOIX DE REPONSES</th>
+										<th>REPONSE</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>{{wizard.detailedCard.intitule}}</td>
+										<td>
+											<ul>
+												<li ng-repeat="choix in wizard.detailedCard.choix">{{choix.intitule}}</li>
+											</ul>
+										</td>
+										<td>{{wizard.detailedCard.reponseCourte}}</td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="wizard.loadCard()">
+				<span class="glyphicon glyphicon-arrow-left" ></span> Retour
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.loadCard()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-arrow-right" ></span> Charger les cartes sélectionnées
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

@@ -30,103 +30,128 @@
 	{
 		border: 2px solid rgba(0,0,0,0.4);
 		opacity: 1;
+		padding: 4px !important;
+	}
+	
+	.question-info
+	{
+		position: absolute;
+		border-radius: 7px;
+		bottom: 0px;
+		right: 25px;
+		max-width: 650px;
+		background-color: rgba(90,190,220, 0.4);
+		border: solid 1px rgba(90,190,220, 0.5);
+	}
+	
+	.question-info th, .question-info td
+	{
+		font-size: 12px;
+		padding: 5px;
+	}
+	
+	.correct-answer
+	{
+		font-weight: bold;
 	}
 
 </style>
 
 <div class="modal fade" id="wizard-library" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <div class="modal-dialog  modal-lg" role="document">
-	<div class="modal-content panel-default">
-	   <!-- HEADER -->
+  	<div class="modal-dialog  modal-lg" role="document">
+		<div class="modal-content panel-default">
+	   	
+	   	<!-- HEADER -->
 	  
-	  <div class="modal-header panel-heading">
-		<h4 class="modal-title" id="exampleModalLabel">Sélectionner les cartes à rajouter à votre quiz</h4>
-	  </div>
+	  	<div class="modal-header panel-heading">
+			<h4 class="modal-title" id="exampleModalLabel">Sélectionner les cartes à rajouter à votre quiz</h4>
+	  	</div>
 	  
 	  
 	  
-	  <!-- BODY -->
+	  	<!-- BODY -->
 	  
-	  <div class="modal-body">
+	  	<div class="modal-body">
 			<div class="row">
-				
-				
-				<div class="category col-lg-4" style="min-height:250px">
-				
-					<h3>Catégories</h3>
-
-					<div class="btn-group-vertical btn-group-lg" role="group" aria-label="Vertical button group">
-						<button type="button" class="btn btn-default" ng-repeat="categorie in wizard.quizConfig.categories" ng-click="wizard.displayCardsMatchingCategory(category)">
-							{{categorie}}
-						</button>
-					</div>
-				
-				</div>
-				
-				
-				
-				
-				<div class="cards col-lg-8" style="min-height:250px">
-					<h3>Cartes disponibles</h3>
-					<div ng-repeat="carte in wizard.library" class="column carte ghost" ng-click="wizard.detailedCard = carte" ng-class="{'selected': carte.selected, 'ghost': !carte.selected}">
+				<div class="col-lg-12">
+					<div class="category col-lg-4" style="min-height:450px">
+						<h3>Catégories</h3>
+	
+						<div class="btn-group-vertical btn-group-lg" role="group" aria-label="Vertical button group">
+							<button type="button" class="btn btn-default" ng-repeat="categorie in wizard.quizConfig.categories" ng-click="wizard.displayCardsMatchingCategory(categorie)" ng-disabled="wizard.categorieMap[categorie] == 0">
+								<span class="pull-left">{{categorie}}</span>
+								<span class="pull-right badge">{{wizard.categorieMap[categorie] || 0}}</span>
+							</button>
+						</div>
 					
-						<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
-							<img src="images/drag-handle.png"></img>
-						</span>
-						
-						<span class="corps glyphicon glyphicon-info-sign" style="cursor:pointer"> </span>
-
-						<div ng-show="wizard.displayedCard && wizard.displayedCard == carte" class="tooltip bottom" role="tooltip">
+					</div>
+					
+					<div class="cards col-lg-8" style="min-height:450px; padding-bottom: 100px;">
+						<h3>Cartes disponibles</h3>
+						<div class="">
+							<div ng-repeat="carte in wizard.library" 
+									class="column carte ghost" 
+									ng-hide="carte.hidden"
+									ng-mouseleave="wizard.detailedCard = null" 
+									ng-mouseenter="wizard.detailedCard = carte" 
+									ng-class="{'selected': carte.selected, 'ghost': !carte.selected}">
 							
-							<div class="tooltip-arrow"></div>
-							<div class="tooltip-inner">
-								{{carte.intitule}}
+								<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
+									<img src="images/drag-handle.png"></img>
+								</span>
+								
+								<span class="corps glyphicon glyphicon-info-sign" style="cursor:pointer"> </span>
+		
+								<div ng-show="wizard.displayedCard && wizard.displayedCard == carte" class="tooltip bottom" role="tooltip">
+									
+									<div class="tooltip-arrow"></div>
+									<div class="tooltip-inner">
+										{{carte.intitule}}
+									</div>
+								</div>
+								
+								<span style="cursor: pointer" ng-click="carte.selected = true" ng-show="!carte.selected"> 
+									<span class="glyphicon glyphicon-plus"></span>
+								</span>
+								
+								<span style="cursor: pointer" ng-click="carte.selected = false" ng-show="carte.selected"> 
+									<span class="glyphicon glyphicon-minus"></span>
+								</span>
+								
+								
 							</div>
 						</div>
-						
-						<span style="cursor: pointer" ng-click="carte.selected = true" ng-show="!carte.selected"> 
-							<span class="glyphicon glyphicon-plus"></span>
-						</span>
-						
-						<span style="cursor: pointer" ng-click="carte.selected = false" ng-show="carte.selected"> 
-							<span class="glyphicon glyphicon-minus"></span>
-						</span>
-						
-						
 					</div>
-				</div>
-				
-				<div class="clearfix"></div>
-				
-				<div class="col-lg-12" ng-show="true">
-
-						<div class="panel panel-default">
-							<div class="panel-heading"><span class="corps glyphicon glyphicon-info-sign" style="cursor:pointer"> </span> Détail de la carte</div>
-							<table class="table">
-								<thead>
-									<tr >
-										<th>INTITULE</th>
-										<th>CHOIX DE REPONSES</th>
-										<th>REPONSE</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>{{wizard.detailedCard.intitule}}</td>
-										<td>
-											<ul>
-												<li ng-repeat="choix in wizard.detailedCard.choix">{{choix.intitule}}</li>
-											</ul>
-										</td>
-										<td>{{wizard.detailedCard.reponseCourte}}</td>
-									</tr>
-									
-								</tbody>
-							</table>
-						</div>
+					
+					<div class="clearfix"></div>
+					
+					
+					<div class="question-info" ng-show="wizard.detailedCard != null">
+						<table class="table">
+							<thead>
+								<tr >
+									<th>INTITULE</th>
+									<th>CHOIX DE REPONSES</th>
+									<th>REPONSE</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{{wizard.detailedCard.intitule}}</td>
+									<td>
+										<span ng-repeat="choix in wizard.detailedCard.choix track by $index" ng-class="{'correct-answer': choix.id == wizard.detailedCard.reponse}">
+											{{$index + 1}}. {{choix.intitule | limitTo:30}}&nbsp;&nbsp;
+										</span>
+									</td>
+									<td>{{wizard.detailedCard.reponseCourte | limitTo:75}}</td>
+								</tr>
+								
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
+		</div>
 	 
 	  
 	  
@@ -140,7 +165,7 @@
 		  	</p>
 		  	<p class="col-xs-6 col-lg-6 text-right">
 		  		<button type="button" class="btn btn-success" ng-click="wizard.loadCard()" data-dismiss="modal">
-		  			<span class="glyphicon glyphicon-arrow-right" ></span> Charger les cartes sélectionnées
+		  			Charger les cartes sélectionnées <span class="glyphicon glyphicon-arrow-right" ></span> 
 		  		</button>
 			</p>
 	  </div>

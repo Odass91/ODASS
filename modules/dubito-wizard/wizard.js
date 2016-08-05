@@ -22,13 +22,20 @@
 	    success(function(data, status) 
 	    {
 	    	wizard.library = data.cartes;
+	    	
+	    	wizard.categorieMap = {};
+	    	
+	    	["santé", "écologie", "politique", "société", "international", "droit", "culture"].forEach(function(categorie)
+	    	{
+	    		var cartes = JSON.search(wizard.library, '//*[categorie/text()="' + categorie + '"]');
+	    		wizard.categorieMap[categorie] = cartes.length;
+	    	}, this);
+	    	
 	    }).
 	    error(function(data, status) 
 	    {
 	    	console.log("Erreur lors de la recuperation du fichier json");
 	    });
-		
-		
 		
 		
 		/** DATA STRUCTURE */
@@ -85,7 +92,9 @@
 			}
 			this.mode = "edit";
 			
-			$("#quiz-type").modal();
+			this.setupOrder();
+			
+			$("#quiz-dashboard").modal();
 		};
 		
 		this.createQuiz = function()
@@ -193,17 +202,58 @@
 			
 		};
 		
+		
+		/*** LIBRARY  ******/
+		
+		
 		this.openLibrary = function()
 		{
 			$("#wizard-library").modal();
 			$("#quiz-dashboard").modal("hide");
 		};
 		
-		this.loadCard = function()
+		this.closeLibrary = function()
 		{
 			$("#wizard-library").modal("hide");
 			$("#quiz-dashboard").modal();
 		};
+		
+		this.loadCard = function()
+		{
+			this.library.forEach(function(carte)
+			{
+				if (carte.selected)
+				{
+					delete carte.selected;
+					if (this.brouillon.quiz.cartes.length < this.brouillon.quiz.length)
+					{
+						this.brouillon.quiz.cartes.push(carte);
+					}
+				}
+			}, this);
+			this.setupOrder();
+			$("#wizard-library").modal("hide");
+			$("#quiz-dashboard").modal();
+		};
+		
+		this.displayCardsMatchingCategory = function(categorie)
+		{
+			console.log("Searching carte with categorie", categorie)
+			this.library.forEach(function(carte)
+			{
+				console.log("carte categorie : ", carte.categorie)
+				if (carte.categorie.indexOf(categorie) != -1)
+				{
+					delete carte.hidden;
+				}
+				else
+				{
+					carte.hidden = true;
+				}
+			}, this);
+		}
+		
+		/*** FIN LIBRARY ****/
 		
 
 		this.previousCard = function()
@@ -226,6 +276,7 @@
 		{
 
 			/** Save old one or make the popup appear */
+			
 			$("#quiz-dashboard").modal("hide");
 			$("#quiz-order").modal("hide");
 			$("#wizard-quiz-card").modal();

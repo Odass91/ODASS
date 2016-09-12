@@ -354,12 +354,21 @@ p.red
 	font-size: 12px !important;
 	font-family: times;
 }
-.initiative-item .panel-heading
+
+.idee-item
+{
+	display: inline-block;
+	width: 250px;
+	height: 250px;
+	margin: 15px;
+}
+
+.initiative-item .panel-heading, .idee-item .panel-heading
 {
 	min-height: 40px;
 	padding: 5px !important;
 }
-.initiative-item .panel-heading h4
+.initiative-item .panel-heading h4, .idee-item .panel-heading h4
 {
 
 	font-size: 12px !important;
@@ -368,4 +377,29 @@ p.red
 #initiatives-area .initiative-title
 {
 	font-size: 14px;
+}
+
+
+.carousel-inner section.item
+{
+	margin-left:100px;
+}
+
+.carousel-inner
+{
+	min-width: 200px;
+}
+
+.carousel-control
+{
+	color: rgba(0,0,0,0.8);
+	background: none;
+}
+.carousel-control:focus
+{
+	color: rgba(0,0,0,0.6);
+}
+.carousel-control:hover
+{
+	color: rgba(0,0,0,0.9);
 }

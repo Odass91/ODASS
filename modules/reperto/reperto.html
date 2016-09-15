@@ -10,7 +10,7 @@
 			</div>
 			
 			<div class="col-md-4">
-				<p ng-show="reperto.activeFilters.geoloc.length > 0 || reperto.activeFilters.keywords.length > 0">
+				<p ng-show="reperto.activeFilters.keywords.length > 0">
 					Filtres actifs :
 					<span ng-show="reperto.activeFilters.keywords.length > 0">
 						<span ng-repeat="filter in reperto.activeFilters.keywords"> 
@@ -26,14 +26,14 @@
 				<filters-box></filters-box>
 			</div>
 			
-			<div class="col-md-1">
-				<a class="btn btn-info icon-action" ng-click="reperto.init()">
-					<span class="glyphicon glyphicon-refresh"></span>
-				</a>
-				<a class="btn btn-info icon-action" ng-click="reperto.displaySavedInitiatives()">
-					<span class="glyphicon glyphicon-star"></span>
-				</a>
-			</div>
+<!-- 			<div class="col-md-1"> -->
+<!-- 				<a class="btn btn-info icon-action" ng-click="reperto.init()"> -->
+<!-- 					<span class="glyphicon glyphicon-refresh"></span> -->
+<!-- 				</a> -->
+<!-- 				<a class="btn btn-info icon-action" ng-click="reperto.displaySavedInitiatives()"> -->
+<!-- 					<span class="glyphicon glyphicon-star"></span> -->
+<!-- 				</a> -->
+<!-- 			</div> -->
 			
 		</section>
 
@@ -42,10 +42,16 @@
 
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
+				
+					<p>Répertoire : 
+						<a ng-click="reperto.init()">{{reperto.thesaurus.id}}</a>
+						<a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a>
+					</p>
+				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					  	
 					  	
-					  	<div class="panel panel-default" ng-repeat="item in reperto.ecologie.nodes">
+					  	<div class="panel panel-default" ng-repeat="item in reperto.thesaurus.nodes">
 							<div class="panel-heading" role="tab" id="headingOne">
 						      	<h4 class="panel-title">
 						      		<a ng-click="reperto.selectSection(item)">{{item.text}}</a>

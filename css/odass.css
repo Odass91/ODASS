@@ -393,7 +393,7 @@ p.red
 .carousel-control
 {
 	color: rgba(0,0,0,0.8);
-	background: none;
+	background-image: none !important;
 }
 .carousel-control:focus
 {

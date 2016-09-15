@@ -4,7 +4,7 @@
 		
 			<div ng-hide="reperto.showFilters">
 				<span class="glyphicon glyphicon-tags"> </span> &nbsp; 
-				{{reperto.activeFilters.keywords.length}} filtres actifs 
+				<span ng-click="reperto.showFilters = true">{{reperto.activeFilters.keywords.length}} filtres actifs </span>
 				<a ng-click="reperto.showFilters = true" class="button button-default pull-right"> <span class="glyphicon glyphicon-triangle-bottom"></span></a>
 			</div>
 		
@@ -18,10 +18,11 @@
 							<input type="text" class="form-control" id="add-keywords"
 								placeholder="ex: bio"
 								ng-focus="reperto.matchedFilters['keywords'] = reperto.availableFilters['keywords']"
-								ng-keypress="reperto.searchFilter('keywords', 'add-keywords', $event)"></input>
+								ng-model="reperto.filter">
+							</input>
+							
 							<span class="input-group-btn">
-								<button class="btn btn-success" type="button"
-									ng-click="reperto.addFilter('keywords')">
+								<button class="btn btn-success" type="button" ng-click="reperto.addFilter('keywords')">
 									<span class="glyphicon glyphicon-plus"> </span>
 								</button>
 							</span>
@@ -30,7 +31,7 @@
 						<div ng-show="reperto.matchedFilters['keywords'].length > 0">
 							<div class="btn-group-vertical list-select" role="group"
 								aria-label="...">
-								<button ng-repeat="item in reperto.matchedFilters['keywords']"
+								<button ng-repeat="item in reperto.matchedFilters['keywords'] | filter:reperto.filter"
 									type="button" class="btn btn-default"
 									ng-click="reperto.addFilter('keywords', item, false)">{{item}}</button>
 							</div>
@@ -42,29 +43,3 @@
 	</div>
 	
 </section>
-
-
-
-	<!-- 						<p> -->
-			<!-- 							<form> -->
-			<!-- 							  	<div class="form-group" style="position: relative"> -->
-			<!-- 							  		<label for="add-geoloc" class="control-label">Par lieu</label> -->
-
-			<!-- 							  		<div class="input-group"> -->
-			<!-- 								      	<input type="text" class="form-control" id="add-geoloc" placeholder="ex: essonne"  -->
-			<!-- 								      		ng-focus="reperto.matchedFilters['geoloc'] = reperto.availableFilters['geoloc']" -->
-			<!-- 								      		ng-keypress="reperto.searchFilter('geoloc', 'add-geoloc', $event)"> -->
-			<!-- 								      	</input> -->
-			<!-- 							      		<span class="input-group-btn"> -->
-			<!-- 								        	<button class="btn btn-success" type="button" ng-click="reperto.addFilter('geoloc')"><span class="glyphicon glyphicon-plus"> </span></button> -->
-			<!-- 								      	</span> -->
-			<!-- 								    </div>/input-group -->
-
-			<!-- 							  		<div ng-show="reperto.matchedFilters['geoloc'].length > 0"> -->
-			<!-- 							  			<div class="btn-group-vertical list-select" role="group" aria-label="..."> -->
-			<!--   											<button ng-repeat="item in reperto.matchedFilters['geoloc']" type="button" class="btn btn-default" ng-click="reperto.addFilter('geoloc', item, true)">{{item}}</button> -->
-			<!-- 										</div> -->
-			<!-- 							  		</div> -->
-			<!-- 							  	</div> -->
-			<!-- 							</form> -->
-			<!-- 						</p> -->

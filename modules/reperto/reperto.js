@@ -11,60 +11,47 @@
 	 * */
 	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', function($http, $location)
 	{
-		
-		/** Google maps data */
-		this.geoloc = 
-		{
-			"national": new google.maps.LatLng(48.858273,2.3473697),
-			"chaville": new google.maps.LatLng(48.807273, 2.187902),
-			"nanterre": new google.maps.LatLng(48.887187, 2.200389),
-			"nantes": new google.maps.LatLng(47.215795, -1.551078),
-			"notre dame des landes": new google.maps.LatLng(47.375285, -1.705601),
-			"hauts de seine": new google.maps.LatLng(48.8399131,2.1009993)
-		};
-		
-		this.markerList = {};
-	
-		var reperto = this;
-		$http.get("data/repertoire.json").
-	    success(function(data, status) 
-	    {
-	    	reperto.ecologie = data.thesaurus;
-	    	reperto.idees = data.idees;
-	    	reperto.initiatives = data.initiatives;
-	    	
-	    	reperto.display = {};
-	    	reperto.display.idees = reperto.idees;
-	    	reperto.display.initiatives = reperto.initiatives;
-
-	    	
-	    }).
-	    error(function(data, status) 
-	    {
-	    	console.log("Erreur lors de la recuperation du fichier json")
-	    });
-		
-		
 		this.loadThesaurus = function()
 		{
-			this.tagThesaurus(reperto.thesaurus);
+			var reperto = this;
+			$http.get("data/repertoire.json").
+		    success(function(data, status) 
+		    {
+		    	reperto.thesaurus = data.thesaurus;
+		    	reperto.idees = data.idees;
+		    	reperto.initiatives = data.initiatives;
+		    	
+		    	reperto.display = {};
+		    	reperto.display.idees = reperto.idees;
+		    	reperto.display.initiatives = reperto.initiatives;
+
+		    	reperto.tagThesaurus(reperto.thesaurus);
+		    	
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json")
+		    });
+			
 		};
 		
 
 		this.tagThesaurus = function(thesaurus)
 		{
+			this.availableFilters = {"keywords": []};
+			
+			this.idees.forEach(function(idee)
+			{
+				idee.keywords.forEach(function(keyword)
+				{
+					if (this.availableFilters.keywords.indexOf(keyword) == -1)
+					{
+						this.availableFilters.keywords.push(keyword);
+					}
+				}, this);
+			
+			}, this);
 			return;
-		};
-		
-
-		this.filterThesaurus = function(thesaurus, domId, options)
-		{
-			
-		};
-		
-		this.resetThesaurus = function(type)
-		{
-			
 		};
 		
 		
@@ -73,17 +60,6 @@
 		this.exportAsPdf = function()
 		{
 			
-		};
-		
-		this.resetInitiatives = function()
-		{
-			if (this.initiatives)
-			{
-				this.initiatives.forEach(function(i_node)
-				{
-					i_node.displayed = true;
-				}, this);
-			}
 		};
 		
 		/** Utilisé lors de la sélection d'un item dans un thésaurus */
@@ -168,7 +144,10 @@
 						initiative = JSON.search(this.initiatives, '//*[id/text()="' + initiativeRef.id + '"]');
 						if (initiative && this.display.initiatives.indexOf(initiative[0]) == -1)
 						{
-							this.display.initiatives.push(initiative[0]);
+							if (this.activeFilters.keywords.length == 0 || idee.activeFilters != undefined)
+							{
+								this.display.initiatives.push(initiative[0]);
+							}
 						}
 					}, this);
 				}
@@ -185,7 +164,7 @@
 		/** construit la liste de tous les mots clefs disponible pour le filtrage des thesaurus */
 		this.gatherAvailableFilters = function(thesaurus)
 		{
-
+			
 		};
 		
 		
@@ -193,23 +172,61 @@
 		
 		this.searchFilter = function(type, nodeId, keyEvent)
 		{
-
 		};
 		
-		this.removeFilter = function(type, filter, additive)
+		this.removeFilter = function(type, item, additive)
 		{
-
+			var indexOfKeyword = this.activeFilters.keywords.indexOf(item);
+			
+			if (indexOfKeyword != -1)
+			{
+				this.activeFilters.keywords.splice(indexOfKeyword, 1);
+				this.display.idees.forEach(function(idee)
+				{
+					
+						if (idee.activeFilters[item])
+						{
+							delete idee.activeFilters[item];
+							this.ideaDisplayed --;
+						}
+					
+				},this);
+			}
 
 		};
 		
 		this.addFilter = function(type, item, additive)
 		{
-
+			if (item === undefined)
+			{
+				return;
+			}
+			if (! this.ideaDisplayed)
+			{
+				this.ideaDisplayed = 0;
+			}
+			if (this.activeFilters.keywords.indexOf(item) == -1)
+			{
+				this.activeFilters.keywords.push(item);
+				this.display.idees.forEach(function(idee)
+				{
+					if (idee.keywords.indexOf(item) != -1)
+					{
+						if (idee.activeFilters === undefined)
+						{
+							idee.activeFilters = {};
+						}
+						this.ideaDisplayed++;
+						idee.activeFilters[item] = true;
+					}
+				},this);
+			}
+			this.updateInitiatives();
 		};
 		
 		this.saveInitiative = function(initiative)
 		{
-
+			
 		};
 		
 		this.removeSavedInitiative = function(initiative)
@@ -229,15 +246,15 @@
 		
 		this.init = function()
 		{
-			console.log("init.");
 			/** INITIALISATION */
 			
 			this.filteredActions = [];
 			
+			this.filter = "";
+			
 			this.availableFilters = 
 			{
-			    "keywords": [],
-			    "geoloc": []
+			    "keywords": []
 			};
 
 			this.activeFilters = 
@@ -257,13 +274,7 @@
 			this.showSummary = false;
 			
 			this.loadThesaurus();
-			
-			this.resetInitiatives();
-			
-			this.availableFilters = 
-			{
-					"keywords": this.gatherAvailableFilters(this.thesaurus)
-			}
+
 			
 			this.filteredInitiativeList = [];
 			this.savedInitiativeList = {};

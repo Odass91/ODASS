@@ -1,0 +1,23 @@
+<div style="position:relative">
+	<h3>Les idées 
+		<span ng-show="reperto.activeFilters.keywords.length == 0" style="font-weight: bold; color: rgba(0,0,0,0.4); font-size: 0.8em">({{reperto.display.idees.length}})</span>
+		<span ng-show="reperto.activeFilters.keywords.length != 0" style="font-weight: bold; color: rgba(0,0,0,0.4); font-size: 0.8em">({{reperto.ideaDisplayed}})</span>
+	</h3>
+	
+	<div class="col-lg-8" style="">
+		 <idees></idees>
+	 </div>
+	
+	<div class="col-lg-4" style="overflow: auto; float: right;background-color: rgba(25,25,50,0.1); border-radius: 5px; padding: 15px; margin-right: -15px; max-height: 400px; height: 400px;" >
+		<div ng-show="reperto.display.hoverIdea" style="position: absolute; background-color: rgba(0,0,0,0.6); color: white; border-radius: 5px; padding: 15px; top: 5px; bottom: 5px; left: 5px; right: 5px">
+			{{reperto.display.hoverIdea.description}}
+		</div>
+		
+		<h3 ng-show="reperto.display.section.title">{{reperto.display.section.title}}</h3>
+		<p ng-show="reperto.display.section.description">{{reperto.display.section.description}}</p>
+		<h3 ng-show="reperto.display.chapter.title">{{reperto.display.chapter.title}}</h3>
+		<p ng-show="reperto.display.chapter.description">{{reperto.display.chapter.description}}</p>
+		<p ng-show="reperto.display.idee">{{reperto.display.idee.description}}</p>
+		<p ng-show="! reperto.display.section && ! reperto.display.chapter">{{reperto.ecologie.description}}</p>
+	</div>
+	

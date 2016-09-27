@@ -1,0 +1,56 @@
+
+<div id="carousel-{{idee.id}}" class="carousel slide" data-ride="carousel" style="background-color: rgba(0,0,0,0.2)">
+	  <!-- Wrapper for slides -->
+	  <div class="carousel-inner" role="listbox" style="padding: 20x;">
+	  
+	  		<section ng-repeat="initiative in reperto.obtainExperiencesForIdea(idee) track by $index" class="initiative-item item" id="initiative-{{initiative.id}}"  ng-class="{ 'active': $first }">
+				<div class="panel panel-default" style="display: inline-block">
+					
+					<div class="panel-heading">
+						<h4 class="panel-title initiative-title">
+							<span class="">{{initiative.label}}</span>
+<!-- 							<span class="pull-right"> -->
+<!-- 								<span ng-hide="initiative.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(initiative)">&nbsp;</span>	 -->
+<!-- 								<span ng-show="initiative.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(initiative)">&nbsp;</span> -->
+<!-- 							</span> -->
+						</h4>
+					</div>
+					
+					
+					
+					<div class="panel-body">
+						<p>{{initiative.description}}</p>
+						<p ng-show="initiative.references && initiative.references.length > 0">
+							<span class="glyphicon glyphicon-globe"></span>&nbsp; 
+							<span ng-repeat="lien in initiative.references">
+								<a href="{{lien.href}}">{{lien.label}}</a><br />
+							</span>
+						</p>
+						<p ng-show="initiative.keywords.length > 0">
+							<span class="glyphicon glyphicon-tag">&nbsp;</span> 
+							<span class="tag" ng-repeat="keyword in initiative.keywords"> 
+								<span class="label label-info">{{keyword}}</span>&nbsp;
+							</span>
+							<span class="tag"> 
+								<span class="label label-default">{{initiative.geoloc}}</span>&nbsp;
+							</span>
+						</p>
+					</div>
+				</div>
+			</section>
+			
+			
+			
+	  </div>
+	
+	  <!-- Controls -->
+	  <a class="left carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="prev" ng-show="reperto.obtainExperiencesForIdea(idee).length > 1">
+	    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+	    <span class="sr-only">Previous</span>
+	  </a>
+	  <a class="right carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="next" ng-show="reperto.obtainExperiencesForIdea(idee).length > 1">
+	    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+	    <span class="sr-only">Next</span>
+	  </a>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+<section ng-repeat="idee in reperto.display.idees" class="idee-item item" id="initiative-{{initiative.id}}" ng-click="reperto.toggleDisplayInitiative(idee)"
+			 	ng-show="reperto.activeFilters.keywords.length == 0 || idee.activeFilters != undefined"
+>
+	 	
+	 	
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
+				<span class="" style="font-size:0.9">{{idee.text}}</span>
+				<span class="pull-right">
+					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
+					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
+				</span>
+			</h4>
+		</div>
+		<div class="panel-body" style="padding-bottom: 50px;">
+		
+			<p style="" ng-hide="idee.displayLong">
+				{{idee.descriptionCourte}}<br/>
+				<a href="" ng-click="idee.displayLong=true">Voir plus</a>
+			</p>
+			
+			<p style="" ng-show="idee.displayLong">
+				{{idee.description}}<br/>
+				<a href="" ng-click="idee.displayLong=null">Voir moins</a>
+			</p>
+			
+			<p ng-show="idee.references && idee.references.length > 0">
+				<span class="glyphicon glyphicon-globe"></span>&nbsp; 
+				<span ng-repeat="lien in idee.references">
+					<a href="{{lien.href}}">{{lien.label}}</a><br />
+				</span>
+			</p>
+			<p ng-show="idee.keywords.length > 0">
+				<span class="glyphicon glyphicon-tag">&nbsp;</span> 
+				<span class="tag" ng-repeat="keyword in idee.keywords"> 
+					<span class="label label-info">{{keyword}}</span>&nbsp;
+				</span>
+				<span class="tag"> 
+					<span class="label label-default">{{idee.geoloc}}</span>&nbsp;
+				</span>
+			</p>
+			
+			<experiences idee="idee" reperto="reperto"></experiences>
+		</div>
+	</div>
+</section>

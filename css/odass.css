@@ -289,6 +289,11 @@ p.red
 	overflow: auto;
 }
 
+.initiative-item 
+{
+	margin: 20px 60px !important;	
+}
+
 .initiative-item-summary .panel-body
 {
 	background: rgba(255,255,0,0.1);
@@ -355,14 +360,6 @@ p.red
 	font-family: times;
 }
 
-.idee-item
-{
-	display: inline-block;
-	width: 250px;
-	height: 250px;
-	margin: 15px;
-}
-
 .initiative-item .panel-heading, .idee-item .panel-heading
 {
 	min-height: 40px;
@@ -380,11 +377,6 @@ p.red
 }
 
 
-.carousel-inner section.item
-{
-	margin-left:100px;
-}
-
 .carousel-inner
 {
 	min-width: 200px;
@@ -394,6 +386,7 @@ p.red
 {
 	color: rgba(0,0,0,0.8);
 	background-image: none !important;
+	width: 6% !important;
 }
 .carousel-control:focus
 {

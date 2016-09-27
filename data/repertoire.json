@@ -3,7 +3,7 @@
 	"thesaurus":
 	{
 		"id": "ecologie",
-		"description": "Le répertoire national d'initiatives",
+		"description": "Le répertoire national d'experiences",
 		"nodes":
 		[
 			{
@@ -47,7 +47,7 @@
 				"text": "Que faire concrètement à plusieurs ?",
 				"keywords": ["groupe"],
 				"description": "Les actions de groupe",
-				"initiatives": [{"id": "13"},{"id": "14"},{"id": "16"}],
+				"experiences": [{"id": "13"},{"id": "14"},{"id": "16"}],
 				"nodes":
 				[
 					{
@@ -71,8 +71,9 @@
 			"text": "Le compostage, en jardin et en ville",
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["compost", "légumes", "fruits"],
+			"descriptionCourte": "Des idées pour mettre en place facilement son compostage !",
 			"description": "Près de la moitié de nos déchets sont des matières organiques compostables, donc recyclables. Le compostage est une pratique simple qui permet de contribuer efficacement à la réduction des déchets et à la production de matière organique de bonne qualité, à la ville comme à la campagne. En particulier, il est facile, utile, et inodore de composter ses déchets en appartement.",
-			"initiatives": [{"id": "13"}, {"id": "14"}]
+			"experiences": [{"id": "13"}, {"id": "14"}]
 		},
 		{
 			"id": "ecologie-2-1-2",
@@ -81,7 +82,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["gaspillage", "pollution", "déchet"],
 			"description": "",
-			"initiatives": [{"id": "15"}]
+			"experiences": [{"id": "15"}]
 		},
 		{
 			"id": "ecologie-2-1-3",
@@ -90,7 +91,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["gaspillage", "pollution", "déchet", "légumes", "fruit"],
 			"description": "Le gaspillage alimentaire représente au niveau mondial, d’après la FAO, 1/3 des aliments comestibles. Dans les pays développés, il se situe du côté de la transformation, de la distribution et de la consommation. Les consommateurs ont leur part de responsabilité et de conditionnement dans ce gaspillage en exigeant des produits ayant bel aspect, au détriment de leurs goûts et de leur valeur nutritive. Mais le consumérisme trouve sa source principale dans la publicité et le conditionnement des individus dès le plus jeune âge. Ce scandale éthique, écologique, social et économique a pris une telle dimension qu’un rapport vient d’être produit par Guillaume Garot, député et ancien ministre de l’alimentation, pour proposer des adaptations réglementaires. Cependant, les mesures proposées ne s’attaquent pas à la racine du problème. Le problème ne pourra être résolu qu’en modifiant en profondeur les comportements, les rapports de pouvoir tout au long de la chaîne alimentaire et les circuits de distribution. Pour préparer les esprits, nous avons le pouvoir en tant que citoyens de résister en modifiant nos habitudes de consommation, mais aussi par des actions à forte portée éducative et symbolique, comme le glanage, les disco soupes et l’organisation de réseaux de solidarité ville campagne.",
-			"initiatives": [{"id": "16"}, {"id": "17"}]
+			"experiences": [{"id": "16"}, {"id": "17"}]
 		},
 		{
 			"id": "ecologie-1-3-1",
@@ -99,7 +100,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Publicité", "gaspillage"],
 			"description": "Nous sommes aujourd’hui soumis à d’innombrables incitations marketing. Alors qu’à ses débuts la publicité consistait à faire connaître la réalité d’un produit, les techniques actuelles de marketing sont principalement destinées à jouer sur notre inconscient et à façonner nos désirs. La publicité est devenue « un discours idéologique qui conduit à ne plus voir les réalités de la vie, les valeurs de la vie, les dimensions de l’être et les êtres eux-mêmes que comme des marchandises qui se produisent et se vendent » (François Brune).Comment est-il possible d’y résister ? Nous pouvons renforcer nos défenses en étant davantage conscient de leur présence (voir plus loin « s’émanciper des médias, c’est possible !). Nous pouvons aussi participer à la résistance qui s’organise.",
-			"initiatives": [{"id": "10"}]
+			"experiences": [{"id": "10"}]
 		},
 		{
 			"id": "ecologie-1-3-2",
@@ -108,7 +109,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Publicité", "gaspillage"],
 			"description": "Nous pouvons aussi limiter le nombre de messages publicitaires que nous recevons.",
-			"initiatives": [{"id": "11"}, {"id": "12"}]
+			"experiences": [{"id": "11"}, {"id": "12"}]
 		},	
 		{
 			"id": "ecologie-1-2-1",
@@ -117,7 +118,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["gaspillage", "pollution"],
 			"description":"Nous sommes de plus en plus largement conditionnés par la publicité, qui tend à remplacer les habitudes familiales ou sociales pour influencer nos choix les plus simples de la vie quotidienne. Ces conditionnements véhiculent de multiples pratiques qui deviennent de plus en plus inacceptables. Il est possible de trouver des conseils ou des formations pour réapprendre les éco-gestes au quotidien. ",
-			"initiatives": [{"id": "7"}, {"id": "8"}]
+			"experiences": [{"id": "7"}, {"id": "8"}]
 		},
 		{
 			"id": "ecologie-1-2-2",
@@ -126,7 +127,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["gaspillage", "pollution"],
 			"description":"Face à une société qui nous pousse à tout acheter, il est gratifiant de retrouver le goût le temps et le savoir pour produire par soi-même. ",
-			"initiatives": [{"id": "9"}]
+			"experiences": [{"id": "9"}]
 		},	
 		{
 			"id": "ecologie-1-1-1",
@@ -135,7 +136,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Consommation", "légumes", "fruits"],
 			"description":"Face aux injonctions de la publicité pour les plats préparés, il est possible, même pour des gens très occupés, de cuisiner par soi-même. Cela revient beaucoup moins cher (une soupe maison revient 3 à 6 fois moins chères qu’une brique de soupe), et la quantité de sucre, de sel, de matières grasses et d’additifs que nous ingérons diminue radicalement. Cela permet aussi de retrouver des saveurs authentiques, et de goûter le plaisir de faire soi-même est de choisir les produits qu’on mange. Il est possible de regrouper les temps de cuisiner de congeler ou de garder au frais ce que l’on a préparé.",
-			"initiatives": [{"id": "1"}]
+			"experiences": [{"id": "1"}]
 		},
 		{
 			"id": "ecologie-1-1-2",
@@ -144,7 +145,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Consommation", "légumes", "fruits", "bio"],
 			"description":"D’une manière générale, la grande distribution fait perdre de temps dans des longs trajets en voiture, payer plus cher un grand nombre de produits en dehors de quelques produits d’appel, et nous rend prisonniers d’une spirale d’achats non contrôlés. Pour y échapper, les marchés et les ventes directes sont à privilégier. Ils permettent d’acheter des produits frais, à des producteurs locaux, avec un choix et une possibilité de comparaisons. Il existe en Île-de-France plus de 70 marchés bio.",
-			"initiatives": [{"id": "2"}, {"id": "3"}]
+			"experiences": [{"id": "2"}, {"id": "3"}]
 		},
 		{
 			"id": "ecologie-1-1-3",
@@ -153,7 +154,7 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Consommation", "légumes", "fruits", "enfants"],
 			"description":"Beaucoup de jeunes sont conditionnés à manger des plats préparés, des sucres et des féculents et ne savent plus ni choisir les fruits et légumes ni cuisiner. L’éducation dès le plus jeune âge est très importante pour donner aux enfants le goût des fruits, des légumes, d’aliments variés, et orienter leurs préférences culinaires",
-			"initiatives": [{"id": "4"}]
+			"experiences": [{"id": "4"}]
 		},
 		{
 			"id": "ecologie-1-1-4",
@@ -162,17 +163,18 @@
 			"icon": "glyphicon glyphicon-file",
 			"keywords": ["Consommation", "légumes", "fruits"],
 			"description":"La « malbouffe » est aussi le lot des moins jeunes, tout autant soumis à la publicité et aux rythmes insensés imposés par la flexibilité et l’intensification du travail. Mais rien n’est perdu ! Il est possible pour des jeunes et des adultes de transformer leurs goûts en découvrant des nouvelles saveurs.",
-			"initiatives": [{"id": "5"}, {"id": "6"}]
+			"experiences": [{"id": "5"}, {"id": "6"}]
 		}
 	],
-	"initiatives":
+	"experiences":
 	[
 		{
 			"id": "1",
 			"label": "Recettes végétariennes",
 			"keywords": ["Consommation", "légumes", "fruits"],
 			"geoloc": "national",
-			"description": "Pour des idées de recettes végétariennes",
+			"description": "Pour des idées de recettes végétariennes, utilisez google, c'est super google et tellement respectueux de la vie des gens hahahaha",
+			"descriptionCourte": "Pour des idées de recettes végétariennes",
 			"references": [{"label": "http://www.sosbouffe.fr/recettes-vegetariennes/potages-soupes.html", "href": "http://www.sosbouffe.fr/recettes-vegetariennes/potages-soupes.html"}]
 		},
 		{

@@ -19,11 +19,11 @@
 		    {
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
-		    	reperto.initiatives = data.initiatives;
+		    	reperto.experiences = data.experiences;
 		    	
 		    	reperto.display = {};
 		    	reperto.display.idees = reperto.idees;
-		    	reperto.display.initiatives = reperto.initiatives;
+		    	reperto.display.experiences = reperto.experiences;
 
 		    	reperto.tagThesaurus(reperto.thesaurus);
 		    	
@@ -40,6 +40,8 @@
 		{
 			this.availableFilters = {"keywords": []};
 			
+			/** Construit la liste de mots clefs */
+			
 			this.idees.forEach(function(idee)
 			{
 				idee.keywords.forEach(function(keyword)
@@ -51,7 +53,34 @@
 				}, this);
 			
 			}, this);
+			
 			return;
+		};
+		
+		this.obtainExperiencesForIdea = function(idea)
+		{
+			var experiences = [];
+			
+			idea.experiences.forEach(function(experience)
+			{
+				experiences.push(this.obtainExperienceObjectFromId(experience.id));
+			}, this);
+			
+			return experiences;
+		};
+		
+		this.obtainExperienceObjectFromId = function(id)
+		{
+			var experience = JSON.search(this.experiences,  '//*[id/text()="' + id + '"]');
+			if (experience)
+			{
+				experience = experience[0];
+			}
+			else
+			{
+				console.log("ERROR", id, this.experiences);
+			}
+			return experience;
 		};
 		
 		
@@ -114,49 +143,13 @@
 
 		this.toggleDisplayInitiative = function(idee)
 		{
-			if (idee.isFocus)
-			{
-				delete idee.isFocus;
-				this.updateInitiatives();
-			}
-			else
-			{
-				idee.isFocus = true;
-				this.updateInitiatives(idee);
-			}
+			
 		};
 		
 		this.updateInitiatives = function(idee)
 		{
-			this.display.initiatives = [];
 			
-			var ideeList = idee ? [idee] : this.display.idees;
-			
-			// On affiche uniquement les expériences liées aux idées affichées
-			
-			ideeList.forEach(function(idee)
-			{
-				if (idee.initiatives)
-				{
-					idee.initiatives.forEach(function(initiativeRef)
-					{
-						var initiative = null;
-						initiative = JSON.search(this.initiatives, '//*[id/text()="' + initiativeRef.id + '"]');
-						if (initiative && this.display.initiatives.indexOf(initiative[0]) == -1)
-						{
-							if (this.activeFilters.keywords.length == 0 || idee.activeFilters != undefined)
-							{
-								this.display.initiatives.push(initiative[0]);
-							}
-						}
-					}, this);
-				}
-			}, this);
-			
-			window.setTimeout(function()
-			{
-				$(".initiative-item")[0].className += " active";
-			}, 500);
+
 		};
 		
 		/*** GESTION DES FILTRES ****/
@@ -221,7 +214,6 @@
 					}
 				},this);
 			}
-			this.updateInitiatives();
 		};
 		
 		this.saveInitiative = function(initiative)
@@ -274,16 +266,10 @@
 			this.showSummary = false;
 			
 			this.loadThesaurus();
-
 			
 			this.filteredInitiativeList = [];
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
-			
-			window.setTimeout(function()
-			{
-				$(".initiative-item")[0].className += " active";
-			}, 500);
 		}
 
 		
@@ -295,6 +281,18 @@
 
 	odass.directive("filtersBox", function(){return{restrict: 'E', templateUrl: 'modules/reperto/filters-box.html'};});
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'modules/reperto/thesaurus.html'};});
-	odass.directive("initiativesBox", function(){return{restrict: 'E', templateUrl: 'modules/reperto/initiatives-box.html'};});
+	odass.directive("repertoireIdees", function(){return{restrict: 'E', templateUrl: 'modules/reperto/repertoire-idees.html'};});
+	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'modules/reperto/idees.html'};});
+	odass.directive("experiences", function()
+	{
+		return {
+			restrict: 'E',
+			scope: {
+				idee: '=idee',
+				reperto: '=reperto'
+			},
+			templateUrl: 'modules/reperto/experiences.html'
+		};
+	});
 	
 })();

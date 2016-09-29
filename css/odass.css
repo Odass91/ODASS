@@ -362,13 +362,12 @@ p.red
 
 .initiative-item .panel-heading, .idee-item .panel-heading
 {
-	min-height: 40px;
-	padding: 5px !important;
+	
 }
 .initiative-item .panel-heading h4, .idee-item .panel-heading h4
 {
 
-	font-size: 12px !important;
+	font-weight: bold;
 }
 
 #initiatives-area .initiative-title

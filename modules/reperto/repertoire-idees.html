@@ -13,11 +13,11 @@
 			{{reperto.display.hoverIdea.description}}
 		</div>
 		
-		<h3 ng-show="reperto.display.section.title">{{reperto.display.section.title}}</h3>
-		<p ng-show="reperto.display.section.description">{{reperto.display.section.description}}</p>
-		<h3 ng-show="reperto.display.chapter.title">{{reperto.display.chapter.title}}</h3>
-		<p ng-show="reperto.display.chapter.description">{{reperto.display.chapter.description}}</p>
-		<p ng-show="reperto.display.idee">{{reperto.display.idee.description}}</p>
-		<p ng-show="! reperto.display.section && ! reperto.display.chapter">{{reperto.ecologie.description}}</p>
+		<h3 ng-show="reperto.display.section.titre" ng-bind-html="reperto.display.section.titre"></h3>
+		<p ng-show="reperto.display.section.description" ng-bind-html="reperto.display.section.description"></p>
+		<h3 ng-show="reperto.display.chapter.titre" ng-bind-html="reperto.display.chapter.titre"></h3>
+		<p ng-show="reperto.display.chapter.description" ng-bind-html="reperto.display.chapter.description"></p>
+		<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
+		<p ng-show="! reperto.display.section && ! reperto.display.chapter"  ng-bind-html="reperto.thesaurus.description"></p>
 	</div>
 	

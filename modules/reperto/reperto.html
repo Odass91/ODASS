@@ -23,7 +23,7 @@
 			</div>
 			
 			<div class="col-md-3">
-				<filters-box></filters-box>
+<!-- 				<filters-box></filters-box> -->
 			</div>
 			
 <!-- 			<div class="col-md-1"> -->
@@ -44,8 +44,8 @@
 				<section>
 				
 					<p>Répertoire : 
-						<a ng-click="reperto.init()">{{reperto.thesaurus.id}}</a>
-						<a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a>
+						<a ng-click="reperto.init()">{{reperto.thesaurus.titre}}</a>
+						<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 					</p>
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -54,18 +54,18 @@
 					  	<div class="panel panel-default" ng-repeat="item in reperto.thesaurus.nodes">
 							<div class="panel-heading" role="tab" id="headingOne">
 						      	<h4 class="panel-title">
-						      		<a ng-click="reperto.selectSection(item)">{{item.text}}</a>
+						      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
 						        	<a class="glyphicon glyphicon-play" role="button" data-toggle="collapse" href="#{{item.id}}" aria-expanded="false" aria-controls="collapseExample" 
 						        		>
 						        	</a>
 						      	</h4>
 						    </div>
-						    <div id="{{item.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+						    <div id="{{item.id}}" class="panel-collapse" role="tabpanel" aria-labelledby="headingOne" ng-class="{ 'collapse': ! $first}">
 						      	<div class="panel-body">
 						        	<ol>
 							        	<li ng-repeat="subItem in item.nodes">
 							          		<div>
-							            		<a href="" ng-click="reperto.selectChapter(subItem)">{{subItem.text}}</a>
+							            		<a href="" ng-click="reperto.selectChapter(subItem)">{{subItem.titre}}</a>
 							          		</div>
 							        	</li>
 							      	</ol>

@@ -6,7 +6,7 @@
 	<div class="panel panel-success">
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="" style="font-size:0.9">{{idee.text}}</span>
+				<span class="">{{idee.titre}}</span>
 				<span class="pull-right">
 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
@@ -16,12 +16,12 @@
 		<div class="panel-body" style="padding-bottom: 50px;">
 		
 			<p style="" ng-hide="idee.displayLong">
-				{{idee.descriptionCourte}}<br/>
+				<span ng-bind-html="idee.description"></span><br/>
 				<a href="" ng-click="idee.displayLong=true">Voir plus</a>
 			</p>
 			
 			<p style="" ng-show="idee.displayLong">
-				{{idee.description}}<br/>
+				<span ng-bind-html="idee.descriptionlongue"></span<br/>
 				<a href="" ng-click="idee.displayLong=null">Voir moins</a>
 			</p>
 			
@@ -41,7 +41,7 @@
 				</span>
 			</p>
 			
-			<experiences idee="idee" reperto="reperto"></experiences>
+			<!-- experiences idee="idee" reperto="reperto"></experiences-->
 		</div>
 	</div>
 </section>

@@ -2,12 +2,6 @@
 {
 	
 	/** 
-	 * 
-	 * TODO : 
-	 * 		-> suppression de filtre
-	 * 		-> sauvegarde des favoris
-	 *    	-> ajustement de la liste de suggestions de mot-clefs
-	 * 
 	 * */
 	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', function($http, $location)
 	{
@@ -19,13 +13,17 @@
 		    {
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
-		    	reperto.experiences = data.experiences;
+		    	reperto.experiences = {};
+		    	
+		    	reperto.cache = {};
+		    	reperto.cache.idees = data.idees;
 		    	
 		    	reperto.display = {};
-		    	reperto.display.idees = reperto.idees;
-		    	reperto.display.experiences = reperto.experiences;
-
-		    	reperto.tagThesaurus(reperto.thesaurus);
+		    	reperto.display.idees = data.idees;
+		    	reperto.display.experiences = {};
+		    	//reperto.tagThesaurus(reperto.thesaurus);
+		    	
+		    	
 		    	
 		    }).
 		    error(function(data, status) 
@@ -39,20 +37,17 @@
 		this.tagThesaurus = function(thesaurus)
 		{
 			this.availableFilters = {"keywords": []};
-			
-			/** Construit la liste de mots clefs */
-			
-			this.idees.forEach(function(idee)
-			{
-				idee.keywords.forEach(function(keyword)
-				{
-					if (this.availableFilters.keywords.indexOf(keyword) == -1)
-					{
-						this.availableFilters.keywords.push(keyword);
-					}
-				}, this);
-			
-			}, this);
+			var reperto = this;
+			$http.get("http://perso.odass.org/api/getmotclefs/9").
+		    success(function(data, status) 
+		    {
+		    	reperto.availableFilters = data;
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json - keywords");
+		    });
+
 			
 			return;
 		};
@@ -60,27 +55,24 @@
 		this.obtainExperiencesForIdea = function(idea)
 		{
 			var experiences = [];
-			
-			idea.experiences.forEach(function(experience)
-			{
-				experiences.push(this.obtainExperienceObjectFromId(experience.id));
-			}, this);
-			
+			var reperto = this;
+
+			$http.get("http://perso.odass.org/api/getexperiences/" + idea.id).
+		    success(function(data, status) 
+		    {
+		    	idea.experiences = data;
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json - experiences");
+		    });
+
 			return experiences;
 		};
 		
 		this.obtainExperienceObjectFromId = function(id)
 		{
-			var experience = JSON.search(this.experiences,  '//*[id/text()="' + id + '"]');
-			if (experience)
-			{
-				experience = experience[0];
-			}
-			else
-			{
-				console.log("ERROR", id, this.experiences);
-			}
-			return experience;
+			return {};
 		};
 		
 		
@@ -105,7 +97,7 @@
 			this.updateInitiatives();
 			
 			this.display.section = {};
-			this.display.section.title = section.text;
+			this.display.section.titre = section.titre;
 			this.display.section.description = section.description;
 			this.display.chapter = {};
 		};
@@ -117,13 +109,16 @@
 			this.updateInitiatives();
 			
 			this.display.chapter = {};
-			this.display.chapter.title = chapter.text;
+			this.display.chapter.titre = chapter.titre;
 			this.display.chapter.description = chapter.description;
 		};
 		
 		this.gatherIdeas = function(section)
 		{
 			var idees = JSON.search(this.idees, '//*[parent/text()="' + section.id + '"]');
+			console.log(section.id, idees)
+			
+			
 			idees.forEach(function(idee)
 			{
 				if (this.display.idees.indexOf(idee) == -1)

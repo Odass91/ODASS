@@ -3,36 +3,30 @@
 	  <!-- Wrapper for slides -->
 	  <div class="carousel-inner" role="listbox" style="padding: 20x;">
 	  
-	  		<section ng-repeat="initiative in reperto.obtainExperiencesForIdea(idee) track by $index" class="initiative-item item" id="initiative-{{initiative.id}}"  ng-class="{ 'active': $first }">
+	  		<section ng-repeat="experience in idee.display.experiences track by $index" class="initiative-item item" id="experience-{{experience.id}}"  ng-class="{ 'active': $first }">
 				<div class="panel panel-default" style="display: inline-block">
 					
 					<div class="panel-heading">
 						<h4 class="panel-title initiative-title">
-							<span class="">{{initiative.label}}</span>
-<!-- 							<span class="pull-right"> -->
-<!-- 								<span ng-hide="initiative.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(initiative)">&nbsp;</span>	 -->
-<!-- 								<span ng-show="initiative.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(initiative)">&nbsp;</span> -->
-<!-- 							</span> -->
+							<span class="" ng-bind-html="experience.titre"></span>
 						</h4>
 					</div>
 					
-					
-					
 					<div class="panel-body">
-						<p>{{initiative.description}}</p>
-						<p ng-show="initiative.references && initiative.references.length > 0">
+						<p ng-bind-html="experience.description"></p>
+						<p ng-show="experience.references && experience.references.length > 0">
 							<span class="glyphicon glyphicon-globe"></span>&nbsp; 
-							<span ng-repeat="lien in initiative.references">
+							<span ng-repeat="lien in experience.references">
 								<a href="{{lien.href}}">{{lien.label}}</a><br />
 							</span>
 						</p>
-						<p ng-show="initiative.keywords.length > 0">
+						<p ng-show="experience.keywords.length > 0">
 							<span class="glyphicon glyphicon-tag">&nbsp;</span> 
-							<span class="tag" ng-repeat="keyword in initiative.keywords"> 
+							<span class="tag" ng-repeat="keyword in experience.keywords"> 
 								<span class="label label-info">{{keyword}}</span>&nbsp;
 							</span>
 							<span class="tag"> 
-								<span class="label label-default">{{initiative.geoloc}}</span>&nbsp;
+								<span class="label label-default">{{experience.geoloc}}</span>&nbsp;
 							</span>
 						</p>
 					</div>
@@ -44,11 +38,11 @@
 	  </div>
 	
 	  <!-- Controls -->
-	  <a class="left carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="prev" ng-show="reperto.obtainExperiencesForIdea(idee).length > 1">
+	  <a class="left carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="prev" ng-show="idee.display.experiences.length > 1">
 	    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
 	    <span class="sr-only">Previous</span>
 	  </a>
-	  <a class="right carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="next" ng-show="reperto.obtainExperiencesForIdea(idee).length > 1">
+	  <a class="right carousel-control" href="#carousel-{{idee.id}}" role="button" data-slide="next" ng-show="idee.display.experiences.length > 1">
 	    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 	    <span class="sr-only">Next</span>
 	  </a>

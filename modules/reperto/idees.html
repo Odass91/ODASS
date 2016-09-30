@@ -41,7 +41,11 @@
 				</span>
 			</p>
 			
-			<!-- experiences idee="idee" reperto="reperto"></experiences-->
+			<div ng-show="!idee.display.experiences" style="color: rgba(0,0,0,0.6)" class="text-center">
+				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
+			</div>
+			
+			<experiences idee="idee" reperto="reperto" ng-show="idee.display.experiences && idee.display.experiences.length > 0"></experiences>
 		</div>
 	</div>
 </section>

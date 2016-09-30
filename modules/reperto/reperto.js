@@ -11,6 +11,7 @@
 			$http.get("data/repertoire.json").
 		    success(function(data, status) 
 		    {
+//		    	$("#patience").modal({"show": true, "backdrop": "static"});
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
 		    	reperto.experiences = {};
@@ -21,9 +22,8 @@
 		    	reperto.display = {};
 		    	reperto.display.idees = data.idees;
 		    	reperto.display.experiences = {};
-		    	//reperto.tagThesaurus(reperto.thesaurus);
 		    	
-		    	
+		    	reperto.obtainExperiencesForIdeas();
 		    	
 		    }).
 		    error(function(data, status) 
@@ -52,35 +52,49 @@
 			return;
 		};
 		
-		this.obtainExperiencesForIdea = function(idea)
+		this.obtainExperiencesForIdeas = function()
 		{
 			var experiences = [];
 			var reperto = this;
 
-			$http.get("http://perso.odass.org/api/getexperiences/" + idea.id).
+			
+			this.display.idees.forEach(function(idee)
+			{
+				this.obtainExperiencesForIdea(idee);
+			}, this);
+		};
+		
+		this.obtainExperiencesForIdea = function(idee)
+		{
+			
+			$http.get("http://jeu.odass.org/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
 		    {
-		    	idea.experiences = data;
+				idee.display = {};
+				
+				if (data.experiences)
+				{
+					idee.display.experiences = data.experiences;
+				}
+				else
+				{
+					idee.display.experiences  = [];
+				}
 		    }).
 		    error(function(data, status) 
 		    {
+				idee.display = {};
+				idee.display.experiences  = [];
 		    	console.log("Erreur lors de la recuperation du fichier json - experiences");
 		    });
-
-			return experiences;
 		};
 		
-		this.obtainExperienceObjectFromId = function(id)
-		{
-			return {};
-		};
 		
 		
 		/** FONCTIONS ANNEXES & UTILITAIRES */
 		
 		this.exportAsPdf = function()
 		{
-			
 		};
 		
 		/** Utilisé lors de la sélection d'un item dans un thésaurus */
@@ -116,8 +130,6 @@
 		this.gatherIdeas = function(section)
 		{
 			var idees = JSON.search(this.idees, '//*[parent/text()="' + section.id + '"]');
-			console.log(section.id, idees)
-			
 			
 			idees.forEach(function(idee)
 			{

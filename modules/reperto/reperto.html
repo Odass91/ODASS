@@ -43,29 +43,38 @@
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
 				
-					<p>Répertoire : 
-						<a ng-click="reperto.init()">{{reperto.thesaurus.titre}}</a>
+					<p>
+					
+						<ol class="breadcrumb">
+						  <li ng-click="reperto.init()">
+						  	<a href="#">{{reperto.display.guide.titre}}</a>
+						  </li>
+						  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.section">
+						  	<a href="#">{{reperto.display.section.titre}}</a>
+						  </li>
+						  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.chapitre">
+						  	<span>{{reperto.display.chapitre.titre}}</span>
+						  </li>
+						</ol>
 						<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 					</p>
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					  	
-					  	
 					  	<div class="panel panel-default" ng-repeat="item in reperto.thesaurus.nodes">
 							<div class="panel-heading" role="tab" id="headingOne">
-						      	<h4 class="panel-title">
+						      	<h4 class="panel-title" data-toggle="collapse" href="#{{item.id}}">
 						      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
-						        	<a class="glyphicon glyphicon-play" role="button" data-toggle="collapse" href="#{{item.id}}" aria-expanded="false" aria-controls="collapseExample" 
-						        		>
-						        	</a>
+<!-- 						        	<a class="glyphicon glyphicon-menu-down" role="button" ng-class="{ 'glyphicon-menu-down': $first}"></a> -->
 						      	</h4>
 						    </div>
+						    
 						    <div id="{{item.id}}" class="panel-collapse" role="tabpanel" aria-labelledby="headingOne" ng-class="{ 'collapse': ! $first}">
 						      	<div class="panel-body">
 						        	<ol>
 							        	<li ng-repeat="subItem in item.nodes">
 							          		<div>
-							            		<a href="" ng-click="reperto.selectChapter(subItem)">{{subItem.titre}}</a>
+							            		<a href="" ng-click="reperto.selectChapter(item, subItem)">{{subItem.titre}}</a>
 							          		</div>
 							        	</li>
 							      	</ol>
@@ -80,9 +89,7 @@
 
 			<!--  COLONNE PRINCIPALE  -->
 			<div class="col-md-5">
-				<section id="thesaurus_metadata" class="">
-					
-				</section>
+				<section id="thesaurus_metadata" class=""></section>
 			</div>
 			
 			<div class="col-md-7" id="initiatives-area">

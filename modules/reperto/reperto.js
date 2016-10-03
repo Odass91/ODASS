@@ -8,7 +8,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-			$http.get("data/repertoire.json").
+			$http.get("http://jeu.odass.org/api/getjsonthesaurus/9").
 		    success(function(data, status) 
 		    {
 //		    	$("#patience").modal({"show": true, "backdrop": "static"});
@@ -23,6 +23,8 @@
 		    	reperto.display.idees = data.idees;
 		    	reperto.display.experiences = {};
 		    	
+		    	
+		    	reperto.display.guide = reperto.thesaurus;
 		    	reperto.obtainExperiencesForIdeas();
 		    	
 		    }).
@@ -66,7 +68,6 @@
 		
 		this.obtainExperiencesForIdea = function(idee)
 		{
-			
 			$http.get("http://jeu.odass.org/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
 		    {
@@ -75,6 +76,10 @@
 				if (data.experiences)
 				{
 					idee.display.experiences = data.experiences;
+					idee.display.experiences.forEach(function(experience){
+						experience.display = {};
+						experience.display.format = "court";
+					}, this);
 				}
 				else
 				{
@@ -110,21 +115,19 @@
 			this.gatherIdeas(section);
 			this.updateInitiatives();
 			
-			this.display.section = {};
-			this.display.section.titre = section.titre;
-			this.display.section.description = section.description;
-			this.display.chapter = {};
+			this.display.section = section;
+			this.display.chapitre = null;
 		};
 		
-		this.selectChapter = function(chapter)
+		this.selectChapter = function(section, chapitre)
 		{
 			this.display.idees = [];
-			this.gatherIdeas(chapter);
+			this.gatherIdeas(chapitre);
 			this.updateInitiatives();
 			
-			this.display.chapter = {};
-			this.display.chapter.titre = chapter.titre;
-			this.display.chapter.description = chapter.description;
+			this.display.section = section;
+			this.display.chapitre = chapitre;
+			
 		};
 		
 		this.gatherIdeas = function(section)
@@ -246,6 +249,8 @@
 		this.init = function()
 		{
 			/** INITIALISATION */
+			
+			this.display = null;
 			
 			this.filteredActions = [];
 			

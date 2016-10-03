@@ -7,22 +7,22 @@
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="">{{idee.titre}}</span>
-				<span class="pull-right">
-					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
-					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
-				</span>
+<!-- 				<span class="pull-right"> -->
+<!-- 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	 -->
+<!-- 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span> -->
+<!-- 				</span> -->
 			</h4>
 		</div>
 		<div class="panel-body" style="padding-bottom: 50px;">
 		
 			<p style="" ng-hide="idee.displayLong">
-				<span ng-bind-html="idee.description"></span><br/>
+				<span ng-bind-html="idee.description"></span>
 				<a href="" ng-click="idee.displayLong=true">Voir plus</a>
 			</p>
 			
 			<p style="" ng-show="idee.displayLong">
-				<span ng-bind-html="idee.descriptionlongue"></span<br/>
-				<a href="" ng-click="idee.displayLong=null">Voir moins</a>
+				<span ng-bind-html="idee.descriptionlongue"></span>
+				<a href="" ng-click="idee.displayLong=false">Voir moins</a>
 			</p>
 			
 			<p ng-show="idee.references && idee.references.length > 0">

@@ -8,15 +8,20 @@
 		 <idees></idees>
 	 </div>
 	
-	<div class="col-lg-4" style="overflow: auto; float: right;background-color: rgba(25,25,50,0.1); border-radius: 5px; padding: 15px; margin-right: -15px; max-height: 400px; height: 400px;" >
-		<div ng-show="reperto.display.hoverIdea" style="position: absolute; background-color: rgba(0,0,0,0.6); color: white; border-radius: 5px; padding: 15px; top: 5px; bottom: 5px; left: 5px; right: 5px">
-			{{reperto.display.hoverIdea.description}}
-		</div>
+	<div class="col-lg-4" style="float: right;background-color: rgba(25,25,50,0.1); border-radius: 5px; padding: 15px; margin-right: -15px;">
 		
-		<h3 ng-show="reperto.display.section.titre" ng-bind-html="reperto.display.section.titre"></h3>
-		<p ng-show="reperto.display.section.description" ng-bind-html="reperto.display.section.description"></p>
-		<h3 ng-show="reperto.display.chapter.titre" ng-bind-html="reperto.display.chapter.titre"></h3>
-		<p ng-show="reperto.display.chapter.description" ng-bind-html="reperto.display.chapter.description"></p>
+		<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
+		<p ng-show="reperto.display.section && ! reperto.display.chapitre" ng-bind-html="reperto.display.section.descriptionlongue"></p>
+		<p ng-show="reperto.display.section && reperto.display.chapitre" ng-bind-html="reperto.display.section.description"></p>
+		
+		<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
+		<p ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.descriptionlongue"></p>
+		
+		
+		
+		
+		
+		
 		<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
 		<p ng-show="! reperto.display.section && ! reperto.display.chapter"  ng-bind-html="reperto.thesaurus.description"></p>
 	</div>

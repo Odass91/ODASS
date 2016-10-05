@@ -4,12 +4,6 @@
 
 		<section id="annuaire-header" class="row">
 			<div class="col-md-4">
-				<a href="http://www.associations-citoyennes.net/"> 
-					<img src="images/logo-CAC.jpg" alt="Responsive image" height="75px" width="500px"> </img>
-				</a>
-			</div>
-			
-			<div class="col-md-4">
 				<p ng-show="reperto.activeFilters.keywords.length > 0">
 					Filtres actifs :
 					<span ng-show="reperto.activeFilters.keywords.length > 0">
@@ -23,6 +17,7 @@
 			</div>
 			
 			<div class="col-md-3">
+				
 <!-- 				<filters-box></filters-box> -->
 			</div>
 			
@@ -38,25 +33,15 @@
 		</section>
 		
 		<section>
-			<p>
-				<ol class="breadcrumb" style="display: inline-block">
-				  <li ng-click="reperto.init()">
-				  	<a href="#">{{reperto.display.guide.titre}}</a>
-				  </li>
-				  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.section">
-				  	<a href="#">{{reperto.display.section.titre}}</a>
-				  </li>
-				  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.chapitre">
-				  	<span>{{reperto.display.chapitre.titre}}</span>
-				  </li>
-				</ol>
-				<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
-			</p>
+			
+			
 		</section>
 					
 		<section id="annuaire-body" class="row">
 			<div class="col-md-3">
-
+				<a href="http://www.associations-citoyennes.net/"> 
+					<img src="images/logo-CAC.jpg" alt="Responsive image" height="75px" width="500px"> </img>
+				</a>
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
 				
@@ -94,6 +79,23 @@
 			</div>
 			
 			<div class="col-md-9" id="initiatives-area">
+				<p>
+					<ol class="breadcrumb" style="display: inline-block">
+					  <li ng-click="reperto.init()">
+					  	
+						<span class="glyphicon glyphicon-book"></span>
+						<a href="#">{{reperto.display.guide.titre}}</a>
+					  </li>
+					  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.section">
+					  	<a href="#">{{reperto.display.section.titre}}</a>
+					  </li>
+					  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.chapitre">
+					  	<span>{{reperto.display.chapitre.titre}}</span>
+					  </li>
+					</ol>
+					<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
+				</p>
+			
 				<repertoire-idees></repertoire-idees>
 			</div>
 			

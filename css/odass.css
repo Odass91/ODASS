@@ -99,12 +99,14 @@ body
  	margin: 0px;
   	padding: 0px;
   	margin-bottom: 100px;
-
-	background: url("../images/background.png") !important;
+	
 	background-size: cover;
 }
 
-
+body.loggedin
+{
+	background: url("../images/background.png") !important;
+}
 
 
 * 

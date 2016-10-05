@@ -19,7 +19,7 @@
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc&libraries=places" type="text/javascript"></script>
 	</head>
 
-	<body ng-controller="OdassController as odass">
+	<body ng-controller="OdassController as odass" ng-class="{'loggedin' : odass.user.loggedIn}">
 	
 		<div class="container-fluid page-wrap">
 			<navbar-logged-off></navbar-logged-off>

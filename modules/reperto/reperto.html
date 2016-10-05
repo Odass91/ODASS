@@ -36,28 +36,29 @@
 <!-- 			</div> -->
 			
 		</section>
-
+		
+		<section>
+			<p>
+				<ol class="breadcrumb" style="display: inline-block">
+				  <li ng-click="reperto.init()">
+				  	<a href="#">{{reperto.display.guide.titre}}</a>
+				  </li>
+				  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.section">
+				  	<a href="#">{{reperto.display.section.titre}}</a>
+				  </li>
+				  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.chapitre">
+				  	<span>{{reperto.display.chapitre.titre}}</span>
+				  </li>
+				</ol>
+				<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
+			</p>
+		</section>
+					
 		<section id="annuaire-body" class="row">
-			<div class="col-md-4">
+			<div class="col-md-3">
 
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
-				
-					<p>
-					
-						<ol class="breadcrumb">
-						  <li ng-click="reperto.init()">
-						  	<a href="#">{{reperto.display.guide.titre}}</a>
-						  </li>
-						  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.section">
-						  	<a href="#">{{reperto.display.section.titre}}</a>
-						  </li>
-						  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.chapitre">
-						  	<span>{{reperto.display.chapitre.titre}}</span>
-						  </li>
-						</ol>
-						<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
-					</p>
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					  	

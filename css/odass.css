@@ -1,10 +1,78 @@
-@media screen and (max-width: 990px)
+@media all and (max-width: 990px)
 {
 	.odass-modal 
 	{
    	 width: 95%; /* either % (e.g. 60%) or px (400px) */
     }
 }
+
+
+@media all and (max-width : 1200px)
+{
+  	.modal-footer .glyphicon
+	{
+		font-size: 18px !important;
+	}
+
+	.label .glyphicon
+	{
+		font-size: 8px !important;
+	}
+ 
+	#thesaurus-ecologie-tree a, #thesaurus_metadata p
+	{
+		font-size: 10px !important;
+	}
+	
+	a, p, span, li, div
+	{
+		font-size: 11px !important;
+	}
+
+	.glyphicon, .modal-footer button .glyphicon, .modal-footer a .glyphicon, #initiatives-area .initiative-title, .panel-title, .score
+	{
+		font-size: 12px !important;
+	}
+	
+	h3
+	{
+		font-size: 16px !important;
+	}
+	
+	
+}
+
+
+
+@media all and (min-width : 1200px)
+{
+  	.modal-footer .glyphicon
+	{
+		font-size: 25px !important;
+	}
+
+	.label .glyphicon
+	{
+		font-size: 10px !important;
+	}
+ 
+	#thesaurus-ecologie-tree a, #thesaurus_metadata p
+	{
+		font-size: 12px !important;
+	}
+
+	a, p, span, li, div, .glyphicon, .modal-footer button .glyphicon, .modal-footer a .glyphicon, #initiatives-area .initiative-title, .panel-title, .score
+	{
+		font-size: 14px !important;
+	}
+	
+	h3
+	{
+		font-size: 20px !important;
+	}
+}
+
+
 
 
 
@@ -29,42 +97,40 @@ body
 
 
 
-* {
-  margin: 0;
+* 
+{
+  	margin: 0;
 	font-family: sans-serif, arial;
-	font-size: 1em;
 }
 
-html, body {
-  height: 100%;
+html, body 
+{
+  	height: 100%;
 }
-.page-wrap {
-  min-height: 100%;
-  /* equal to footer height */
-  margin-bottom: -42px; 
+.page-wrap 
+{
+	min-height: 100%;
+	/* equal to footer height */
+	margin-bottom: -42px; 
 }
-.page-wrap:after {
+.page-wrap:after 
+{
   content: "";
   display: block;
 }
-.footer, .page-wrap:after {
+.footer, .page-wrap:after 
+{
   height: 42px; 
 }
-.footer {
-  background: orange;
+.footer 
+{
+  	background: orange;
 	background-color: #f8f8f8;
 	border: 1px solid #e7e7e7;
 }
 
-p
-{
-	font-family: sans-serif, arial;
-	font-size: 1em;
-}
-
 h1, h2, h3, h4
 {
-	font-family: sans-serif, arial;
 	text-transform: uppercase;
 }
 
@@ -93,13 +159,7 @@ li.answer.active
 
 .score
 {
-	font-size: 1.2em;
 	margin-bottom: 20px;
-}
-
-.glyphicon
-{
-	font-size: 14px;
 }
 
 .modal-footer
@@ -109,13 +169,11 @@ li.answer.active
 
 .modal-footer .glyphicon
 {
-	font-size: 25px;
 	cursor: pointer;
 }
 
 .modal-footer button .glyphicon, .modal-footer a .glyphicon
 {
-	font-size: 14px;
 	cursor: pointer;
 }
 
@@ -217,11 +275,6 @@ p.red
 	color: rgb(35, 144, 64);
 }
 
-.label .glyphicon
-{
-	font-size: 10px;
-}
-
 .icon-action
 {
 	cursor: pointer;
@@ -232,64 +285,6 @@ p.red
 {
 	padding-top: 20px;
 }
-.carte
-{
-	
-   -webkit-border-top-right-radius: 3px;
-	-webkit-border-bottom-right-radius: 3px;
-	-moz-border-radius-topright: 3px;
-	-moz-border-radius-bottomright: 3px;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px; 
-	
-	border: 1px rgba(0,0,0,1) solid;
-  	box-shadow: 0px 6px 12px #aaa;
-    
-    padding: 5px;
-    position: relative;
-}
-
-.carte.over
-{
-	
-	border: 2px rgba(0,0,0,1) solid;
-	opacity:0.2;
-	background-color: rgba(0,0,0,0.1);
-}
-
-
-.carte .handle
-{
-	
-}
-.carte .corps
-{
-	padding: 10px;
-}
-
-.carte .tooltip
-{
-	max-height: 40px;
-	height: 40px;
-	width: 200px !important;
-	max-width: 400px !important;
-	position:absolute;
-	bottom: -40px;
-	opacity: 0.9;
-}
-
-.carte .tooltip .tooltip-arrow
-{
-	left: 15px;
-}
-
-.carte_preview
-{
-	font-size: 10px;
-	padding: 5px !important;
-}
-
-
 
 
 /** CAC */
@@ -315,9 +310,6 @@ p.red
   white-space: nowrap;
   width: 100%;                   
   overflow: hidden;              
-  /* "overflow" doit être différent
-  de "visible" */ 
-
   text-overflow: ellipsis;
 }
 
@@ -360,15 +352,9 @@ p.red
  	padding: 5px;
  	margin: 5px;
  }
- 
- #thesaurus-ecologie-tree a
-{
-	font-size: 12px !important;
-}
 
 #thesaurus_metadata p
 {
-	font-size: 12px !important;
 	font-family: times;
 }
 
@@ -381,12 +367,6 @@ p.red
 
 	font-weight: bold;
 }
-
-#initiatives-area .initiative-title
-{
-	font-size: 14px;
-}
-
 
 .carousel-inner
 {

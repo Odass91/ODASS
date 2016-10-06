@@ -23,8 +23,11 @@
 		    	reperto.display.idees = data.idees;
 		    	reperto.display.experiences = {};
 		    	
+		    	reperto.display.section = null;
+		    	reperto.display.chapitre = null;
 		    	
 		    	reperto.display.guide = reperto.thesaurus;
+		    	reperto.display.intro = true;
 		    	reperto.obtainExperiencesForIdeas();
 		    	
 		    }).
@@ -115,8 +118,10 @@
 			this.gatherIdeas(section);
 			this.updateInitiatives();
 			console.log(section);
+			
 			this.display.section = section;
 			this.display.chapitre = null;
+			this.display.intro = null;
 		};
 		
 		this.selectChapter = function(section, chapitre)
@@ -124,7 +129,8 @@
 			this.display.idees = [];
 			this.gatherIdeas(chapitre);
 			this.updateInitiatives();
-			
+
+			this.display.intro = null;
 			this.display.section = null;
 			this.display.chapitre = chapitre;
 			

@@ -125,7 +125,7 @@
 			this.gatherIdeas(chapitre);
 			this.updateInitiatives();
 			
-			this.display.section = section;
+			this.display.section = null;
 			this.display.chapitre = chapitre;
 			
 		};

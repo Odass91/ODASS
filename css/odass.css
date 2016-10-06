@@ -403,10 +403,12 @@ p.red
 
 .experiences-visibles
 {
-	padding-bottom: 160px !important;
+	padding-bottom: 200px !important;
 }
-
-
+.carousel-indicators
+{
+	bottom: 0px !important;
+}
 .carousel-indicators li {
     background-color: rgba(0, 0, 0, 0.1);
 	border: 1px solid rgba(0, 0, 0, 0.2);

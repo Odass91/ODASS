@@ -114,7 +114,7 @@
 			this.display.idees = [];
 			this.gatherIdeas(section);
 			this.updateInitiatives();
-			
+			console.log(section);
 			this.display.section = section;
 			this.display.chapitre = null;
 		};

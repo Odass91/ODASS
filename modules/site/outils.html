@@ -9,7 +9,7 @@
 		<div class="col-lg-4">
 			<div class="media"
 	  			ng-mouseenter="odass.displayModuleDetail = 'petition'"
-	  			ng-mouseleave="odass.displayModuleDetail = ''">
+	  			>
 				<div class="media-left">
 					<a href="#">
 					  	<img src="images/module-petition.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		
-		<div class="col-lg-8">
+		<div class="col-lg-8" ng-mouseleave="odass.displayModuleDetail = ''">
 			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'petition'">
 				<p>Un outil pour</p>    
 				<dl class="dl-horizontal">
@@ -44,7 +44,7 @@
 		<div class="col-lg-5">
 			<div class="media"
 	  			ng-mouseenter="odass.displayModuleDetail = 'repertoire'"
-	  			ng-mouseleave="odass.displayModuleDetail = ''">
+	  			>
 				<div class="media-left">
 					<a href="#">
 					  	<img src="images/module-repertoire.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		
-		<div class="col-lg-7">
+		<div class="col-lg-7" ng-mouseleave="odass.displayModuleDetail = ''">
 			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'repertoire'">
 				<p>Un outil pour</p>
 				<dl class="dl-horizontal">
@@ -80,7 +80,6 @@
 		<div class="col-lg-4">
 			<div class="media"
 	  			ng-mouseenter="odass.displayModuleDetail = 'dubito'"
-	  			ng-mouseleave="odass.displayModuleDetail = ''"
 	  		>
 				<div class="media-left">
 					<a href="#">
@@ -93,7 +92,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-8">
+		<div class="col-lg-8" ng-mouseleave="odass.displayModuleDetail = ''">
 			<div class="module-description-text" ng-show="odass.displayModuleDetail == 'dubito'">
 				<style>
 					.dl-horizontal dd {margin-bottom: 12px;}

@@ -234,18 +234,26 @@
 		
 		this.saveInitiative = function(initiative)
 		{
-			
+			initiative.favorite = true;
+			if (this.panierInitiatives.indexOf(initiative) == -1)
+			{
+				this.panierInitiatives.push(initiative);
+			}
 		};
 		
 		this.removeSavedInitiative = function(initiative)
 		{
-
+			var index = this.panierInitiatives.indexOf(initiative);
+			delete initiative.favorite;
+			if (index >= 0)
+			{
+				this.panierInitiatives.splice(index, 1);
+			}
 		}
 		
 		this.displaySavedInitiatives = function()
 		{
 			$(".initiative-item").hide();
-			
 			for(var key in this.savedInitiativeList)
 			{
 				$("#initiative-" + this.savedInitiativeList[key].id).show();
@@ -288,6 +296,7 @@
 			this.filteredInitiativeList = [];
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
+			this.panierInitiatives = [];
 		}
 
 		

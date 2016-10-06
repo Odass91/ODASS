@@ -311,7 +311,7 @@ p.red
 
 .initiative-item 
 {
-	margin: 20px 60px !important;	
+	margin: 5px 25px !important;	
 }
 
 .initiative-item-summary .panel-body
@@ -399,4 +399,20 @@ p.red
 .carousel-control:hover
 {
 	color: rgba(0,0,0,0.9);
+}
+
+.experiences-visibles
+{
+	padding-bottom: 160px !important;
+}
+
+
+.carousel-indicators li {
+    background-color: rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.carousel-indicators li.active {
+    background-color: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(0, 0, 0, 0.2);
 }

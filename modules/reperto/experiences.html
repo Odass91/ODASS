@@ -1,8 +1,11 @@
 
-<div id="carousel-{{idee.id}}" class="carousel slide" data-ride="carousel" style="background-color: rgba(0,0,0,0.2)">
+<div id="carousel-{{idee.id}}" class="carousel slide" data-ride="carousel" style="background-color: rgba(0,0,0,0.1)">
+	 <ol class="carousel-indicators">
+	    <li ng-repeat="experience in idee.display.experiences track by $index" data-target="#experience-{{experience.id}}" data-slide-to="$index" ng-class="{ 'active': $first }"></li>
+	 </ol>
+	
 	  <!-- Wrapper for slides -->
-	  <div class="carousel-inner" role="listbox" style="padding: 20x;">
-	  
+	  <div class="carousel-inner" role="listbox" style="padding: 5px">
 	  		<section ng-repeat="experience in idee.display.experiences track by $index" class="initiative-item item" id="experience-{{experience.id}}"  ng-class="{ 'active': $first }">
 				<div class="panel panel-default" style="display: inline-block">
 					

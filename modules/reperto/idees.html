@@ -7,13 +7,13 @@
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="">{{idee.titre}}</span>
-<!-- 				<span class="pull-right"> -->
-<!-- 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	 -->
-<!-- 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span> -->
-<!-- 				</span> -->
+				<span class="pull-right">
+					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
+					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
+				</span>
 			</h4>
 		</div>
-		<div class="panel-body" style="padding-bottom: 50px;">
+		<div class="panel-body" style="padding-bottom: 20px; position: relative;" ng-class="{'experiences-visibles': idee.display.experiences && idee.display.experiences.length > 0}">
 		
 			<p style="" ng-hide="idee.displayLong">
 				<span ng-bind-html="idee.description"></span>
@@ -45,7 +45,7 @@
 				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
 			</div>
 			
-			<experiences idee="idee" reperto="reperto" ng-show="idee.display.experiences && idee.display.experiences.length > 0"></experiences>
+			<experiences idee="idee" reperto="reperto" ng-show="idee.display.experiences && idee.display.experiences.length > 0" style="position:absolute; bottom: 0px; left: 0px; right: 0px; max-height: 140px;"></experiences>
 		</div>
 	</div>
 </section>

@@ -1,3 +1,21 @@
+
+<style>
+	.send-mail
+	{
+		font-size: 20px !important;
+		margin-top: -34px;
+		margin-left: -5px;
+		margin-right: 7px;
+		color: rgba(0,0,0,0.6);
+	}
+	
+	.send-mail:hover
+	{
+		color: rgba(0,0,0,0.8);
+	}
+
+</style>
+
 <div>
 	<div ng-controller="RepertoController as reperto">
 
@@ -42,6 +60,9 @@
 				<a href="http://www.associations-citoyennes.net/"> 
 					<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
 				</a>
+				
+				<a title="Envoyez vos commentaires sur le guide" href="mailto:cac_repertoire@odass.org?subject=Guide%20National%20Ecologie" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
+				
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
 				

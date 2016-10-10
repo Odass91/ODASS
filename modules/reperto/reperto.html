@@ -49,9 +49,10 @@
 					  	
 					  	<div class="panel panel-default" ng-repeat="item in reperto.thesaurus.nodes">
 							<div class="panel-heading" role="tab" id="headingOne">
-						      	<h4 class="panel-title" data-toggle="collapse" href="#{{item.id}}">
+						      	<h4 class="panel-title" data-toggle="collapse" href="#{{item.id}}" id="h4-{{item.id}}">
 						      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
-<!-- 						        	<a class="glyphicon glyphicon-menu-down" role="button" ng-class="{ 'glyphicon-menu-down': $first}"></a> -->
+						        	<a role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone()">replier</a>
+						        	<a role="button" ng-show="reperto.isExpanded('h4-' + item.id)">déplier</a>
 						      	</h4>
 						    </div>
 						    

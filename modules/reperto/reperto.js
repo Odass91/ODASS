@@ -5,13 +5,37 @@
 	 * */
 	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', function($http, $location)
 	{
+		this.loadIntroduction = function()
+		{
+			
+			var reperto = this;
+			
+			$http.get("http://jeu.odass.org/api/getjsonintroduction/9").
+		    success(function(data, status) 
+		    {
+		    	if (data)
+		    	{
+					reperto.display = {};
+		    		reperto.display.introduction = {};
+		    		reperto.display.introduction.titre = data.titre;
+			    	reperto.display.introduction.contenu = data.introduction;
+					$("#introduction-cac").modal({"show": true, "backdrop": "static"});
+					$("#introduction-titre").html(data.titre);
+					$("#introduction-contenu").html(data.introduction);
+		    	}
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json")
+		    });
+		};
+		
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
 			$http.get("http://jeu.odass.org/api/getjsonthesaurus/9").
 		    success(function(data, status) 
 		    {
-//		    	$("#patience").modal({"show": true, "backdrop": "static"});
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
 		    	reperto.experiences = {};
@@ -19,7 +43,6 @@
 		    	reperto.cache = {};
 		    	reperto.cache.idees = data.idees;
 		    	
-		    	reperto.display = {};
 		    	reperto.display.idees = data.idees;
 		    	reperto.display.experiences = {};
 		    	
@@ -263,8 +286,10 @@
 		this.init = function()
 		{
 			/** INITIALISATION */
+
 			
 			this.display = null;
+			this.loadIntroduction();
 			
 			this.filteredActions = [];
 			

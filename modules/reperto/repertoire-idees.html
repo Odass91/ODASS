@@ -17,11 +17,26 @@
 	
 	<div class="col-lg-5" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white">
 		
-		<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
-		<p ng-show="reperto.display.section" ng-bind-html="reperto.display.section.description"></p>
+		<p ng-show="reperto.display.section">
+			<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
+			
+			<span ng-hide="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.description"></span>
+			<span ng-show="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.descriptionlongue"></span>
+			
+			
+			<a href="" ng-show="reperto.display.section && ! reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = true">voir plus</a>
+			<a href="" ng-show="reperto.display.section && reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = false">voir moins</a>
+		</p>
 		
-		<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
-		<p ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.description"></p>
+		<p ng-show="reperto.display.chapitre">
+			<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
+			
+			<span ng-hide="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.description"></span>
+			<span ng-show="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.descriptionlongue"></span>
+			
+			<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = true">voir plus</a>
+			<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = false">voir moins</a>
+		</p>
 		
 		<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
 		<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>

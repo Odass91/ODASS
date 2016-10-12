@@ -29,6 +29,26 @@
 		    });
 		};
 		
+		this.isExpanded = function(id)
+		{
+			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
+		};
+		
+		
+		this.toggleExpandedZone = function(id)
+		{
+			var target=$("#" + id).parents(".panel").find(".panel-collapse");
+			
+			if (target.hasClass("collapse"))
+			{
+				target.removeClass("collapse");
+			}
+			else
+			{
+				target.addClass("collapse");
+			}
+		}
+		
 		this.isPaginationVisible = function(index)
 		{
 			if (!this.display)
@@ -48,7 +68,7 @@
 			{
 				this.display.pager = {"index": 0, "offset": 5};
 			}
-			this.display.pager.index = (index - 1) * this.display.pager.offset;
+			this.display.pager.index = index * this.display.pager.offset;
 			
 		};
 		
@@ -77,7 +97,7 @@
 		    	if (!reperto.display.pager)
 		    	{
 		    		reperto.display.pager = {"index": 0, "offset": 5};
-		    		reperto.display.pager.pagerItems = new Array(parseInt(reperto.display.idees.length / 5))
+		    		reperto.display.pager.pagerItems = new Array(parseInt(reperto.display.idees.length / 5));
 		    	}
 		    	reperto.obtainExperiencesForIdeas();
 		    	
@@ -206,6 +226,9 @@
 					this.gatherIdeas(node);
 				}, this);
 			}
+
+    		this.display.pager.pagerItems = new Array(parseInt(this.display.idees.length / 5));
+    		console.log(this.display.pager.pagerItems);
 		};
 
 		this.toggleDisplayInitiative = function(idee)

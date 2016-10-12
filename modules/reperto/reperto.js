@@ -7,7 +7,6 @@
 	{
 		this.loadIntroduction = function()
 		{
-			
 			var reperto = this;
 			
 			$http.get("http://jeu.odass.org/api/getjsonintroduction/9").
@@ -19,15 +18,38 @@
 		    		reperto.display.introduction = {};
 		    		reperto.display.introduction.titre = data.titre;
 			    	reperto.display.introduction.contenu = data.introduction;
-					$("#introduction-cac").modal({"show": true, "backdrop": "static"});
+					//$("#introduction-cac").modal({"show": true, "backdrop": "static"});
 					$("#introduction-titre").html(data.titre);
 					$("#introduction-contenu").html(data.introduction);
 		    	}
 		    }).
 		    error(function(data, status) 
 		    {
-		    	console.log("Erreur lors de la recuperation du fichier json")
+		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
+		};
+		
+		this.isPaginationVisible = function(index)
+		{
+			if (!this.display)
+			{
+				this.display = {};
+			}
+			if (!this.display.pager)
+			{
+				this.display.pager = {"index": 0, "offset": 5};
+			}
+			return (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
+		};
+		
+		this.setPagerIndex = function(index)
+		{
+			if (!this.display.pager)
+			{
+				this.display.pager = {"index": 0, "offset": 5};
+			}
+			this.display.pager.index = (index - 1) * this.display.pager.offset;
+			
 		};
 		
 		this.loadThesaurus = function()
@@ -51,6 +73,12 @@
 		    	
 		    	reperto.display.guide = reperto.thesaurus;
 		    	reperto.display.intro = true;
+		    	
+		    	if (!reperto.display.pager)
+		    	{
+		    		reperto.display.pager = {"index": 0, "offset": 5};
+		    		reperto.display.pager.pagerItems = new Array(parseInt(reperto.display.idees.length / 5))
+		    	}
 		    	reperto.obtainExperiencesForIdeas();
 		    	
 		    }).
@@ -288,7 +316,8 @@
 			/** INITIALISATION */
 
 			
-			this.display = null;
+			this.display = {};
+			
 			this.loadIntroduction();
 			
 			this.filteredActions = [];

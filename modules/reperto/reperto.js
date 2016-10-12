@@ -97,7 +97,7 @@
 		    	if (!reperto.display.pager)
 		    	{
 		    		reperto.display.pager = {"index": 0, "offset": 5};
-		    		reperto.display.pager.pagerItems = new Array(parseInt(reperto.display.idees.length / 5));
+		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 5));
 		    	}
 		    	reperto.obtainExperiencesForIdeas();
 		    	
@@ -227,7 +227,7 @@
 				}, this);
 			}
 
-    		this.display.pager.pagerItems = new Array(parseInt(this.display.idees.length / 5));
+    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 5));
     		console.log(this.display.pager.pagerItems);
 		};
 

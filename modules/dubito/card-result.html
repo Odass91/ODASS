@@ -1,36 +1,7 @@
 <div class="modal fade" id="result-success" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content" ng-class="dubito.obtainSuccessStatusClass()">
-		  <div class="modal-header panel-heading">
-			<h4 class="modal-title" id="exampleModalLabel">{{dubito.currentAnswer == 0 ? "Dommage !" : "Bravo !!"}}</h4>
-		  </div>
-		  <div class="modal-body" ng-repeat="card in dubito.turns" ng-show="$index == dubito.turn">
-			<p ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></p>
-			<p ng-bind-html="card.explicationCourte" ng-show="! dubito.showLongAnswer"></p>
-			<p ng-bind-html="card.explicationLongue" ng-show="dubito.showLongAnswer"></p>
-			
-			<a href="#" ng-click="dubito.toggleLongAnswer()">
-				<span class="glyphicon glyphicon-menu-right" ng-show="! dubito.showLongAnswer"> </span> <span ng-show="! dubito.showLongAnswer">En savoir plus</span>
-				<span class="glyphicon glyphicon-menu-left" ng-show="dubito.showLongAnswer"> </span> <span ng-show="dubito.showLongAnswer">Retour</span>
-			</a>
-			<p>{{card.reference}}</p>
-		  </div>
-		  <div class="modal-footer">
-		  	<p class="col-xs-6 col-lg-6 text-left">
-		  		<button type="button" class="btn btn-primary" ng-click="dubito.quit()" data-dismiss="modal">
-				<span class="glyphicon glyphicon-remove" ></span> Quitter
-			</button>
-		  	</p>
-		  	<p class="col-xs-6 col-lg-6 text-right">
-		  		<button ng-hide="(dubito.turn == dubito.quiz.questions - 1)" type="button" class="btn btn-success" ng-click="dubito.nextTurn()" data-dismiss="modal">
-		  			<span class="glyphicon glyphicon-arrow-right" ></span> Question suivante
-		  		</button>
-				<button ng-show="(dubito.turn == dubito.quiz.questions - 1)" type="button" class="btn btn-info" ng-click="dubito.endQuiz()" data-dismiss="modal" data-backdrop="static" data-keyboard="false">
-					<span class="glyphicon glyphicon-stats" ></span> Voir les scores
-				</button>
-			</p>
-		  	
-		  </div>
+		  
 		</div>
 	  </div>
 	</div>

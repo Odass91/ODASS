@@ -92,7 +92,7 @@
 		{
 			this.currentAnswer = -1;
 			this.turn = (this.turn + 1) % this.quiz.questions;
-
+			this.hasAnswered = false;
 			$http.post("http://jeu.odass.org/api/getresponsetour/", 
 			{
                 "uuid": this.quiz.uuid,
@@ -116,7 +116,6 @@
 			var dubito = this;
 			$http.post("http://jeu.odass.org/api/getresponsequizz/", dubito.donnees).success(function(data)
 			{
-					console.log(data);
 			       dubito.quiz.message = data.message.commentaire;
 			       dubito.player.classement = {};
 			       dubito.player.classement.egal = data.message.classement.egal;
@@ -163,6 +162,7 @@
 				card.reponseUtilisateur = answerIndex;
 				this.quiz.score += (card.reponse == answerIndex) ? 1 : 0;
 			}
+			this.hasAnswered = true;
 			
 		};
 		

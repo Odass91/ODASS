@@ -18,7 +18,8 @@
 		    		reperto.display.introduction = {};
 		    		reperto.display.introduction.titre = data.titre;
 			    	reperto.display.introduction.contenu = data.introduction;
-					//$("#introduction-cac").modal({"show": true, "backdrop": "static"});
+			    	
+					$("#introduction-cac").modal({"show": true, "backdrop": "static"});
 					$("#introduction-titre").html(data.titre);
 					$("#introduction-contenu").html(data.introduction);
 		    	}

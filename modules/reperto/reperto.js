@@ -76,7 +76,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-			$http.get("http://jeu.odass.org/api/getjsonthesaurus/9").
+			$http.get("http://jeu.odass.org/api/getjsonthesaurus/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	reperto.thesaurus = data.thesaurus;
@@ -339,11 +339,23 @@
 
 			
 			this.display = {};
-			console.log("location", $location, window.location);
-			var guideid = $location.search(); 
-			console.log("guideid", guideid);
-			var modetest = $location.search().modetest; 
-			console.log("modetest", modetest);
+			
+			var guideid = "9";
+			
+			if (window.location.search.indexOf("guideid") != -1)
+			{
+				var guideidvalue = window.location.search.split("guideid=")[1];
+				guideidvalue = guideidvalue.split("&")[0];
+				guideid = guideidvalue;
+			}
+			
+			var modetest = false;
+			if (window.location.search.indexOf("modetest") != -1)
+			{
+				var modetestvalue = window.location.search.split("modetest=")[1];
+				modetestvalue = modetestvalue.split("&")[0];
+				modetest = modetestvalue;
+			}
 			
 			this.guideIdentifiant = guideid;
 			this.modeTest = modetest;

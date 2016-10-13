@@ -9,7 +9,7 @@
 		{
 			var reperto = this;
 			
-			$http.get("http://jeu.odass.org/api/getjsonintroduction/9").
+			$http.get("http://jeu.odass.org/api/getjsonintroduction/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	if (data)
@@ -189,7 +189,6 @@
 			this.display.idees = [];
 			this.gatherIdeas(section);
 			this.updateInitiatives();
-			console.log(section);
 			
 			this.display.section = section;
 			this.display.chapitre = null;
@@ -229,7 +228,6 @@
 			}
 
     		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 5));
-    		console.log(this.display.pager.pagerItems);
 		};
 
 		this.toggleDisplayInitiative = function(idee)
@@ -341,6 +339,15 @@
 
 			
 			this.display = {};
+			console.log("location", $location, window.location);
+			var guideid = $location.search(); 
+			console.log("guideid", guideid);
+			var modetest = $location.search().modetest; 
+			console.log("modetest", modetest);
+			
+			this.guideIdentifiant = guideid;
+			this.modeTest = modetest;
+			this.emailContact = "contact@odass.org";
 			
 			this.loadIntroduction();
 			

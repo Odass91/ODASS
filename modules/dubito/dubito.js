@@ -1,29 +1,47 @@
 (function()
 {
-	var odass = angular.module("odass").controller('DubitoController', ['$http', '$location', function($http, $location)
+	var odass = angular.module("odass").controller('DubitoController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-		this.player = {"name": "Anonyme", "loggedIn": false};
-		this.quiz = {};
-		this.turns = [];
-		this.currentAnswer = -1; 	//-1 : not answered yet ; 0 : wrong answer ; 1 : correct answer
-		this.gameStatus = 0; 		// 0 : intro ; 1 : game active ; 2 : scoring panel
-		this.donnees = {};
-        this.height = "600px";
-        
-		this.showSummary = false;
-		
-        this.quizzes = [
-        	{"intitule": "Etat d'Urgence", "played": 1, "score": 4, "id": "EtatDurgence"}, 
-        	{"intitule": "Linky", "played": 1, "score": 2, "id": "linky"}
-        ];
-        
-        // nom du quiz à récupérer en paramètre de l'URL
-        
-        // Recommendation parameters
-        this.toContacts = [null, null];
-        this.fromContact = "";
 
-        this.selectedQuiz = {"intitule": "Electro-sensibilité", "played": 0, "id": "linky"};
+		var dubito = this;
+		$scope.$on('initModule', function(event, args)
+		{
+			if (args.message == "dubito")
+			{
+				dubito.init();
+			}
+		});
+		
+		this.init = function()
+		{
+			this.player = {"name": "Anonyme", "loggedIn": false};
+			this.quiz = {};
+			this.turns = [];
+			this.currentAnswer = -1; 	//-1 : not answered yet ; 0 : wrong answer ; 1 : correct answer
+			this.gameStatus = 0; 		// 0 : intro ; 1 : game active ; 2 : scoring panel
+			this.donnees = {};
+	        this.height = "600px";
+	        
+			this.showSummary = false;
+			
+	        this.quizzes = [
+	        	{"intitule": "Etat d'Urgence", "played": 1, "score": 4, "id": "EtatDurgence"}, 
+	        	{"intitule": "Linky", "played": 1, "score": 2, "id": "linky"}
+	        ];
+	        
+	        // nom du quiz à récupérer en paramètre de l'URL
+	        
+	        // Recommendation parameters
+	        this.toContacts = [null, null];
+	        this.fromContact = "";
+
+	        this.selectedQuiz = {"intitule": "Electro-sensibilité", "played": 0, "id": "linky"};
+	        
+	        this.computeGraph();
+	        
+	        $scope.$broadcast('initModule', {"message": "wizard"});
+		}
+		
 		
 		this.selectQuiz = function(quiz)
 		{
@@ -264,8 +282,6 @@
 	        	}
         	}
         }
-        
-       this.computeGraph();
 	}]);
 	
 

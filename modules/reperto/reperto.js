@@ -3,8 +3,80 @@
 	
 	/** 
 	 * */
-	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', function($http, $location)
+	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", function($http, $location, $scope)
 	{
+		var reperto = this;
+		$scope.$on('initModule', function(event, args)
+		{
+			if (args.message == "annuaire")
+			{
+				reperto.init();
+			}
+		});
+		
+		
+		this.init = function()
+		{
+			/** INITIALISATION */
+
+			this.display = {};
+			
+			var guideid = "9";
+			
+			if (window.location.search.indexOf("guideid") != -1)
+			{
+				var guideidvalue = window.location.search.split("guideid=")[1];
+				guideidvalue = guideidvalue.split("&")[0];
+				guideid = guideidvalue;
+			}
+			
+			var modetest = false;
+			if (window.location.search.indexOf("modetest") != -1)
+			{
+				var modetestvalue = window.location.search.split("modetest=")[1];
+				modetestvalue = modetestvalue.split("&")[0];
+				modetest = modetestvalue;
+			}
+			
+			this.guideIdentifiant = guideid;
+			this.modeTest = modetest;
+			this.emailContact = "contact@odass.org";
+			
+			this.loadIntroduction();
+			
+			this.filteredActions = [];
+			
+			this.filter = "";
+			
+			this.availableFilters = 
+			{
+			    "keywords": []
+			};
+
+			this.activeFilters = 
+			{
+				    "keywords": [],
+				    "geoloc": []
+			};
+
+			this.activeFilterCount = 0;
+
+			this.matchedFilters = 
+			{
+				    "keywords": [],
+				    "geoloc": []
+			};
+			
+			this.showSummary = false;
+			
+			this.loadThesaurus();
+			
+			this.filteredInitiativeList = [];
+			this.savedInitiativeList = {};
+			this.savedInitiativeList.length = 0;
+			this.panierInitiatives = [];
+		}
+		
 		this.loadIntroduction = function()
 		{
 			var reperto = this;
@@ -332,74 +404,6 @@
 				$("#initiative-" + this.savedInitiativeList[key].id).show();
 			}
 		}
-		
-		this.init = function()
-		{
-			/** INITIALISATION */
-
-			
-			this.display = {};
-			
-			var guideid = "9";
-			
-			if (window.location.search.indexOf("guideid") != -1)
-			{
-				var guideidvalue = window.location.search.split("guideid=")[1];
-				guideidvalue = guideidvalue.split("&")[0];
-				guideid = guideidvalue;
-			}
-			
-			var modetest = false;
-			if (window.location.search.indexOf("modetest") != -1)
-			{
-				var modetestvalue = window.location.search.split("modetest=")[1];
-				modetestvalue = modetestvalue.split("&")[0];
-				modetest = modetestvalue;
-			}
-			
-			this.guideIdentifiant = guideid;
-			this.modeTest = modetest;
-			this.emailContact = "contact@odass.org";
-			
-			this.loadIntroduction();
-			
-			this.filteredActions = [];
-			
-			this.filter = "";
-			
-			this.availableFilters = 
-			{
-			    "keywords": []
-			};
-
-			this.activeFilters = 
-			{
-				    "keywords": [],
-				    "geoloc": []
-			};
-
-			this.activeFilterCount = 0;
-
-			this.matchedFilters = 
-			{
-				    "keywords": [],
-				    "geoloc": []
-			};
-			
-			this.showSummary = false;
-			
-			this.loadThesaurus();
-			
-			this.filteredInitiativeList = [];
-			this.savedInitiativeList = {};
-			this.savedInitiativeList.length = 0;
-			this.panierInitiatives = [];
-		}
-
-		
-		this.init();
-		
-		
 	
 	}]);
 

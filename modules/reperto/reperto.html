@@ -18,7 +18,7 @@
 
 <div ng-show="odass.isModule('annuaire')">
 
-	<div ng-controller="RepertoController as reperto">
+	<div ng-controller="RepertoController as reperto" id="repertoControllerWrapper">
 
 
 		<section id="annuaire-header" class="row">
@@ -124,30 +124,26 @@
 			</div>
 			
 		</section>
-		<script>
-		</script>
-	</div>
-	<p></p>
-	<p></p>
-	
-	<div class="modal fade" id="introduction-cac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-	  <div class="modal-dialog modal-lg" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header panel-heading">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 id="introduction-titre"></h4>
-			</div>
-			
-	      <div class="modal-body">
-	       	<div id="introduction-contenu"></div>
-	    </div>
-	  </div>
-	</div>
 		
+		
+		<div class="modal fade" id="introduction-cac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		  	<div class="modal-dialog modal-lg" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 id="introduction-titre"></h4>
+					</div>
+				
+		      		<div class="modal-body">
+		       			<div id="introduction-contenu"></div>
+		    		</div>
+		  		</div>
+			</div>
+		</div>
 	
-	
+	</div>
 </div>
 
 

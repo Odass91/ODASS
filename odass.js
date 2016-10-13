@@ -2,14 +2,44 @@
 {
 	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree', 'xeditable']);
 	
-	angular.module("odass").controller('OdassController', ['$http', '$location', function($http, $location)
+	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-		this.user = {"name": ""};
-		this.debug = (window.location.search.match("debug=true")) ? true : false;
-		this.config = 
+		this.init = function()
 		{
-			"google.maps.key": "AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc"
+			this.user = {"name": ""};
+			this.debug = (window.location.search.match("debug=true")) ? true : false;
+			this.config = 
+			{
+				"google.maps.key": "AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc"
+			};
+			
+			if (window.localStorage.odassLoggedIn)
+			{
+				this.user.name = window.localStorage.odassLoggedIn;
+				this.user.loggedIn = true;
+			}
+			
+			if (window.localStorage.odassModule)
+			{
+				this.module = window.localStorage.odassModule;
+			}
+			else
+			{
+				this.module = "page-accueil";
+			}
+			
+			this.initModule();
+			
+			if (! this.user.loggedIn)
+			{
+				$('#menu-odass-site a#' + this.module + '-item').tab('show');
+			}
+			else
+			{
+				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
+			}
 		};
+		
 		
 		this.debugAPIcall = function()
 		{
@@ -27,13 +57,7 @@
 				odass.callbackFailureData = "[ERROR] Donnees reçues : " + data;
             });	
 			
-		}
-		
-		if (window.localStorage.odassLoggedIn)
-		{
-			this.user.name = window.localStorage.odassLoggedIn;
-			this.user.loggedIn = true;
-		}
+		};
 		
 		this.login = function()
 		{
@@ -87,25 +111,7 @@
 			
 		};
 		
-
 		
-		if (window.localStorage.odassModule)
-		{
-			this.module = window.localStorage.odassModule;
-		}
-		else
-		{
-			this.module = "page-accueil";
-		}
-		
-		if (! this.user.loggedIn)
-		{
-			$('#menu-odass-site a#' + this.module + '-item').tab('show');
-		}
-		else
-		{
-			$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
-		}
 		
 		this.logout = function()
 		{
@@ -133,13 +139,33 @@
 			{
 				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
 			}
+			
+			this.initModule();
+		};
+		
+		this.initModule = function()
+		{
+			var that = this;
+			setTimeout(function()
+			{
+				if (that.module)
+				{
+					$scope.$broadcast('initModule', {"message": that.module});
+				}
+				else
+				{
+					setTimeout(that.init, 500);
+				}
+			}, 500);
 		};
 		
 		$('#menu-odass-site a, #menu-odass-backoffice a').click(function (e) 
 		{
 			  e.preventDefault();
 			  $(this).tab('show');
-		})
+		});
+		
+		this.init();
 		
 	}]);
 	

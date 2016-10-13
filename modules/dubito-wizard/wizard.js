@@ -1,74 +1,88 @@
 (function()
 {
-	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', function($http, $location)
+	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-		/** GET FAKE DATA */
 		
-		var wizard = this;
-		this._debugTmpId = 1;
-		$http.get("data/quiz.json").
-	    success(function(data, status) 
-	    {
-	    	wizard.availableQuiz = data;
-	    }).
-	    error(function(data, status) 
-	    {
-	    	console.log("Erreur lors de la recuperation du fichier json");
-	    });
-		
-		
-		this.library = [];
-		$http.get("data/librairie.json").
-	    success(function(data, status) 
-	    {
-	    	wizard.library = data.cartes;
-	    	
-	    	wizard.categorieMap = {};
-	    	
-	    	["santé", "écologie", "politique", "société", "international", "droit", "culture"].forEach(function(categorie)
-	    	{
-	    		var cartes = JSON.search(wizard.library, '//*[categorie/text()="' + categorie + '"]');
-	    		wizard.categorieMap[categorie] = cartes.length;
-	    	}, this);
-	    	
-	    }).
-	    error(function(data, status) 
-	    {
-	    	console.log("Erreur lors de la recuperation du fichier json");
-	    });
-		
-		
-		/** DATA STRUCTURE */
-		this.quiz = null;
-		this.sortableOptions = 
+		var dubitowizard = this;
+		$scope.$on('initModule', function(event, args)
 		{
-			"stop": function(list, dropped_index)
+			if (args.message == "wizard")
 			{
-				wizard.updateQuizOnServer();
-			}	
+				dubitowizard.init();
+			}
+		});
+		
+		this.init = function()
+		{
+			/** GET FAKE DATA */
+			var wizard = this;
+			this._debugTmpId = 1;
+			$http.get("data/quiz.json").
+		    success(function(data, status) 
+		    {
+		    	wizard.availableQuiz = data;
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });
+			
+			
+			this.library = [];
+			$http.get("data/librairie.json").
+		    success(function(data, status) 
+		    {
+		    	wizard.library = data.cartes;
+		    	
+		    	wizard.categorieMap = {};
+		    	
+		    	["santé", "écologie", "politique", "société", "international", "droit", "culture"].forEach(function(categorie)
+		    	{
+		    		var cartes = JSON.search(wizard.library, '//*[categorie/text()="' + categorie + '"]');
+		    		wizard.categorieMap[categorie] = cartes.length;
+		    	}, this);
+		    	
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });
+			
+			
+			/** DATA STRUCTURE */
+			this.quiz = null;
+			this.sortableOptions = 
+			{
+				"stop": function(list, dropped_index)
+				{
+					wizard.updateQuizOnServer();
+				}	
+			};
+			
+			this.quizConfig = 
+			{
+				"name": "nouveau quiz",
+				"description": "Texte introductif",
+				"length":  
+				{
+					"showTicksValues": true,
+				    "stepsArray": 
+				    [
+				      	{value: 12, legend: 'Quiz - 12 questions'},
+				      	{value: 36, legend: 'Mini-jeu - 36 questions'},
+				      	{value: 108, legend: 'Jeu - 108 questions'}
+				    ]
+				},
+				"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"],
+				"social": ["facebook", "twitter", "email"]
+			};
+			
+			this.brouillon = {};
+			
+			this.mode = "create";
 		};
 		
-		this.quizConfig = 
-		{
-			"name": "nouveau quiz",
-			"description": "Texte introductif",
-			"length":  
-			{
-				"showTicksValues": true,
-			    "stepsArray": 
-			    [
-			      	{value: 12, legend: 'Quiz - 12 questions'},
-			      	{value: 36, legend: 'Mini-jeu - 36 questions'},
-			      	{value: 108, legend: 'Jeu - 108 questions'}
-			    ]
-			},
-			"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"],
-			"social": ["facebook", "twitter", "email"]
-		};
 		
-		this.brouillon = {};
-		
-		this.mode = "create";
 		
 		/** Methods */
 		
@@ -134,10 +148,13 @@
 		
 		this.initArrayFromMissingCards = function()
 		{
-			
-			var length = this.brouillon.quiz.length - (this.brouillon.quiz.cartes ? this.brouillon.quiz.cartes.length : 0 );
+			var length = 0;
+			if (this.brouillon && this.brouillon.quiz && this.brouillon.quiz.length)
+			{
+				length = this.brouillon.quiz.length - (this.brouillon.quiz.cartes ? this.brouillon.quiz.cartes.length : 0 );
+			}
 			return (new Array(length));
-		}
+		};
 		
 		this.setupOptions = function()
 		{
@@ -238,10 +255,8 @@
 		
 		this.displayCardsMatchingCategory = function(categorie)
 		{
-			console.log("Searching carte with categorie", categorie)
 			this.library.forEach(function(carte)
 			{
-				console.log("carte categorie : ", carte.categorie)
 				if (carte.categorie.indexOf(categorie) != -1)
 				{
 					delete carte.hidden;
@@ -292,14 +307,12 @@
 				
 				if (options.index != undefined)
 				{
-					console.log("edit card from given index");
 					this.brouillon.quiz.cardIndex = options.index;
 					this.brouillon.carte = this.brouillon.quiz.cartes[options.index];
 				}
 				
 				if (options.id != undefined)
 				{
-					console.log("edit card from given id");
 					var index = -1;
 				
 					this.brouillon.quiz.cartes.forEach(function (carte)
@@ -319,12 +332,10 @@
 
 		this.deleteSelectedCards = function()
 		{
-			console.log("deleteSelectedCards");
 			this.brouillon.quiz.cartesOrdonnees.forEach(function(carte)
 			{
 				if (carte.selected)
 				{
-					console.log("Carte a supprimer trouvée !", carte);
 					this.deleteCardWithId(carte.id);
 				}
 			}, this);
@@ -335,7 +346,6 @@
 		
 		this.deleteCardWithId = function(id)
 		{
-			console.log("Suppression de la carte ", id);
 			var index = 0;
 			var selectedCard = null;
 			var selectedIndex = 0;
@@ -440,8 +450,6 @@
 		
 		this.saveAndQuit = function()
 		{
-			console.log(this.brouillon.quiz);
-			
 			var wizard = this;
 			
 			$http.post(" http://jeu.odass.org/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
@@ -560,7 +568,6 @@
 			var wizard = this;
 			
 			this.updateOrder();
-			console.log(wizard.brouillon.quiz);
 			
 			$http.post("http://jeu.odass.org/api/modifierquiz", wizard.brouillon.quiz).then(
 				/**   SERVER ANSWER  */

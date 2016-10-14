@@ -13,6 +13,13 @@
 				"google.maps.key": "AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc"
 			};
 			
+			if (window.location.href.match("index-cac"))
+			{
+				this.user.loggedIn = true;
+				window.localStorage.odassLoggedIn = "cac";
+				this.changeModule("annuaire");
+			}
+			
 			if (window.localStorage.odassLoggedIn)
 			{
 				this.user.name = window.localStorage.odassLoggedIn;
@@ -108,6 +115,8 @@
 					odass.loginFeedback = "Erreur serveur : exception sur le serveur";
 				}
 			});
+				
+			
 			
 		};
 		

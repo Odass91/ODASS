@@ -90,10 +90,21 @@
 		    		reperto.display.introduction = {};
 		    		reperto.display.introduction.titre = data.titre;
 			    	reperto.display.introduction.contenu = data.introduction;
-			    	
-					$("#introduction-cac").modal({"show": true, "backdrop": "static"});
-					$("#introduction-titre").html(data.titre);
-					$("#introduction-contenu").html(data.introduction);
+			    	if ( ! window.localStorage.odassRepertoIntroShown)
+					{
+			    		$("#introduction-cac").modal({"show": true, "backdrop": "static"});
+						$("#introduction-titre").html(data.titre);
+						$("#introduction-contenu").html(data.introduction);
+						window.localStorage.odassRepertoIntroShown = 0;
+					}
+			    	else
+			    	{
+			    		window.localStorage.odassRepertoIntroShown++;
+			    		if (window.localStorage.odassRepertoIntroShown == 5)
+			    		{
+			    			delete window.localStorage.odassRepertoIntroShown;
+			    		}
+			    	}
 		    	}
 		    }).
 		    error(function(data, status) 
@@ -166,6 +177,8 @@
 		    	
 		    	reperto.display.guide = reperto.thesaurus;
 		    	reperto.display.intro = true;
+		    	
+		    	reperto.display.breadcrumb = {};
 		    	
 		    	if (!reperto.display.pager)
 		    	{
@@ -265,6 +278,10 @@
 			this.display.section = section;
 			this.display.chapitre = null;
 			this.display.intro = null;
+			
+			this.display.breadcrumb.section = chapitre.section.titre;
+			delete this.display.breadcrumb.chapitre;
+			this.setPagerIndex(0);
 		};
 		
 		this.selectChapter = function(section, chapitre)
@@ -276,6 +293,10 @@
 			this.display.intro = null;
 			this.display.section = null;
 			this.display.chapitre = chapitre;
+
+			this.display.breadcrumb.section = section.titre;
+			this.display.breadcrumb.chapitre = chapitre.titre;
+			this.setPagerIndex(0);
 			
 		};
 		

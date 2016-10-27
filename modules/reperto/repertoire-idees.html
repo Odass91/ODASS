@@ -8,12 +8,6 @@
 		<span ng-show="reperto.activeFilters.keywords.length == 0" style="">{{reperto.display.idees.length}}</span>
 		<span ng-show="reperto.activeFilters.keywords.length != 0" style="">{{reperto.ideaDisplayed}}</span>
 		actions possibles&nbsp;&nbsp;
-		<nav aria-label="Page navigation">
-		  <ul class="pagination">
-		    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
-		  </ul>
-		</nav>
-		
 	</h3>
 	
 	<div class="col-lg-7" style="">
@@ -45,4 +39,12 @@
 		
 		<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
 		<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
+	</div>
+	
+	<div class="col-lg-12">
+		<nav aria-label="Page navigation">
+		  <ul class="pagination pagination-sm">
+		    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
+		  </ul>
+		</nav>
 	</div>

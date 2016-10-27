@@ -1,7 +1,7 @@
 
 <div id="carousel-{{idee.id}}" class="carousel slide" data-ride="carousel" style="background-color: rgba(0,0,0,0.1)">
 	 <ol class="carousel-indicators">
-	    <li ng-repeat="experience in idee.display.experiences track by $index" data-target="#experience-{{experience.id}}" data-slide-to="$index" ng-class="{ 'active': $first }"></li>
+	    <li ng-repeat="experience in idee.display.experiences track by $index" data-target="#experience-{{experience.id}}" ng-class="{ 'active': $first }"></li>
 	 </ol>
 	
 	  <!-- Wrapper for slides -->

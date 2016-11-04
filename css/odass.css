@@ -293,6 +293,11 @@ p.red
 	cursor: pointer;
 }
 
+.partenaires.loggedin
+{
+	background-color: rgba(255,255,255,0.1);
+}
+
 /** DUBITO */
 .tab-content
 {

@@ -1,9 +1,9 @@
-<div class="container" ng-show="odass.isModule('page-partenaires')">
+<div class="container partenaires" ng-show="odass.isModule('page-partenaires')" ng-class="{'loggedin' : odass.user.loggedIn}">
 	
 	<!-- DEBUG -->
 	<section class="row">
 		<div style="padding:25px; padding-left: 100px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size: 24px">
-			<p>Ils nous font confiance</p>
+			<h3><strong>Ils nous font confiance</strong></h3>
 		</div>
 	</section>
 
@@ -11,18 +11,32 @@
 		<div class="media">
 			<div class="media-left">
 				<a href="http://www.associations-citoyennes.net/" target="_">
-				  	<img src="images/logo-CAC.jpg" class="media-object" alt="logo du collectif des associations citoyennes" width="750px" height="100px"></img>
+				  	<img src="images/logo-CAC.jpg" class="media-object" alt="logo du collectif des associations citoyennes" width="750px" height="100px" style="opacity:1 !important"></img>
 				</a>
+			</div>
+			
+			<div style="padding:25px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size: 24px">
+				<p>Le Collectif des associations citoyennes (CAC) est né en 2010 pour :
+
+				    <ol>
+				    	<li>lutter contre l’instrumentalisation et la réduction des associations à leur seule dimension commerciale</li>
+				    	<li>défendre la contribution des associations à l’intérêt général et à la construction d’une société solidaire, durable et participative</li>
+				    </ol>
+				</p>
 			</div>
 		</div>
 	</section>
 
 	<section class="row">
 		<div class="media">
-			<div class="media-left">
-				<a href="http://www.jardinmoderne.fr/" target="_">
-				  	<img src="images/logo-le-jardin-moderne.png" class="media-object" alt="logo le jardin moderne" width="150px" height="100px"></img>
+			<div class="media-left" style="opacity:1 !important">
+				<a href="http://www.jardinmoderne.org/" target="_">
+				  	<img src="images/logo-jardin-moderne.png" class="media-object" alt="logo le jardin moderne" width="150px" height="100px" style="opacity:1 !important"></img>
 				</a>
+			</div>
+			
+			<div style="padding:25px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size: 24px">
+				<p> Le Jardin Moderne est un espace d'aide à la création et la diffusion des musiques actuelles à destination des porteurs de projets et des pratiques amateurs.</p>
 			</div>
 		</div>
 	</section>

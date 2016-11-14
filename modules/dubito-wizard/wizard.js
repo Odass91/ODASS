@@ -14,7 +14,7 @@
 		
 		this.init = function()
 		{
-			/** GET DATA */
+			/** GET FAKE DATA */
 			var wizard = this;
 			this._debugTmpId = 1;
 			$http.get("data/quiz.json").

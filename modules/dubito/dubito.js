@@ -2,7 +2,7 @@
 {
 	var odass = angular.module("odass").controller('DubitoController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-
+		var odass_app = $scope.$parent.odass;
 		var dubito = this;
 		$scope.$on('initModule', function(event, args)
 		{
@@ -56,7 +56,7 @@
 		this.loadQuiz = function(dismissModal)
 		{
 			var dubito = this;
-			$http.post(" http://jeu.odass.org/api/getquizz/" + dubito.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
+			$http.post(odass_app.hostname + "/api/getquizz/" + dubito.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
 			{
 				dubito.donnees = data;
 				
@@ -111,7 +111,7 @@
 			this.currentAnswer = -1;
 			this.turn = (this.turn + 1) % this.quiz.questions;
 			this.hasAnswered = false;
-			$http.post("http://jeu.odass.org/api/getresponsetour/", 
+			$http.post(odass_app.hostname + "/api/getresponsetour/", 
 			{
                 "uuid": this.quiz.uuid,
                 "tourId":this.card.id,
@@ -132,7 +132,7 @@
 		this.endQuiz = function()
 		{
 			var dubito = this;
-			$http.post("http://jeu.odass.org/api/getresponsequizz/", dubito.donnees).success(function(data)
+			$http.post(odass_app.hostname + "/api/getresponsequizz/", dubito.donnees).success(function(data)
 			{
 			       dubito.quiz.message = data.message.commentaire;
 			       dubito.player.classement = {};
@@ -236,7 +236,7 @@
 			};
 			console.log("send reco from:", this.fromContact, "to:", this.toContacts);
 			
-			$http.post("http://jeu.odass.org/api/sendrecommendation/", recoParameters).success(function(data)
+			$http.post(odass_app.hostname + "/api/sendrecommendation/", recoParameters).success(function(data)
             {
             });			
 		};

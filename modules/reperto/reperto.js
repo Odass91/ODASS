@@ -6,6 +6,9 @@
 	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", function($http, $location, $scope)
 	{
 		var reperto = this;
+		
+		var odass_app = $scope.$parent.odass;
+		
 		$scope.$on('initModule', function(event, args)
 		{
 			if (args.message == "annuaire")
@@ -20,6 +23,7 @@
 			/** INITIALISATION */
 
 			this.display = {};
+			console.log(odass_app.hostname);
 			
 			var guideid = "9";
 			
@@ -81,7 +85,7 @@
 		{
 			var reperto = this;
 			
-			$http.get("http://jeu.odass.org/api/getjsonintroduction/" + reperto.guideIdentifiant).
+			$http.get(odass_app.hostname + "/api/getjsonintroduction/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	if (data)
@@ -159,7 +163,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-			$http.get("http://jeu.odass.org/api/getjsonthesaurus/" + reperto.guideIdentifiant).
+			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	reperto.thesaurus = data.thesaurus;
@@ -200,7 +204,7 @@
 		{
 			this.availableFilters = {"keywords": []};
 			var reperto = this;
-			$http.get("http://perso.odass.org/api/getmotclefs/9").
+			$http.get(odass_app.hostname + "/api/getmotclefs/9").
 		    success(function(data, status) 
 		    {
 		    	reperto.availableFilters = data;
@@ -219,7 +223,6 @@
 			var experiences = [];
 			var reperto = this;
 
-			
 			this.display.idees.forEach(function(idee)
 			{
 				this.obtainExperiencesForIdea(idee);
@@ -228,7 +231,10 @@
 		
 		this.obtainExperiencesForIdea = function(idee)
 		{
-			$http.get("http://jeu.odass.org/api/getjsonexp/" + idee.id).
+			//GUIDE_idduguide -> toutes les xps d'un guide
+			//
+			
+			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
 		    {
 				idee.display = {};

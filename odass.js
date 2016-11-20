@@ -6,6 +6,7 @@
 	{
 		this.init = function()
 		{
+			this.hostname = "http://perso.odass.org";
 			this.user = {"name": ""};
 			this.debug = (window.location.search.match("debug=true")) ? true : false;
 			this.config = 
@@ -71,8 +72,8 @@
 			this.user.name = $("#userNameInput").val();
 			var password = $("#passwordField").val();			
 			var odass = this;
-			
-			$http.post("http://jeu.odass.org/api/apilogin", 
+			console.log(odass.hostname);
+			$http.post(odass.hostname + "/api/apilogin", 
 			{
 				"login": odass.user.name,
 				"motdepasse": password

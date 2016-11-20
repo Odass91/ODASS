@@ -2,7 +2,7 @@
 {
 	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-		
+		var odass_app = $scope.$parent.odass;
 		var dubitowizard = this;
 		$scope.$on('initModule', function(event, args)
 		{
@@ -452,7 +452,7 @@
 		{
 			var wizard = this;
 			
-			$http.post(" http://jeu.odass.org/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
+			$http.post(odass_app.hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
 			{
 				//
 			});
@@ -541,6 +541,8 @@
 				}
 			}
 			
+			//
+			
 		};
 		
 		/** COMMUNICATION AVEC LE SERVEUR */
@@ -550,7 +552,7 @@
 			
 			var wizard = this;
 			
-			$http.post("http://jeu.odass.org/api/creerquiz", {"nom": wizard.brouillon.quiz.name}).then(
+			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": wizard.brouillon.quiz.name}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -568,8 +570,10 @@
 			var wizard = this;
 			
 			this.updateOrder();
+
+			console.log(this.brouillon.quiz);
 			
-			$http.post("http://jeu.odass.org/api/modifierquiz", wizard.brouillon.quiz).then(
+			$http.post(odass_app.hostname + "/api/modifierquiz", wizard.brouillon.quiz).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -586,7 +590,7 @@
 		{
 			var wizard = this;
 			
-			$http.post("http://jeu.odass.org/api/creercarte", {"id": wizard.brouillon.quiz.id}).then(
+			$http.post(odass_app.hostname + "/api/creercarte", {"id": wizard.brouillon.quiz.id}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -606,7 +610,7 @@
 		{
 			var wizard = this;
 			
-			$http.post("http://jeu.odass.org/api/modifiercarte", wizard.brouillon.carte).then(
+			$http.post(odass_app.hostname + "/api/modifiercarte", wizard.brouillon.carte).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -624,7 +628,7 @@
 			var wizard = this;
 			var cardId = index ? index : wizard.brouillon.carte.id;
 			
-			$http.post("http://jeu.odass.org/api/supprimercarte", {"id": cardId}).then(
+			$http.post(odass_app.hostname + "/api/supprimercarte", {"id": cardId}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -642,7 +646,7 @@
 			var wizard = this;
 			var quizId = index ? index : wizard.brouillon.quiz.id;
 			
-			$http.post("http://jeu.odass.org/api/supprimerquiz", {"id": quizId}).then(
+			$http.post(odass_app.hostname + "/api/supprimerquiz", {"id": quizId}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{

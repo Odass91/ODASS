@@ -18,6 +18,7 @@
 					</div>
 					
 					<div class="panel-body" style="max-height: 100px; overflow:auto;">
+						
 						<p style="" ng-hide="experience.displayLong">
 							<span ng-bind-html="experience.description"></span>
 							<a href="" ng-click="experience.displayLong=true">Voir plus</a>
@@ -25,16 +26,23 @@
 						
 						<p style="" ng-show="experience.displayLong">
 							<span ng-bind-html="experience.descriptionlongue"></span>
-							<a href="" ng-click="experience.displayLong=false">Voir moins</a>
+							
+							<p ng-show="experience.displayLong && experience.references && experience.references.length > 0">
+								<span class="glyphicon glyphicon-globe"></span>&nbsp; 
+								<span ng-repeat="lien in experience.references">
+									<a target="_" href="{{lien.lien}}">{{lien.nom}}</a><br />
+								</span>
+							</p>
+							
+							<p ng-show="experience.displayLong && experience.contacts && experience.contacts.length > 0">
+								<span class="glyphicon glyphicon-user"></span>&nbsp; 
+								<span ng-repeat="contact in experience.contacts">
+									<a href="{{contact.href}}">{{contact}}</a><br />
+								</span>
+							</p>
+							
+							<a ng-show="experience.displayLong" href="" ng-click="experience.displayLong=false">Voir moins</a>
 						</p>
-						
-						<p ng-show="experience.references && experience.references.length > 0">
-							<span class="glyphicon glyphicon-globe"></span>&nbsp; 
-							<span ng-repeat="lien in experience.references">
-								<a href="{{lien.href}}">{{lien.label}}</a><br />
-							</span>
-						</p>
-						
 			
 						<p ng-show="experience.keywords.length > 0">
 							<span class="glyphicon glyphicon-tag">&nbsp;</span> 

@@ -62,7 +62,7 @@
 		this.loadQuiz = function(dismissModal)
 		{
 			var game = this;
-			$http.post(" http://jeu.odass.org/api/getquizz/" + game.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
+			$http.post(odass.hostname + "/api/getquizz/" + game.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
 			{
 				game.donnees = data;
 				
@@ -127,7 +127,7 @@
 			this.currentAnswer = -1;
 			this.turn = (this.turn + 1) % this.quizz.questions;
 
-			$http.post("http://jeu.odass.org/api/getresponsetour/", 
+			$http.post(odass.hostname + "/api/getresponsetour/", 
 			{
                 "uuid": this.quizz.uuid,
                 "tourId":this.card.id,
@@ -148,7 +148,7 @@
 		this.endQuizz = function()
 		{
 			var game = this;
-			$http.post("http://jeu.odass.org/api/getresponsequizz/", game.donnees).success(function(data)
+			$http.post(odass.hostname + "/api/getresponsequizz/", game.donnees).success(function(data)
 			{
 			       game.quizz.message = data.message.commentaire;
 			       game.player.classement = {};
@@ -251,7 +251,7 @@
 			};
 			console.log("send reco from:", this.fromContact, "to:", this.toContacts);
 			
-			$http.post("http://jeu.odass.org/api/sendrecommendation/", recoParameters).success(function(data)
+			$http.post(odass.hostname + "/api/sendrecommendation/", recoParameters).success(function(data)
             {
             });			
 		};

@@ -56,6 +56,7 @@
 		this.loadQuiz = function(dismissModal)
 		{
 			var dubito = this;
+			
 			$http.post(odass_app.hostname + "/api/getquizz/" + dubito.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
 			{
 				dubito.donnees = data;

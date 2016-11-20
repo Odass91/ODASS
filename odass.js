@@ -72,7 +72,6 @@
 			this.user.name = $("#userNameInput").val();
 			var password = $("#passwordField").val();			
 			var odass = this;
-			console.log(odass.hostname);
 			$http.post(odass.hostname + "/api/apilogin", 
 			{
 				"login": odass.user.name,

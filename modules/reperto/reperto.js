@@ -23,7 +23,6 @@
 			/** INITIALISATION */
 
 			this.display = {};
-			console.log(odass_app.hostname);
 			
 			var guideid = "9";
 			

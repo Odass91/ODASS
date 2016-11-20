@@ -33,7 +33,7 @@
 			<span ng-hide="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.description"></span>
 			<span ng-show="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.descriptionlongue"></span>
 			
-			<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = true">voir plus</a>
+			<a href="" ng-show="reperto.display.chapitre && ! reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = true">voir plus</a>
 			<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = false">voir moins</a>
 		</p>
 		

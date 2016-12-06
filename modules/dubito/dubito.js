@@ -24,10 +24,20 @@
 	        
 			this.showSummary = false;
 			
-	        this.quizzes = [
-	        	{"intitule": "Etat d'Urgence", "played": 1, "score": 4, "id": "EtatDurgence"}, 
-	        	{"intitule": "Linky", "played": 1, "score": 2, "id": "linky"}
-	        ];
+	        this.quizzes = [];
+	        $http.get(odass_app.hostname + "/api/listquiz").
+		    success(function(data, status) 
+		    {
+		    	if (data)
+		    	{
+					console.log(data);
+					dubito.quizzes = data.message;
+		    	}
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });
 	        
 	        // nom du quiz à récupérer en paramètre de l'URL
 	        
@@ -56,12 +66,11 @@
 		this.loadQuiz = function(dismissModal)
 		{
 			var dubito = this;
-			
-			$http.post(odass_app.hostname + "/api/getquizz/" + dubito.selectedQuiz.id, {"source": $location.absUrl()}).success(function(data)
+			$http.post(odass_app.hostname + "/api/getquizz/" + dubito.selectedQuiz.titre, {"source": $location.absUrl()}).success(function(data)
 			{
 				dubito.donnees = data;
-				
 				dubito.href = data.donnees.jeu.href;
+				
 				/** Game metadata initialization */
 				dubito.quiz.title = data.donnees.jeu.nom;
 				dubito.quiz.uuid = data.donnees.jeu.uuid;

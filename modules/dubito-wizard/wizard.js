@@ -554,9 +554,10 @@
 			
 			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": wizard.brouillon.quiz.name}).then(
 				/**   SERVER ANSWER  */
-				function(response)
+				function(data)
 				{
-					wizard.brouillon.quiz = response.donnees.id;
+					console.log(data);
+					wizard.brouillon.quiz.id = data.data.response.donnees.id;
 				},
 				function (response)
 				{

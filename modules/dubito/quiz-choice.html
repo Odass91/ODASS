@@ -9,7 +9,7 @@
 					<button type="button" class="list-group-item" ng-repeat="quiz in dubito.quizzes" ng-click="dubito.selectQuiz(quiz)" ng-dblclick="dubito.loadQuiz(true)">
 					  	<span class="glyphicon glyphicon-ok" ng-show="quiz.played && quiz.played == 1"></span>
 					  	<span class="glyphicon glyphicon-unchecked" ng-show="! quiz.played"></span>
-					  	{{ quiz.intitule }}
+					  	{{ quiz.titre }}
 					  	<span ng-show="quiz.score" class="glyphicon glyphicon-star-empty pull-right" ng-repeat="n in dubito.getArrayFromNumber(5 - quiz.score) track by $index"></span>
 					  	<span ng-show="quiz.score" class="glyphicon glyphicon-star pull-right" ng-repeat="n in dubito.getArrayFromNumber(quiz.score) track by $index"></span>
 					  	<span ng-show="! quiz.played || quiz.played == 0" class=" pull-right"><em style="color:rgba(255,255,255,0.3)">nouveau</em></span>

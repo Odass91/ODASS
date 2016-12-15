@@ -8,14 +8,14 @@
 		
 		<div class="col-lg-12" style="padding: 10px;">
 		
-			<ul class="col-lg-6 nav nav-pills nav-stacked">
+			<ul class="col-lg-6 nav nav-pills nav-stacked" ng-hide="dubito.displayRecommandation">
 				<li class="answer" ng-repeat="choice in dubito.card.propositions" ng-class="{'active': dubito.isCorrectAnswer(dubito.card, $index)}" >
 					<a href="#" ng-click="dubito.checkAnswer(dubito.card, choice.id)" ng-bind-html="choice.enonce"></a>
 				</li>
 			</ul>
 			
 			
-			<div class="col-lg-6">
+			<div class="col-lg-6" ng-hide="dubito.displayRecommandation">
 				<div ng-hide="dubito.hasAnswered">
 					<img src="images/attente.gif" class="img-responsive"></img>
 				</div>
@@ -44,6 +44,39 @@
 				  </div>
 			</div>
 			
+			<div class="col-lg-12" ng-show="dubito.displayRecommandation">
+				<form name="contactsForm" novalidate>
+					<div class="modal-body">
+							<div class="form-group" ng-form="origineForm">
+							    <label for="fromInputEmail">From:</label>
+							    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
+							</div>
+							<div class="form-group" ng-form="destinatairesForm">
+							    <label>To:</label>
+							    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="dubito.toContact" required></input>
+							</div>
+							
+							<div class="form-group text-center">
+								<a class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
+									Ajouter un destinataire
+								</a>
+							</div>
+							
+							<div class="form-group" ng-form="destinatairesForm">
+							    <span class="btn btn-default" ng-repeat="contact in dubito.toContacts track by $index" ng-click="dubito.removeContact($index)">{{contact}}<span class="glyphicon glyphicon-minus"></span>
+							</div>
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default" ng-click="dubito.displayRecommandation = false">
+							<span class="glyphicon glyphicon-arrow-left"></span> retour
+						</button>
+						<button type="button" class="btn btn-success" data-dismiss="modal" ng-click="dubito.sendRecommendation()" ng-disabled="origineForm.$invalid || destinatairesForm.$invalid">
+							<span class="glyphicon glyphicon-envelope"></span> Envoyer !
+						</button>
+					</div>		
+				</form>
+			</div>
+			
 			<div class="text-center">
 				<button ng-hide="(dubito.turn == dubito.quiz.questions - 1) || ! dubito.hasAnswered" type="button" class="btn btn-success" ng-click="dubito.nextTurn()">
 		  			 Question suivante&nbsp;<span class="glyphicon glyphicon-arrow-right" ></span>
@@ -64,9 +97,9 @@
 	  	<p class="col-xs-4 col-lg-4 text-center vcenter"><span class="btn">Tour {{ dubito.turn + 1}} / {{ dubito.quiz.questions}}</span></p>
 	  	
 	  	<p class="col-xs-4 col-lg-4 text-right vcenter">
-		  	<button type="button" class="btn btn-primary" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#send-contact"> 
-		  				<span class="glyphicon glyphicon-envelope" ></span><span class="hidden-xs"> Recommander</span>
-		  			</button>
+		  	<button type="button" class="btn btn-primary"  ng-click="dubito.displayRecommandation = true"> 
+  				<span class="glyphicon glyphicon-envelope" ></span><span class="hidden-xs"> Recommander</span>
+  			</button>
 			<a class="twitter-share-button glyphicon icon-twitter-t" href="https://twitter.com/intent/tweet?text={{dubito.card.intitule}}"></a>
 		</p>
 	  </div>

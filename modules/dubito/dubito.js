@@ -42,7 +42,8 @@
 	        // nom du quiz à récupérer en paramètre de l'URL
 	        
 	        // Recommendation parameters
-	        this.toContacts = [null, null];
+	        this.toContacts = [];
+	        this.toContact = "";
 	        this.fromContact = "";
 
 	        this.selectedQuiz = {"intitule": "Electro-sensibilité", "played": 0, "id": "linky"};
@@ -234,7 +235,14 @@
 		
 		this.addContactEmail = function()
 		{
-			this.toContacts.push("");
+			this.toContacts.push(this.toContact);
+			console.log(this.toContacts);
+			this.toContact = ""; 
+		};
+		
+		this.removeContact = function(supprIndex)
+		{
+			this.toContacts.splice(supprIndex, 1);
 		};
 
 		this.sendRecommendation = function()
@@ -245,7 +253,7 @@
 				"body": "Message personnalise"
 			};
 			console.log("send reco from:", this.fromContact, "to:", this.toContacts);
-			
+			this.displayRecommandation = false;
 			$http.post(odass_app.hostname + "/api/sendrecommendation/", recoParameters).success(function(data)
             {
             });			

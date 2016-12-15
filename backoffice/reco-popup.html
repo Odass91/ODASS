@@ -8,18 +8,18 @@
 				<h4>Envoyer à mes contacts</h4>
 			</div>
 			<form name="contactsForm" novalidate>
-				<div class="modal-body" style="max-height: {{game.obtainScreenHeight()}};overflow-y: scroll;">
+				<div class="modal-body">
 						<div class="form-group" ng-form="origineForm">
 						    <label for="fromInputEmail">From:</label>
-						    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="game.fromContact" required></input> 
+						    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
 						</div>
 						<div class="form-group" ng-form="destinatairesForm">
 						    <label>To:</label>
-						    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="game.toContacts[0]" required></input>
-						    <input type="email" class="form-control" placeholder="contact@email.org" ng-repeat="contact in game.toContacts track by $index" ng-show="$index > 0"  ng-model="game.toContacts[$index]"></input>
+						    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="dubito.toContacts[0]" required></input>
+						    <input type="email" class="form-control" placeholder="contact@email.org" ng-repeat="contact in dubito.toContacts track by $index" ng-show="$index > 0"  ng-model="game.toContacts[$index]"></input>
 						</div>
 						<div class="form-group text-center">
-							<a class="btn btn-primary" href="#" ng-click="game.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
+							<a class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
 								Ajouter un destinataire
 							</a>
 						</div>

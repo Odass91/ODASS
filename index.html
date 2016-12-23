@@ -16,6 +16,7 @@
 		<link rel="stylesheet" type="text/css" href="css/xeditable.css">
 		<link rel="stylesheet" type="text/css" href="css/slick.css"/>
 		<link rel="stylesheet" type="text/css" href="css/slick-theme.css"/>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
 		<style>
 			html, body { height: 100%; margin: 0; padding: 0; }
  			#map { height: 100%; }
@@ -54,7 +55,6 @@
 				font-size: 24px !important;
 			}
 		</style>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc&libraries=places" type="text/javascript"></script>
 	</head>
 
 	<body ng-controller="OdassController as odass" ng-class="{'loggedin' : odass.user.loggedIn}" data-spy="scroll" data-target="#navbar-odass">
@@ -125,17 +125,21 @@
 	
 
 	<section class="row" style="" >
-			<div class="col-lg-2">
+			<div class="col-lg-3">
 			</div>
-			<div class="col-lg-4 text-intro text-center">
+			<div class="col-lg-6 text-intro text-center">
 				<strong>ODASS, SCOP spécialistes des NTIC, conçoit et développe les outils quotidiens de l'action économique, sociale et solidaire.</strong>
 			</div>
-			<div class="col-lg-4">
+			<div class="col-lg-3">
 			</div>
-			<div class="col-lg-3 text-intro text-center">
+	</section>
+	<section class="row" style="" >
+			<div class="col-lg-3">
+			</div>
+			<div class="col-lg-6 text-intro text-center">
 				Ces outils s'adressent à tous, particuliers, professionnels, associations et collectifs.
 			</div>
-			<div class="col-lg-2">
+			<div class="col-lg-3">
 			</div>
 	</section>
 
@@ -529,6 +533,10 @@
 		<script type="text/javascript" src="libs/angular-ui-tree.min.js"></script>
 		<script type="text/javascript" src="libs/slick.min.js"></script>
 		<script type="text/javascript" src="libs/angular-slick.min.js"></script>
+		<script type="text/javascript" src="libs/jspdf.min.js"></script>
+		<script type="text/javascript" src="libs/pdfmake.min.js"></script>
+		<script type="text/javascript" src="libs/html2canvas.js"></script>
+		<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 		
 		<script type="text/javascript" src="odass.js"></script>
 		<script type="text/javascript" src="modules/dubito/dubito.js"></script>

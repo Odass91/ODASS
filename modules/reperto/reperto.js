@@ -23,6 +23,7 @@
 			/** INITIALISATION */
 
 			this.display = {};
+			this.navigationmode = "map";  // map | tree
 			
 			var guideid = "9";
 			
@@ -190,12 +191,25 @@
 		    	}
 		    	reperto.obtainExperiencesForIdeas();
 		    	
+		    	reperto.setupMap();
+		    	
 		    }).
 		    error(function(data, status) 
 		    {
 		    	console.log("Erreur lors de la recuperation du fichier json")
 		    });
 			
+		};
+		
+		this.setupMap = function()
+		{
+			var mymap = L.map('repertomap').setView([48.712, 2.24], 13);
+			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
+			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			    maxZoom: 18,
+			    id: 'davidleray.2f171f1g',
+			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
+			}).addTo(mymap);
 		};
 		
 
@@ -429,6 +443,36 @@
 			{
 				$("#initiative-" + this.savedInitiativeList[key].id).show();
 			}
+		}
+		
+		this.exportToPdf = function()
+		{
+//			var doc = new jsPDF();
+//			this.panierInitiatives.forEach(function(initiative)
+//			{
+//				console.log(initiative);
+//				doc.addPage();
+//				doc.setFontSize(24);
+//				doc.text(20,20,initiative.titre, {width: 500});
+//				doc.setFontSize(12);
+//				doc.text(20,60,initiative.descriptionlongue, {width: 500});
+//			}, this);
+//			doc.save("repertoire.pdf");
+//			
+			//
+			
+		   html2canvas(document.getElementById('initiatives-area'), {
+		            onrendered: function (canvas) {
+		                var data = canvas.toDataURL();
+		                var docDefinition = {
+		                    content: [{
+		                        image: data,
+		                        width: 500,
+		                    }]
+		                };
+		                pdfMake.createPdf(docDefinition).download("repertoire.pdf");
+		            }
+		        });
 		}
 	
 	}]);

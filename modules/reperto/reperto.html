@@ -51,10 +51,8 @@
 			
 		</section>
 		
-		<section></section>
-					
 		<section id="annuaire-body" class="row">
-			<div class="col-md-3">
+			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree'">
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
 				
@@ -99,11 +97,11 @@
 
 
 			<!--  COLONNE PRINCIPALE  -->
-			<div class="col-md-5">
-				<section id="thesaurus_metadata" class=""></section>
-			</div>
+			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
+				<div id="repertomap" style="height:600px;"></div>
+			 </div>
 			
-			<div class="col-md-9" id="initiatives-area">
+			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
 				<p style="">
 					<ol class="breadcrumb" style="display: inline-block;margin-left: 15px;">
 					  <li ng-click="reperto.init()">
@@ -120,7 +118,81 @@
 					</ol>
 					<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 				</p>
-				<repertoire-idees></repertoire-idees>
+				<h3 style="color: white; padding-left: 15px; margin-top: 22px;">
+					<span ng-show="reperto.activeFilters.keywords.length == 0" style="">{{reperto.display.idees.length}}</span>
+					<span ng-show="reperto.activeFilters.keywords.length != 0" style="">{{reperto.ideaDisplayed}}</span>
+					actions possibles&nbsp;&nbsp;
+				</h3>
+	
+				<div style="" ng-show="reperto.navigationmode == 'tree'">
+					 <idees></idees>
+				 </div>
+	
+				<div ng-show="reperto.navigationmode == 'tree'">
+					<nav aria-label="Page navigation">
+					  <ul class="pagination pagination-sm">
+					    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
+					  </ul>
+					</nav>
+				</div>
+			</div>
+			
+			
+	 
+	 
+			<div class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white">
+				<h4>TOOLBOX</h4>
+				<div>
+					<p>
+						<span ng-click="reperto.navigationmode = 'map'" class="btn btn-default">
+							<span class="glyphicon glyphicon-map-marker"></span>
+							&nbsp;Navigation par carte
+							<span ng-show="reperto.navigationmode == 'map'" class="glyphicon glyphicon-check"></span>
+						</span>
+					</p>
+					<p>
+						<span ng-click="reperto.navigationmode = 'tree'" class="btn btn-default">
+							<span class="glyphicon glyphicon-th-list"></span>&nbsp;Navigation par arborescence
+							<span ng-show="reperto.navigationmode == 'tree'" class="glyphicon glyphicon-check"></span>
+						</span>
+						</p>
+					<p>Navigation classique</p>
+				
+					<span ng-show="reperto.panierInitiatives.length == 0">
+						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
+					</span>
+					
+					<span ng-show="reperto.panierInitiatives.length > 0">
+						<p>{{reperto.panierInitiatives.length}} sauvées. <a href="">Cliquez ici</a> pour les visualiser.</p>
+						<p><span ng-click="reperto.exportToPdf()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
+					</span>
+				</div>
+			</div>
+			<div class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white">
+				<h4>INFO</h4>
+				<p ng-show="reperto.display.section">
+					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
+					
+					<span ng-hide="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.description"></span>
+					<span ng-show="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.descriptionlongue"></span>
+					
+					
+					<a href="" ng-show="reperto.display.section && ! reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = true">voir plus</a>
+					<a href="" ng-show="reperto.display.section && reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = false">voir moins</a>
+				</p>
+				
+				<p ng-show="reperto.display.chapitre">
+					<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
+					
+					<span ng-hide="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.description"></span>
+					<span ng-show="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.descriptionlongue"></span>
+					
+					<a href="" ng-show="reperto.display.chapitre && ! reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = true">voir plus</a>
+					<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = false">voir moins</a>
+				</p>
+				
+				<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
+				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
 			</div>
 			
 		</section>

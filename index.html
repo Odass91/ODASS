@@ -4,6 +4,8 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://fonts.googleapis.com/css?family=Bree+Serif|Varela+Round" rel="stylesheet"> 
+		
 		<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.css"/>
 		<link rel="stylesheet" type="text/css" href="libs/fullcalendar/fullcalendar.css"/>
 		<link rel="stylesheet" href="libs/themes/default/style.min.css" />
@@ -12,18 +14,91 @@
 		<link rel="stylesheet" type="text/css" href="css/angular-ui-tree.css">
 		<link rel="stylesheet" type="text/css" href="css/angular-ui-tree-app.css">
 		<link rel="stylesheet" type="text/css" href="css/xeditable.css">
+		<link rel="stylesheet" type="text/css" href="css/slick.css"/>
+		<link rel="stylesheet" type="text/css" href="css/slick-theme.css"/>
 		<style>
 			html, body { height: 100%; margin: 0; padding: 0; }
  			#map { height: 100%; }
+ 			#site-vitrine, body {position:relative;}
+		</style>
+		<style>
+			#logo-odass
+			{
+				width: 100px;
+				height: 100px;
+				position: relative;
+				left: 50%;
+				margin-left: -50px;
+				margin-bottom: 50px;
+			}
+			.carousel-legende
+			{
+				background-color: rgba(0,0,0,0.4);
+				color: white;
+				padding: 5px;
+				position: relative;
+				top: -45px;
+				left: 2px;
+				right: 2px;
+			}
+			
+			#site-vitrine .row
+			{
+				padding: 25px;
+				color: white;
+			}
+			
+			.text-intro, .text-intro a
+			{
+				font-family: 'Varela Round', sans-serif;
+				font-size: 24px !important;
+			}
 		</style>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc&libraries=places" type="text/javascript"></script>
 	</head>
 
-	<body ng-controller="OdassController as odass" ng-class="{'loggedin' : odass.user.loggedIn}">
-	
+	<body ng-controller="OdassController as odass" ng-class="{'loggedin' : odass.user.loggedIn}" data-spy="scroll" data-target="#navbar-odass">
+		<navbar-logged-in></navbar-logged-in>
+		
 		<div class="container-fluid page-wrap">
-			<navbar-logged-off></navbar-logged-off>
-			<navbar-logged-in></navbar-logged-in>
+			<nav id="navbar-odass" class="navbar navbar-default navbar-fixed-top" ng-hide="odass.user.loggedIn">
+				<div class="container-fluid">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed"
+							data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+							aria-expanded="false">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="http://demo.odass.org"></a>
+					</div>
+			
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			
+						<!--  MODULES ODASS -->
+						<ul id="menu-odass-site" class="nav navbar-nav">
+							<li class="active">
+								<a id="dashboard-item" href="#page-accueil" style="padding-top: 0px; padding-bottom: 0px;"> 
+								<img src="images/odass-logo-sable.png" class="img-responsive"alt="LOGO ODASS" width="50px" height="50px"></img> 
+								<span class="sr-only">(current)</span>
+								</a>
+							</li>
+							<li><a id="page-accueil-item" href="#page-accueil">Accueil</a></li>
+							<li><a id="page-outils-item" href="#page-outils">Outils</a></li>
+							<li><a id="page-services-item" href="#page-services">Services</a></li>
+			<!-- 				<li><a id="page-partenaires-item" href="" ng-click="odass.changeModule('page-partenaires')">Partenaires</a></li> -->
+						</ul>
+						<!--  USER MENU -->
+						<ul class="nav navbar-nav navbar-right">
+							<li ng-show="odass.debug"><a href="#" data-toggle="modal" data-target="#login-popup"><span class="glyphicon glyphicon-wrench"></span></a></li>
+							<li ng-hide="odass.user.loggedIn"><a href="#" data-toggle="modal" data-target="#login-popup"><span class="glyphicon glyphicon-log-in"></span> Connexion</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
 		
 			<!--  POPUPS  -->
 			<reco-popup></reco-popup>
@@ -36,10 +111,297 @@
 			<mentions-legales-popup></mentions-legales-popup>
 			
 			<!-- SITE VITRINE -->
-			<page-accueil></page-accueil>
-			<page-outils></page-outils>
-			<page-partenaires></page-partenaires>
-			<page-services></page-services>
+			<div id="site-vitrine" ng-hide="odass.user.loggedIn">
+
+
+<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6);padding-top:50px;">
+	<!-- DEBUG -->
+	
+	<section class="row">
+		<div class="text-center">
+			<img id="logo-odass" src="images/odass-logo-gris-clair.png" alt="logo ODASS" class="img-responsive">
+		</div>
+	</section>
+	
+
+	<section class="row" style="" >
+			<div class="col-lg-2">
+			</div>
+			<div class="col-lg-3 text-intro text-center">
+				ODASS, SCOP spécialistes des NTIC, conçoit et développe les outils quotidiens de l'action économique, sociale et solidaire.
+			</div>
+			<div class="col-lg-2">
+			</div>
+			<div class="col-lg-3 text-intro text-center">
+				Ces outils s'adressent à tous, particuliers, professionnels, associations et collectifs.
+			</div>
+			<div class="col-lg-2">
+			</div>
+	</section>
+
+	<section class="row" style="" >
+			<div class="col-lg-2">
+			</div>
+			<div class="col-lg-3 text-intro text-center">
+				L’expertise et les services ODASS vous permettent de vous concentrer tout simplement sur vos missions.
+			</div>
+			<div class="col-lg-2">
+			</div>
+			<div class="col-lg-3 text-intro text-center">
+				<a href="#" data-toggle="modal" data-target="#ethique-odass-popup">L’éthique ODASS</a> vous garantit des projets développés dans le respect des valeurs de l’ESS.
+			</div>
+			<div class="col-lg-2">
+			</div>
+	</section>
+
+	<section class="row" style="" >
+		<div class="col-lg-1">
+		</div>
+		<div class="col-lg-10">
+			  <slick infinite="true" slides-to-show="3" slides-to-scroll="1">
+			    
+			    <div class="">
+				  <img src="images/vitrine-1.jpg" alt="..." class="img-responsive">
+			      <div class="carousel-legende">
+			        Nous croyons dans les valeurs mutualistes : tous nos outils sont développés au bénéfice de tout le monde
+			      </div>
+			    </div>
+			    
+			    
+			    <div class="">
+			      <img src="images/vitrine-2.jpg" alt="..." class="img-responsive">
+			      <div class="carousel-legende">
+			        Nous respectons la vie privée : nous ne faisons pas de commerce avec vos données
+			      </div>
+			    </div>
+			    
+			    
+			    <div class="">
+			      <img src="images/vitrine-3.jpg" alt="..." class="img-responsive">
+			      <div class="carousel-legende">
+			        Nous voulons que tou.te.s aient accès au meilleur : avec notre modèle à prix libre chacun.e contribue selon ses moyens aux outils communs
+			      </div>
+			    </div>
+			    
+			    
+			    <div class="">
+			      <img src="images/vitrine-4.jpg" alt="..." class="img-responsive">
+			      <div class="carousel-legende">
+			        Nous savons que l’union fait la force : nos outils collaboratifs sont élaborés pour fédérer les citoyen.ne.s
+			      </div>
+			    </div>
+			  </slick>
+		</div>
+		<div class="col-lg-1">
+		</div>
+	</section>
+</div>
+		
+		
+				
+				
+				
+				
+				
+<div id="page-outils" class="container-fluid" style="background-color:rgba(0,125,0,0.6);">
+	<section class="row" style="background-color:rgba(50,125,50,0.8);">
+		<div class="text-center">
+			<h4>Nos outils . Nos logiciels </h4>
+		</div>
+	</section>
+	
+	
+	<!-- DEBUG -->
+	<section class="row module-description">
+		<div class="col-lg-4">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-petition.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Petitio</h4>
+				  	<p>Créez et mettez en ligne votre pétition.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-8">
+			<div class="module-description-text">
+				<p>Un outil pour</p>    
+				<dl class="dl-horizontal">
+					<dt>créer et héberger</dt>
+					<dd>vos pétitions</dd>
+					
+					<dt>permettre <br/>leur signature</dt>
+					<dd>selon des paramètres choisis par le soumissionnaire</dd>
+					
+					<dt>traiter les données</dt>
+					<dd>des signataires uniquement par le soumissionnaire, en toute transparence</dd>
+				</dl>   
+			
+				
+			</div>
+		</div>
+	</section>
+	<section class="row module-description">
+		<div class="col-lg-5">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-repertoire.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Reperto</h4>
+				  	<p>Naviguez dans un répertoire hiérarchique de données.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-7">
+			<div class="module-description-text">
+				<p>Un outil pour</p>
+				<dl class="dl-horizontal">
+					<dt>créer et héberger</dt>
+					<dd>un répertoire de données</dd>
+					
+					<dt>classer</dt>
+					<dd>les données selon des thésaurus choisis et/ou créés par l’utilisateur</dd>
+					
+					<dt>découvrir et <br/>rechercher</dt>
+					<dd>les données grâce à des filtres choisis et/ou créés par l’utilisateur</dd>
+					
+				</dl>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="row module-description">
+		<div class="col-lg-4">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-quiz.png" class="media-object" alt="LOGO DUBITO" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">Dubito</h4>
+				  	<p>Le jeu multiformat de déconstruction intellectuelle et de culture générale.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="module-description-text" >
+				<style>
+					.dl-horizontal dd {margin-bottom: 12px;}
+				</style>
+				<p>Découvrez nos quiz. Créez vos propres quiz.</p>
+				<dl class="dl-horizontal">
+					<dt>multiformat</dt>
+					<dd>on peut jouer sur un PC, une tablette, un smartphone, avec des cartes… </dd>
+					
+					<dt>de culture générale</dt>
+					<dd>avec des questions à choix multiple sur des sujets de société concrets et des réponses argumentées et documentées</dd>
+					
+					<dt>de déconstruction <br/>intellectuelle</dt>
+					<dd>les questions-réponses contribuent à la déconstruction des idées reçues et rendent plus clair la cohérence du système capitaliste global et ses conséquences</dd>
+					
+					<dt>coopératif</dt>
+					<dd>les joueurs coopèrent avec leurs amis pour gagner mieux</dd>
+					
+					<dt>contributif</dt>
+					<dd>les joueurs proposent des questions pour enrichir la base de donnée ou même créer de nouveaux jeux sur un thème de leur choix</dd>
+					
+					<dt>et d’utilité sociale</dt>
+					<dd>les joueurs améliorent leurs connaissances et leur compréhension des enjeux de société et favorise leur prise de conscience de leur puissance d’agir sur la société</dd>
+				</dl>
+			</div>
+		</div>
+	</section>
+</div>
+
+
+
+
+
+	
+		<div id="page-services"  class="container-fluid" style="background-color:rgba(125,0,0,0.6);">
+		
+			<section class="row" style="background-color:rgba(125,50,50,0.8);">
+				<div class="text-center">
+					<h4>Notre expertise</h4>
+				</div>
+			</section>
+			
+			<section class="row">
+				<div class="col-lg-3"></div>
+				<p class="col-lg-6 text-center">
+					ODASS est la SCOP spécialiste de l’Internet et des NTIC. 
+					ODASS permet à tous les acteurs de l’économie sociale et solidaire de s’équiper en outils efficaces et performants.
+					Selon vos besoins, ODASS gère ou développe pour vous les outils et les interfaces adaptés à vos missions. </br></br>
+					N’hésitez pas à <a href="mailto:contact@odass.org?subject=contact">nous contacter</a> pour de plus amples détails.
+				</p>
+				<div class="col-lg-3"></div>
+			</section>
+		
+			<section class="row">
+				<div class="text-center">
+					<h4>Notre offre de service</h4>
+				</div>
+			</section>
+			
+			<!-- DEBUG -->
+
+			<section class="row">
+				
+				<div class="col-lg-2"></div>
+				
+				<div class="col-lg-4">
+					<div class="media">
+						<div class="media-left">
+							<a href="#">
+							  	<img src="images/odass-logo-noir.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+							</a>
+						</div>
+						<div class="media-body">
+						  	<h4 class="media-heading">Internet</h4>
+						  	<p>Conception & développement sur mesure</p>
+							<p>Analyse & optimisation des sites Internet</p>
+							<p>Amélioration continue par tests A/B</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-4">
+					<div class="media">
+						<div class="media-left">
+							<a href="#">
+							  	<img src="images/site-page-services-techno.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+							</a>
+						</div>
+						<div class="media-body">
+						  	<h4 class="media-heading">Techno</h4>
+						  	<p>Javascript / Boostrap, AngularJS</p>
+							<p>Java / J2EE, Grails</p>
+							<p>BDD / mySQL</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-2"></div>
+			</section>
+		</div>
+
+
+
+
+
+
+				<page-partenaires id="page-partenaires"></page-partenaires>
+			</div>
 			
 			<!-- ODASS MODULES -->
 			
@@ -118,6 +480,8 @@
 		<script type="text/javascript" src="libs/rzslider.min.js"></script>
 		<script type="text/javascript" src="libs/xeditable.js"></script>
 		<script type="text/javascript" src="libs/angular-ui-tree.min.js"></script>
+		<script type="text/javascript" src="libs/slick.min.js"></script>
+		<script type="text/javascript" src="libs/angular-slick.min.js"></script>
 		
 		<script type="text/javascript" src="odass.js"></script>
 		<script type="text/javascript" src="modules/dubito/dubito.js"></script>
@@ -131,6 +495,7 @@
 			$(function () {
 			  $('[data-toggle="popover"]').popover();
 			})
+			
 		</script>
 	</body>
 	

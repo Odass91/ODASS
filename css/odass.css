@@ -133,7 +133,8 @@ html, body
 }
 .footer, .page-wrap:after 
 {
-  height: 42px; 
+  height: 42px;
+  padding-top: 10px;
 }
 .footer 
 {
@@ -145,6 +146,8 @@ html, body
 h1, h2, h3, h4
 {
 	text-transform: uppercase;
+	font-family: 'Varela Round', sans-serif;
+	
 }
 
 .media
@@ -156,13 +159,6 @@ h1, h2, h3, h4
 {
 	padding: 10px;
 	background: url("../images/module-dubito-screenshot");
-}
-.module-description:hover
-{
-	border: 1px solid #e7e7e7;
-	border-radius: 8px;
-	background-color: #fefefe;
-	
 }
 
 li.answer.active 

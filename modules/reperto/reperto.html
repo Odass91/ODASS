@@ -99,6 +99,12 @@
 			<!--  COLONNE PRINCIPALE  -->
 			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
 				<div id="repertomap" style="height:600px;"></div>
+				<div class="row">
+					<div class="col-md-1 filter" ng-repeat="categorie in reperto.availableFilters.keywords" style="background-color:#{{categorie.color}}; padding:5px;">
+						{{categorie.label}}
+					</div>
+				
+				</div>
 			 </div>
 			
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">

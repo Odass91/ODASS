@@ -341,6 +341,16 @@ p.red
  	font-weight: bold;
  }
  
+ .filter
+ {
+ 	cursor: pointer;
+ }
+ 
+ .filter:hover
+ {
+ 	opacity: 0.5;
+ }
+ 
  /** MAIN SITE */
  
  #menu-odass>li.active:first-child

@@ -54,7 +54,19 @@
 			
 			this.availableFilters = 
 			{
-			    "keywords": []
+			    "keywords": [
+			    	{"label": "CATEGORIE 1", "color": "00aadd"},
+			    	{"label": "CATEGORIE 2", "color": "5db026"},
+			    	{"label": "CATEGORIE 3", "color": "6e8126"},
+			    	{"label": "CATEGORIE 4", "color": "0068a2"},
+			    	{"label": "CATEGORIE 5", "color": "396a78"},
+			    	{"label": "CATEGORIE 6", "color": "613b6b"},
+			    	{"label": "CATEGORIE 7", "color": "af2f38"},
+		    		{"label": "CATEGORIE 8", "color": "e34cb8"},
+		    		{"label": "CATEGORIE 9", "color": "ffc932"},
+		    		{"label": "CATEGORIE 10", "color": "e8352b"}
+		    	]
+			
 			};
 
 			this.activeFilters = 
@@ -203,15 +215,42 @@
 		
 		this.setupMap = function()
 		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 13);
+			var mymap = L.map('repertomap').setView([48.712, 2.24], 10);
 			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
 			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			    maxZoom: 18,
 			    id: 'davidleray.2f171f1g',
 			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
 			}).addTo(mymap);
+			
+			this.reperto_carte = mymap;
 		};
 		
+		
+		this.addMarker = function(experience)
+		{
+			if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+			if (experience.geoloc)
+			{
+				console.log(experience);
+				var x_pos = 42 + (Math.random()*8);
+				var y_pos = -1 + (Math.random()*10);
+				experience.category = Math.ceil(Math.random()*10);
+				var icon = L.icon({
+					'iconUrl': 'images/markers/marker-'+ this.availableFilters.keywords[experience.category].color + '.png'
+				})
+				var marker = L.marker([x_pos, y_pos], {"icon": icon}).addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+				experience.marker = marker;
+			}
+		};
+		
+		this.filterMap = function(categorie)
+		{
+			reperto.display.idees.forEach(function(idee){}, this);
+		};
 
 		this.tagThesaurus = function(thesaurus)
 		{
@@ -247,6 +286,7 @@
 			//GUIDE_idduguide -> toutes les xps d'un guide
 			//
 			
+			var reperto = this;
 			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
 		    {
@@ -259,6 +299,14 @@
 						experience.display = {};
 						experience.display.format = "court";
 					}, this);
+					
+					data.experiences.forEach(function(exp)
+					{
+						if (exp.geoloc)
+						{
+							reperto.addMarker(exp);
+						}
+					}, reperto);
 				}
 				else
 				{

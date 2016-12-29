@@ -96,16 +96,33 @@
 			</div>
 
 
+
+
+
 			<!--  COLONNE PRINCIPALE  -->
 			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
+				
+				
 				<div id="repertomap" style="height:600px;"></div>
-				<div class="row">
-					<div class="col-md-1 filter" ng-repeat="categorie in reperto.availableFilters.keywords" style="background-color:#{{categorie.color}}; padding:5px;">
-						{{categorie.label}}
+				
+				
+				<div class="row" ng-hide="reperto.guide_is_loaded">guide en cours de chargement...</div>
+				
+				
+				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;">
+					<div class="col-md-1 filter" ng-repeat="categorie in reperto.availableFilters.keywords" 
+						style="background-color:#{{categorie.color}}; padding:5px; color: white"
+						ng-click="reperto.toggleCategory(categorie)" 
+						ng-class="{ 'active': reperto.isCategorieActive(categorie)}">
+						<span class="glyphicon" ng-class="{ 'glyphicon-eye-open': reperto.isCategorieActive(categorie), 'glyphicon-eye-close': ! reperto.isCategorieActive(categorie)}"></span>&nbsp;&nbsp;{{categorie.label}}
 					</div>
 				
 				</div>
 			 </div>
+			 
+			 
+			 
+			 
 			
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
 				<p style="">

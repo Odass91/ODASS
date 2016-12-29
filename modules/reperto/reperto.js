@@ -182,6 +182,8 @@
 		    	reperto.idees = data.idees;
 		    	reperto.experiences = {};
 		    	
+//		    	reperto.cache = {};
+//		    	reperto.cache.idees = data.idees;
 		    	reperto.cache = {};
 		    	reperto.cache.idees = data.idees;
 		    	
@@ -213,63 +215,6 @@
 			
 		};
 		
-		this.setupMap = function()
-		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 10);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
-			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'davidleray.2f171f1g',
-			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
-			}).addTo(mymap);
-			
-			this.reperto_carte = mymap;
-		};
-		
-		
-		this.addMarker = function(experience)
-		{
-			if (! this.reperto_carte)
-			{
-				this.setupMap();
-			}
-			if (experience.geoloc)
-			{
-				console.log(experience);
-				var x_pos = 42 + (Math.random()*8);
-				var y_pos = -1 + (Math.random()*10);
-				experience.category = Math.ceil(Math.random()*10);
-				var icon = L.icon({
-					'iconUrl': 'images/markers/marker-'+ this.availableFilters.keywords[experience.category].color + '.png'
-				})
-				var marker = L.marker([x_pos, y_pos], {"icon": icon}).addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
-				experience.marker = marker;
-			}
-		};
-		
-		this.filterMap = function(categorie)
-		{
-			reperto.display.idees.forEach(function(idee){}, this);
-		};
-
-		this.tagThesaurus = function(thesaurus)
-		{
-			this.availableFilters = {"keywords": []};
-			var reperto = this;
-			$http.get(odass_app.hostname + "/api/getmotclefs/9").
-		    success(function(data, status) 
-		    {
-		    	reperto.availableFilters = data;
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json - keywords");
-		    });
-
-			
-			return;
-		};
-		
 		this.obtainExperiencesForIdeas = function()
 		{
 			var experiences = [];
@@ -279,6 +224,8 @@
 			{
 				this.obtainExperiencesForIdea(idee);
 			}, this);
+			
+			this.guide_is_loaded = true;
 		};
 		
 		this.obtainExperiencesForIdea = function(idee)
@@ -294,31 +241,147 @@
 				
 				if (data.experiences)
 				{
-					idee.display.experiences = data.experiences;
-					idee.display.experiences.forEach(function(experience){
+					idee.experiences = data.experiences;
+					idee.experiences.forEach(function(experience)
+					{
 						experience.display = {};
 						experience.display.format = "court";
+						experience.category = Math.floor(Math.random() * 10);
 					}, this);
 					
 					data.experiences.forEach(function(exp)
 					{
 						if (exp.geoloc)
 						{
-							reperto.addMarker(exp);
+							reperto.setupMarker(exp);
 						}
 					}, reperto);
 				}
 				else
 				{
-					idee.display.experiences  = [];
+					idee.experiences  = [];
 				}
 		    }).
 		    error(function(data, status) 
 		    {
 				idee.display = {};
-				idee.display.experiences  = [];
+				idee.experiences  = [];
 		    	console.log("Erreur lors de la recuperation du fichier json - experiences");
 		    });
+		};
+		
+		/** MAP */
+		
+		this.setupMap = function()
+		{
+			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
+			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
+			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			    maxZoom: 18,
+			    id: 'davidleray.2f171f1g',
+			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
+			}).addTo(mymap);
+			
+			this.reperto_carte = mymap;
+		};
+		
+		
+		this.setupMarker = function(experience)
+		{
+			if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+			if (experience.geoloc)
+			{
+				var x_pos = 42 + (Math.random() * 8);
+				var y_pos = -1 + (Math.random() * 10);
+				var icon = L.icon({
+					'iconUrl': 'images/markers/marker-'+ this.availableFilters.keywords[experience.category].color + '.png'
+				})
+				var marker = L.marker([x_pos, y_pos], {"icon": icon});
+				experience.marker = marker;
+			}
+		};
+		
+		this.isCategorieActive = function(categorie)
+		{
+			if (! this.activeCategories)
+			{
+				this.activeCategories = {};
+			}
+			return (this.activeCategories[categorie.label] != undefined);
+		};
+		
+		this.toggleCategory = function(categorie)
+		{
+			if (this.activeCategories == undefined)
+			{
+				this.activeCategories = [];
+			}
+
+			if (this.activeCategories[categorie.label] == undefined)
+			{
+				this.addCategoryToMap(categorie);
+				this.activeCategories[categorie.label] = true;
+			}
+			else
+			{
+				this.removeCategoryToMap(categorie);
+				delete this.activeCategories[categorie.label];
+			}
+		};
+		
+		this.addCategoryToMap = function(categorie)
+		{
+			this.display.idees.forEach(function(idee)
+			{
+				if (idee.experiences)
+				{
+					idee.experiences.forEach(function (experience)
+					{
+						if (this.availableFilters.keywords[experience.category].label == categorie.label)
+						{
+							experience.marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+						}
+					}, this);
+				}
+			}, this);
+		};
+		
+		this.removeCategoryToMap = function(categorie)
+		{
+			this.display.idees.forEach(function(idee)
+			{
+				if (idee.experiences)
+				{
+					idee.experiences.forEach(function (experience)
+					{
+						if (this.availableFilters.keywords[experience.category].label == categorie.label)
+						{
+							experience.marker.remove();
+						}
+					}, this);
+				}
+			}, this);
+		};
+
+		this.tagThesaurus = function(thesaurus)
+		{
+//			this.availableFilters = {"keywords": []};
+//			var reperto = this;
+//			$http.get(odass_app.hostname + "/api/getmotclefs/9").
+//		    success(function(data, status) 
+//		    {
+//		    	reperto.availableFilters = data;
+//		    }).
+//		    error(function(data, status) 
+//		    {
+//		    	console.log("Erreur lors de la recuperation du fichier json - keywords");
+//		    });
+//
+//			
+			return;
 		};
 		
 		

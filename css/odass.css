@@ -338,12 +338,24 @@ p.red
  
  .filter-match
  {
+ 	font-weight: normal;
+ }
+ .filter-match.active
+ {
  	font-weight: bold;
+ 	opacity: 1;
  }
  
  .filter
  {
  	cursor: pointer;
+ 	opacity: 0.3;
+ }
+ 
+ .filter.active
+ {
+ 	cursor: pointer;
+ 	opacity: 1;
  }
  
  .filter:hover

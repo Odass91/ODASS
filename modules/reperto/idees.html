@@ -7,7 +7,7 @@
 	<div class="panel panel-success">
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="">{{idee.titre}}</span>
+				<span class="">{{idee.id}} / {{idee.titre}}</span>
 				<span class="pull-right">
 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>

@@ -55,16 +55,16 @@
 			this.availableFilters = 
 			{
 			    "keywords": [
-			    	{"label": "CATEGORIE 1", "color": "00aadd"},
-			    	{"label": "CATEGORIE 2", "color": "5db026"},
-			    	{"label": "CATEGORIE 3", "color": "6e8126"},
-			    	{"label": "CATEGORIE 4", "color": "0068a2"},
-			    	{"label": "CATEGORIE 5", "color": "396a78"},
-			    	{"label": "CATEGORIE 6", "color": "613b6b"},
-			    	{"label": "CATEGORIE 7", "color": "af2f38"},
-		    		{"label": "CATEGORIE 8", "color": "e34cb8"},
-		    		{"label": "CATEGORIE 9", "color": "ffc932"},
-		    		{"label": "CATEGORIE 10", "color": "e8352b"}
+			    	{"label": "CATEGORIE A", "color": "00aadd"},
+			    	{"label": "CATEGORIE B", "color": "5db026"},
+			    	{"label": "CATEGORIE C", "color": "6e8126"},
+			    	{"label": "CATEGORIE D", "color": "0068a2"},
+			    	{"label": "CATEGORIE E", "color": "396a78"},
+			    	{"label": "CATEGORIE F", "color": "613b6b"},
+			    	{"label": "CATEGORIE G", "color": "af2f38"},
+		    		{"label": "CATEGORIE H", "color": "e34cb8"},
+		    		{"label": "CATEGORIE I", "color": "ffc932"},
+		    		{"label": "CATEGORIE J", "color": "e8352b"}
 		    	]
 			
 			};
@@ -375,6 +375,7 @@
 
 			this.display.idees.forEach(function(idee)
 			{
+				idee.experiences = 'loading';
 				this.obtainExperiencesForIdea(idee);
 			}, this);
 			
@@ -401,8 +402,7 @@
 						experience.display.format = "court";
 						experience.category = Math.floor(Math.random() * 10);
 					}, this);
-					
-					data.experiences.forEach(function(exp)
+					idee.experiences.forEach(function(exp)
 					{
 						if (exp.geoloc)
 						{
@@ -550,7 +550,6 @@
 		{
 			this.display.idees = [];
 			this.gatherIdeas(section);
-			this.updateInitiatives();
 			
 			this.display.section = section;
 			this.display.chapitre = null;
@@ -565,7 +564,6 @@
 		{
 			this.display.idees = [];
 			this.gatherIdeas(chapitre);
-			this.updateInitiatives();
 
 			this.display.intro = null;
 			this.display.section = null;
@@ -579,7 +577,15 @@
 		
 		this.gatherIdeas = function(section)
 		{
-			var idees = JSON.search(this.idees, '//*[parent/text()="' + section.id + '"]');
+			var idees = [];
+			
+			for (var idee of this.cache.idees)
+			{
+				if (idee.parent == section.id)
+				{
+					idees.push(idee);
+				}
+			}
 			
 			idees.forEach(function(idee)
 			{

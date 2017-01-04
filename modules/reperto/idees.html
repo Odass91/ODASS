@@ -42,12 +42,11 @@
 				</span>
 			</p>
 			
-			<div ng-show="!idee.display.experiences" style="color: rgba(0,0,0,0.6)" class="text-center">
+			<div ng-show="idee.experiences == 'loading'" style="color: rgba(0,0,0,0.6)" class="text-center">
 				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
 			</div>
 			
-			<experiences idee="idee" reperto="reperto" ng-show="idee.display.experiences && idee.display.experiences.length > 0" 
-				style="position:absolute; bottom: 0px; left: 0px; right: 0px; max-height: 200px;">
+			<experiences idee="idee" reperto="reperto" ng-show="idee.experiences != 'loading' && idee.experiences.length > 0">
 			</experiences>
 		</div>
 	</div>

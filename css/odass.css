@@ -360,7 +360,7 @@ p.red
  
  .filter:hover
  {
- 	opacity: 0.5;
+ 	opacity: 0.8;
  }
  
  /** MAIN SITE */
@@ -382,6 +382,26 @@ p.red
  }
  
  /** CAC REPERTOIRE */
+ 
+ .prettyprint .sheet
+ {
+ 	background-color: white;
+ 	padding: 1cm;
+ }
+ 
+ .prettyprint .sheet.A4.portrait
+ {
+ 	width: 21cm;
+ 	height: 29.7cm;
+ 	overflow: auto;
+ }
+ 
+ .prettyprint .toolbox
+ {
+ 	position: relative;
+ 	left: 5%;
+ 	top: -15px;
+ }
  
  #thesaurus-ecologie-tree
  {

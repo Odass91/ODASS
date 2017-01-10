@@ -7,7 +7,7 @@
 	<div class="panel panel-success">
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="">{{idee.id}} / {{idee.titre}}</span>
+				<span class="{{idee.id}}">{{idee.titre}}</span>
 				<span class="pull-right">
 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
@@ -46,8 +46,59 @@
 				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
 			</div>
 			
-			<experiences idee="idee" reperto="reperto" ng-show="idee.experiences != 'loading' && idee.experiences.length > 0">
-			</experiences>
+			<slick ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" infinite="true" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
+					
+					<div ng-repeat="experience in idee.experiences track by $index">
+						<div class="panel panel-default col-lg-12">
+					
+							<div class="panel-heading">
+								<h4 class="panel-title initiative-title">
+									<span class="" ng-bind-html="experience.label"></span>
+								</h4>
+							</div>
+							
+							<div class="panel-body" style="max-height: 100px; overflow:auto;">
+								
+								<p style="" ng-hide="experience.displayLong">
+									<span ng-bind-html="experience.description"></span>
+									<a href="" ng-click="experience.displayLong=true">Voir plus</a>
+								</p>
+								
+								<p style="" ng-show="experience.displayLong">
+									<span ng-bind-html="experience.descriptionlongue"></span>
+									
+									<p ng-show="experience.displayLong && experience.references && experience.references.length > 0">
+										<span class="glyphicon glyphicon-globe"></span>&nbsp; 
+										<span ng-repeat="lien in experience.references">
+											<a target="_" href="{{lien.lien}}">{{lien.nom}}</a><br />
+										</span>
+									</p>
+									
+									<p ng-show="experience.displayLong && experience.contacts && experience.contacts.length > 0">
+										<span class="glyphicon glyphicon-user"></span>&nbsp; 
+										<span ng-repeat="contact in experience.contacts">
+											<a href="{{contact.href}}">{{contact}}</a><br />
+										</span>
+									</p>
+									
+									<a ng-show="experience.displayLong" href="" ng-click="experience.displayLong=false">Voir moins</a>
+								</p>
+					
+								<p ng-show="experience.keywords.length > 0">
+									<span class="glyphicon glyphicon-tag">&nbsp;</span> 
+									<span class="tag" ng-repeat="keyword in experience.keywords"> 
+										<span class="label label-info">{{keyword}}</span>&nbsp;
+									</span>
+									<span class="tag"> 
+										<span class="label label-default">{{experience.geoloc}}</span>&nbsp;
+									</span>
+								</p>
+							</div>
+						</div>
+					
+					</div>
+				
+			</slick>
 		</div>
 	</div>
 </section>

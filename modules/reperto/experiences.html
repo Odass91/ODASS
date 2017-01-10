@@ -1,8 +1,9 @@
 
 <slick id="carousel-{{idee.id}}" infinite="true" slides-to-show="1" slides-to-scroll="1">
 
-	  		<section ng-repeat="experience in idee.experiences track by $index" class="initiative-item item" id="experience-{{experience.id}}">
-				<div class="panel panel-default" style="display: inline-block">
+	  		<section ng-repeat="experience in idee.experiences track by $index" class="initiative-item item row" id="experience-{{experience.id}}">
+				
+				<div class="panel panel-default col-lg-12">
 					
 					<div class="panel-heading">
 						<h4 class="panel-title initiative-title">

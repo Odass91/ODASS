@@ -72,9 +72,9 @@
 							<p class="idee description" ng-bind-html="idee.description"></p>
 							<ul class="experiences">
 								<li class="experience" ng-repeat="experience in idee.experiences">
-									<h5 ng-bind-html="experience.titre"></h5>
-									<div class="experience description"></div>
-									<div class="contact"></div>
+									<h5 ng-bind-html="experience.label"></h5>
+									<div class="experience description" ng-bind-html="experience.descriptionlongue"></div>
+									<div class="contact"><a ng-repeat="contact in experience.references" href="{{contact.lien}}">{{contact.label}}</a></div>
 									<div class="localisation"></div>
 								</li>
 							</ul>

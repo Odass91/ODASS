@@ -46,7 +46,7 @@
 				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
 			</div>
 			
-			<slick ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" infinite="true" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
+			<slick ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" autoplay="true" infinite="true" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
 					
 					<div ng-repeat="experience in idee.experiences track by $index">
 						<div class="panel panel-default col-lg-12">

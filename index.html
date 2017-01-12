@@ -25,22 +25,56 @@
 		<style>
 			#logo-odass
 			{
-				width: 100px;
-				height: 100px;
+				width: 200px;
+				height: 200px;
 				position: relative;
 				left: 50%;
-				margin-left: -50px;
-				margin-bottom: 50px;
+				margin-left: -100px;
+				margin-bottom: 15px;
 			}
+			
+			.carousel-content
+			{
+				height: 250px;
+				width: 100%;
+				background-image: url('images/odass-logo-gris-clair.png');
+				background-position: 50% 10%;
+				background-repeat: no-repeat;
+				background-size: 200px 200px;
+			}
+			
+			.privacy
+			{
+				background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Linecons_locked-padlock.svg/1000px-Linecons_locked-padlock.svg.png');
+			}
+			
+			.strength
+			{
+				background-image: url('https://cdn1.iconfinder.com/data/icons/hands-pt-6/100/017_-_fist-512.png');
+			}
+			
+			.equality
+			{
+				background-image: url('https://cdn.pixabay.com/photo/2016/04/02/05/28/icon-1302201_960_720.png');
+			}
+			
+			.universality
+			{
+				background-image: url('http://www.freeiconspng.com/uploads/world-wide-web-icon-png-12.png');
+			}
+			
 			.carousel-legende
 			{
-				background-color: rgba(0,0,0,0.4);
 				color: white;
-				padding: 5px;
-				position: relative;
-				top: -45px;
+				width: 100%;
+				height: 42px;
+				padding: 15px 2% 2% 15px;
+				position: absolute;
+				bottom: 10px;
 				left: 2px;
 				right: 2px;
+				font-size: 24px !important;
+				text-align: center;
 			}
 			
 			#site-vitrine .row
@@ -114,7 +148,7 @@
 			<div id="site-vitrine" ng-hide="odass.user.loggedIn">
 
 
-<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6);padding-top:50px;">
+<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6); background-image: url('http://www.camping-vannes.com/medias/background/camping-moulin-de-cantizac-vannes-bretagne-sud-04(3).jpg'); background-size: 100% 100%; background-opacity: 0.6; padding-top:50px;">
 	<!-- DEBUG -->
 	
 	<section class="row">
@@ -124,7 +158,7 @@
 	</section>
 	
 
-	<section class="row" style="" >
+	<section class="row" style="">
 			<div class="col-lg-3">
 			</div>
 			<div class="col-lg-6 text-intro text-center">
@@ -158,45 +192,46 @@
 			</div>
 	</section>
 
-	<section class="row" style="" >
-		<div class="col-lg-1">
-		</div>
-		<div class="col-lg-10">
-			  <slick infinite="true" slides-to-show="3" slides-to-scroll="1">
-			    
-			    <div class="">
-				  <img src="images/vitrine-1.jpg" alt="..." class="img-responsive">
+	<section class="row" style="position:relative; background-color: rgba(50,255,127,0.3)" >
+		
+		<div class="col-lg-12">
+		
+			  <slick infinite="true" slides-to-show="1" slides-to-scroll="1">
+			  
+			    <div class="" style="position:relative;">
+				  <div class="carousel-content universality"></div>
 			      <div class="carousel-legende">
 			        Nous croyons dans les valeurs mutualistes : tous nos outils sont développés au bénéfice de tout le monde
 			      </div>
 			    </div>
 			    
 			    
-			    <div class="">
-			      <img src="images/vitrine-2.jpg" alt="..." class="img-responsive">
+			    <div class="" style="position:relative;">
+				  <div class="carousel-content privacy"></div>
 			      <div class="carousel-legende">
 			        Nous respectons la vie privée : nous ne faisons pas de commerce avec vos données
 			      </div>
 			    </div>
 			    
 			    
-			    <div class="">
-			      <img src="images/vitrine-3.jpg" alt="..." class="img-responsive">
+			    <div class="" style="position:relative;">
+				  <div class="carousel-content equality"></div>
 			      <div class="carousel-legende">
 			        Nous voulons que tou.te.s aient accès au meilleur : avec notre modèle à prix libre chacun.e contribue selon ses moyens aux outils communs
 			      </div>
 			    </div>
 			    
 			    
-			    <div class="">
-			      <img src="images/vitrine-4.jpg" alt="..." class="img-responsive">
+			    <div style="position:relative;">
+				  <div class="carousel-content strength"></div>
 			      <div class="carousel-legende">
 			        Nous savons que l’union fait la force : nos outils collaboratifs sont élaborés pour fédérer les citoyen.ne.s
 			      </div>
 			    </div>
+			    
+			    
 			  </slick>
-		</div>
-		<div class="col-lg-1">
+			  
 		</div>
 	</section>
 </div>

@@ -4,6 +4,29 @@
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
+		this.backgrounds = ["vitrine-background.jpg", 
+			"vitrine-background-1.jpg",
+			"vitrine-background-2.jpg",
+			"vitrine-background-3.jpg",
+			"vitrine-background-4.jpg",
+			"vitrine-background-5.jpg"
+			];
+		this.backgroundindex = 0;
+		
+		this.changeBackground = function()
+		{
+
+			this.backgroundindex++;
+
+			if (this.backgroundindex == this.backgrounds.length)
+			{
+				this.backgroundindex = 0;
+			}
+			$("#page-accueil").css("background-image", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
+			
+		}
+		
+		
 		this.init = function()
 		{
 			this.hostname = "http://perso.odass.org";

@@ -85,6 +85,15 @@
 		</section>
 		
 		<section id="annuaire-body" class="row">
+				
+			
+			<div class="well" style="width: 200px; height:200px; position: absolute; top:50%; left: 50%; margin-top: -100px; margin-left: -100px;padding: 25px;" ng-hide="reperto.guide_is_loaded">
+				guide en cours de chargement...<br/><br/>
+				<img style="margin: auto; display: block;" src="images/chargement.gif" width=75 height=75></img>
+			</div>
+			
+			
+			
 			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree'">
 				<!-- THESAURUS ECOLOGIE  -->
 				<section>
@@ -130,16 +139,11 @@
 
 
 
-
-
 			<!--  COLONNE PRINCIPALE  -->
 			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
 				
 				
 				<div id="repertomap" style="height:600px;"></div>
-				
-				
-				<div class="row" ng-hide="reperto.guide_is_loaded">guide en cours de chargement...</div>
 				
 				
 				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;">
@@ -159,8 +163,8 @@
 			 
 			
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
-				<p style="">
-					<ol class="breadcrumb" style="display: inline-block;margin-left: 15px;">
+				<p class="">
+					<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px;">
 					  <li ng-click="reperto.init()">
 					  	
 						<span class="glyphicon glyphicon-book"></span>
@@ -175,7 +179,8 @@
 					</ol>
 					<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 				</p>
-				<h3 style="color: white; padding-left: 15px; margin-top: 22px;">
+				
+				<h3 class="well" style=" padding-left: 15px; margin-top: 22px;">
 					<span ng-show="reperto.activeFilters.keywords.length == 0" style="">{{reperto.display.idees.length}}</span>
 					<span ng-show="reperto.activeFilters.keywords.length != 0" style="">{{reperto.ideaDisplayed}}</span>
 					actions possibles&nbsp;&nbsp;

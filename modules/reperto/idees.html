@@ -1,4 +1,4 @@
-<section ng-repeat="idee in reperto.display.idees" class="idee-item item" id="initiative-{{initiative.id}}" 
+<section ng-repeat="idee in reperto.display.idees" class="idee-item item col-lg-6" id="initiative-{{initiative.id}}" 
 			ng-click="reperto.toggleDisplayInitiative(idee)"
 			ng-show="(reperto.activeFilters.keywords.length == 0 || idee.activeFilters != undefined) && reperto.isPaginationVisible($index)"
 >
@@ -46,6 +46,10 @@
 				<img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
 			</div>
 			
+			<div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0">
+				<img class="placeholder" src="images/placeholder.gif"></img>
+			</div>
+			
 			<slick ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" autoplay="true" infinite="true" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
 					
 					<div ng-repeat="experience in idee.experiences track by $index">
@@ -57,7 +61,7 @@
 								</h4>
 							</div>
 							
-							<div class="panel-body" style="max-height: 100px; overflow:auto;">
+							<div class="panel-body" style="height: 100px; max-height: 100px; overflow:auto;">
 								
 								<p style="" ng-hide="experience.displayLong">
 									<span ng-bind-html="experience.description"></span>

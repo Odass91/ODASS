@@ -23,7 +23,7 @@
 			/** INITIALISATION */
 
 			this.display = {};
-			this.navigationmode = "map";  // map | tree | print
+			this.navigationmode = "tree";  // map | tree | print
 			
 			var guideid = "9";
 			

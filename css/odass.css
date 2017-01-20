@@ -413,9 +413,24 @@ p.red
 {
 	font-family: times;
 }
+
+.idee-item>.panel
+{
+	height: 400px !important;
+	max-height:  400px !important;
+}
+
+
+.idee-item .placeholder
+{
+	height: 150px !important;
+	width: 240px !important;
+	display: block;
+	margin: auto;
+}
+
 .initiative-item .panel-heading h4, .idee-item .panel-heading h4
 {
-
 	font-weight: bold;
 }
 

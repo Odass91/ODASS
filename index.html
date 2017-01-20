@@ -43,6 +43,11 @@
 				background-size: 150px 150px;
 			}
 			
+			#page-accueil
+			{
+				background-image: url('images/vitrine-background.jpg');
+			}
+			
 			.privacy
 			{
 				background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Linecons_locked-padlock.svg/1000px-Linecons_locked-padlock.svg.png');
@@ -148,12 +153,11 @@
 			<div id="site-vitrine" ng-hide="odass.user.loggedIn">
 
 
-<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6); background-image: url('http://www.camping-vannes.com/medias/background/camping-moulin-de-cantizac-vannes-bretagne-sud-04(3).jpg'); background-size: 100% 100%; background-opacity: 0.6; padding-top:50px;">
+<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6);background-size: 100% 100%; background-opacity: 0.6; padding-top:50px;">
 	<!-- DEBUG -->
-	
 	<section class="row">
 		<div class="text-center">
-			<img id="logo-odass" src="images/odass-logo-gris-clair.png" alt="logo ODASS" class="img-responsive">
+			<img id="logo-odass" src="images/odass-logo-gris-clair.png" alt="logo ODASS" class="img-responsive" ng-click="odass.changeBackground()">
 		</div>
 	</section>
 	
@@ -309,6 +313,45 @@
 					
 					<dt>découvrir et <br/>rechercher</dt>
 					<dd>les données grâce à des filtres choisis et/ou créés par l’utilisateur</dd>
+					
+				</dl>
+			</div>
+		</div>
+	</section>
+	
+	
+	<section class="row module-description">
+		<div class="col-lg-4">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  	<img src="images/module-bazdo.png" class="media-object" alt="LOGO ODASS" width="50px" height="50px"></img>
+					</a>
+				</div>
+				<div class="media-body">
+				  	<h4 class="media-heading">BAZDO</h4>
+				  	<p>Gérez et administrez vos bases de données</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-8">
+			<div class="module-description-text">
+				<dl class="dl-horizontal">
+					<dt>créez</dt>
+					<dd>votre communauté et gérez vos contacts, membres, adhérent.e.s, sociétaires, etc.</dd>
+					
+					<dt>assurer le suivi<br/> des adhésions</dt>
+					<dd>cotisations et dons ; émettre automatiquement les reçus fiscaux de vos donateur.rice.s</dd>
+					
+					<dt>Envoyer</dt>
+					<dd>des mails à tous vos contacts (convocations aux AG, lettres d’informations, événementiel, etc.)</dd>
+					
+					<dt>Proposer</dt>
+					<dd>à vos contacts leur espace personnel sécurisé</dd>
+					
+					<dt>Doter</dt>
+					<dd>vos adhérent.e.s d’outils collaboratifs pour interagir, partager les informations et se mobiliser</dd>
 					
 				</dl>
 			</div>

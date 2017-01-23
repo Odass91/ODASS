@@ -9,7 +9,11 @@
 			"vitrine-background-2.jpg",
 			"vitrine-background-3.jpg",
 			"vitrine-background-4.jpg",
-			"vitrine-background-5.jpg"
+			"vitrine-background-5.jpg",
+			"vitrine-background-6.jpg",
+			"vitrine-background-7.jpg",
+			"vitrine-background-8.jpg",
+			"vitrine-background-9.jpg"
 			];
 		this.backgroundindex = 0;
 		

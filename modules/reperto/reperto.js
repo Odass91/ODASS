@@ -17,6 +17,32 @@
 			}
 		});
 		
+		this.backgrounds = ["background.png", 
+			"background-old.png",
+			"background-bedge-grunge.png",
+			"background-gray.png",
+			"background-light-alu.png",
+			"background-ricepaper2.png",
+			"background-ricepaper_v3.png",
+			"background-snow.png",
+			"background-white_plaster.png"
+			];
+		this.backgroundindex = 0;
+		
+		this.changeBackground = function()
+		{
+			console.log("Changing background");
+			this.backgroundindex++;
+
+			if (this.backgroundindex == this.backgrounds.length)
+			{
+				this.backgroundindex = 0;
+			}
+			$("body").css("background", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
+			
+			$("#background-placeholder").html(this.backgrounds[this.backgroundindex]);
+			
+		}
 		
 		this.init = function()
 		{
@@ -200,8 +226,8 @@
 		    	
 		    	if (!reperto.display.pager)
 		    	{
-		    		reperto.display.pager = {"index": 0, "offset": 5};
-		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 5));
+		    		reperto.display.pager = {"index": 0, "offset": 6};
+		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
 		    	}
 		    	reperto.obtainExperiencesForIdeas();
 		    	
@@ -373,9 +399,13 @@
 			var experiences = [];
 			var reperto = this;
 
-			this.display.idees.forEach(function(idee)
+			var displayed_idees = this.display.idees.splice(0,6);
+			
+			
+			displayed_idees.forEach(function(idee)
 			{
 				idee.experiences = 'loading';
+				console.log(idee);
 				this.obtainExperiencesForIdea(idee);
 			}, this);
 			
@@ -384,9 +414,6 @@
 		
 		this.obtainExperiencesForIdea = function(idee)
 		{
-			//GUIDE_idduguide -> toutes les xps d'un guide
-			//
-			
 			var reperto = this;
 			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
@@ -603,7 +630,7 @@
 				}, this);
 			}
 
-    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 5));
+    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
 		};
 
 		this.toggleDisplayInitiative = function(idee)

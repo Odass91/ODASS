@@ -105,7 +105,6 @@ body
 
 body.loggedin
 {
-	background: url("../images/background.png") !important;
 	background-opacity: 0.8 !important;
 }
 

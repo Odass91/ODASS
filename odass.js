@@ -251,3 +251,21 @@
 	odass.directive("contactPopup", function(){return{restrict: 'E', templateUrl: 'modules/site/contact.html'};});
 	odass.directive("mentionsLegalesPopup", function(){return{restrict: 'E', templateUrl: 'modules/site/mentions-legales.html'};});
 })();
+
+$(document).ready(function (){
+    $("#page-accueil-item").click(function (){
+        $('html, body').animate({
+            scrollTop: $("body").offset().top
+        }, 2000);
+    });
+    $("#page-outils-item").click(function (){
+        $('html, body').animate({
+            scrollTop: $("#page-outils").offset().top
+        }, 2000);
+    });
+    $("#page-services-item").click(function (){
+        $('html, body').animate({
+            scrollTop: $("#page-services").offset().top
+        }, 2000);
+    });
+});

@@ -1,10 +1,10 @@
 <section ng-repeat="idee in reperto.display.idees" class="idee-item item col-lg-6" id="initiative-{{initiative.id}}" 
 			ng-click="reperto.toggleDisplayInitiative(idee)"
-			ng-show="(reperto.activeFilters.keywords.length == 0 || idee.activeFilters != undefined) && reperto.isPaginationVisible($index)"
+			ng-show="reperto.isPaginationVisible($index)"
 >
 	 	
 	 	
-	<div class="panel panel-success">
+	<div class="panel panel-success {{reperto.sectionByChapterId[idee.parent].id}}">
 		<div class="panel-heading">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="{{idee.id}}">{{idee.titre}}</span>
@@ -14,8 +14,7 @@
 				</span>
 			</h4>
 		</div>
-		<div class="panel-body" style="padding-bottom: 20px; position: relative;" ng-class="{'experiences-visibles': idee.display.experiences && idee.display.experiences.length > 0}">
-		
+		<div class="panel-body" style="padding-bottom: 20px;" ng-class="{'experiences-visibles': idee.display.experiences && idee.display.experiences.length > 0}">
 			<p style="" ng-hide="idee.displayLong">
 				<span ng-bind-html="idee.description"></span>
 				<a href="" ng-click="idee.displayLong=true">Voir plus</a>
@@ -49,11 +48,10 @@
 			<div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0">
 				<img class="placeholder" src="images/placeholder.gif"></img>
 			</div>
-			
-			<slick ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" autoplay="true" infinite="true" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
+			<slick style="position: relative; bottom: -20px;" ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" autoplay="false" infinite="false" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
 					
 					<div ng-repeat="experience in idee.experiences track by $index">
-						<div class="panel panel-default col-lg-12">
+						<div class="panel panel-default">
 					
 							<div class="panel-heading">
 								<h4 class="panel-title initiative-title">
@@ -61,7 +59,7 @@
 								</h4>
 							</div>
 							
-							<div class="panel-body" style="height: 100px; max-height: 100px; overflow:auto;">
+							<div class="panel-body" style="height: 150px; max-height: 150px; overflow:auto;">
 								
 								<p style="" ng-hide="experience.displayLong">
 									<span ng-bind-html="experience.description"></span>

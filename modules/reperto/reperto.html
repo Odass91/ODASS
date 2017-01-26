@@ -94,8 +94,12 @@
 			
 			
 			
+				<!-- THESAURUS NAVIGATION ARBORESCENTE   -->
+				
+				
+				
+				
 			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree'">
-				<!-- THESAURUS ECOLOGIE  -->
 				<section>
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -109,13 +113,13 @@
 							</div>
 						</div>
 					  	
-					  	<div class="panel panel-default" ng-repeat="item in reperto.thesaurus.nodes">
+					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{item.id}}">
 							<div class="panel-heading" role="tab" id="headingOne">
 						      	
 					        	<a class="pull-right" role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">replier</a>
 					        	<a class="pull-right" role="button" ng-show="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">déplier</a>
 						      	<h4 class="panel-title" href="#{{item.id}}" id="h4-{{item.id}}">
-						      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
+						      		<a ng-click="reperto.selectSection(item)">{{item.titre}} {{item.id}}</a>
 						      	</h4>
 						      	
 						    </div>
@@ -165,7 +169,7 @@
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
 				<p class="">
 					<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px;">
-					  <li ng-click="reperto.init()">
+					  <li ng-click="reperto.selectThesaurus()">
 					  	
 						<span class="glyphicon glyphicon-book"></span>
 						<a href="#" style="font-size: 16px !important">{{reperto.display.guide.titre}}</a>
@@ -190,7 +194,9 @@
 					 <idees></idees>
 				 </div>
 	
-				<div ng-show="reperto.navigationmode == 'tree'">
+				<div class="clearfix"></div>
+				
+				<div ng-show="reperto.navigationmode == 'tree'" class="row">
 					<nav aria-label="Page navigation">
 					  <ul class="pagination pagination-sm">
 					    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
@@ -232,7 +238,10 @@
 			</div>
 			
 			
-			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white">
+			<div ng-hide="reperto.navigationmode == 'print'" 
+						class="col-lg-3 {{reperto.display.section.id}} infozone" 
+						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
+			>
 				<h4>INFO</h4>
 				<p ng-show="reperto.display.section">
 					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>

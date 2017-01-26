@@ -40,15 +40,39 @@
 			}
 			$("body").css("background", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
 			
-			$("#background-placeholder").html(this.backgrounds[this.backgroundindex]);
+			$("#background-placeholder").html("image de fond : " + this.backgrounds[this.backgroundindex]);
 			
 		}
+		
+		this.reinit= function()
+		{
+			this.navigationmode = "tree";  // map | tree | print
+			
+			this.filteredInitiativeList = [];
+			this.savedInitiativeList = {};
+			this.savedInitiativeList.length = 0;
+			this.panierInitiatives = [];
+
+			this.display.idees = this.idees;
+			this.cache.idees = this.idees;
+	    	
+	    	this.display.section = null;
+	    	this.display.chapitre = null;
+	    	
+	    	this.display.breadcrumb = {};
+	    	
+	    	this.display.pager = {"index": 0, "offset": 6};
+	    	this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
+	    	
+		};
+		
 		
 		this.init = function()
 		{
 			/** INITIALISATION */
 
 			this.display = {};
+			this.sectionByChapterId = {};
 			this.navigationmode = "tree";  // map | tree | print
 			
 			var guideid = "9";
@@ -177,25 +201,47 @@
 		
 		this.isPaginationVisible = function(index)
 		{
-			if (!this.display)
+			if (! this.display)
 			{
 				this.display = {};
 			}
-			if (!this.display.pager)
+			if (! this.display.pager)
 			{
-				this.display.pager = {"index": 0, "offset": 5};
+				this.display.pager = {"index": 0, "offset": 6};
 			}
-			return (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
+			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
+			
+			return isVisible;
 		};
 		
 		this.setPagerIndex = function(index)
 		{
 			if (!this.display.pager)
 			{
-				this.display.pager = {"index": 0, "offset": 5};
+				this.display.pager = {"index": 0, "offset": 6};
 			}
 			this.display.pager.index = index * this.display.pager.offset;
 			
+			var startindex = this.display.pager.index;
+			var endindex = Math.max(this.display.pager.index + this.display.pager.offset, this.display.idees.length - 1);
+			
+			for (var index = startindex; index < endindex; index++)
+			{
+				this.obtainExperiencesForIdea(this.display.idees[index]);
+			}
+			
+		};
+		
+		this.associateIdeasAndSections = function()
+		{
+			this.sectionByChapterId = {};
+			reperto.thesaurus.nodes.forEach(function(section)
+			{
+				section.nodes.forEach(function(chapter)
+				{
+					this.sectionByChapterId[chapter.id] = section;
+				}, this);
+			}, this);
 		};
 		
 		this.loadThesaurus = function()
@@ -206,14 +252,16 @@
 		    {
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
+		    	var timestart = new Date();
+		    	reperto.associateIdeasAndSections();
+		    	var timeend = new Date();
+		    	console.log((timeend.getTime() - timestart.getTime())*1000);
 		    	reperto.experiences = {};
 		    	
-//		    	reperto.cache = {};
-//		    	reperto.cache.idees = data.idees;
 		    	reperto.cache = {};
-		    	reperto.cache.idees = data.idees;
+		    	reperto.cache.idees = reperto.idees;
 		    	
-		    	reperto.display.idees = data.idees;
+		    	reperto.display.idees = reperto.idees;
 		    	reperto.display.experiences = {};
 		    	
 		    	reperto.display.section = null;
@@ -229,11 +277,12 @@
 		    		reperto.display.pager = {"index": 0, "offset": 6};
 		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
 		    	}
-		    	reperto.obtainExperiencesForIdeas();
 		    	
 		    	reperto.setupMap();
-
 		    	reperto.setupPrint();
+
+		    	reperto.guide_is_loaded = true;
+		    	reperto.setPagerIndex(0);
 		    	
 		    }).
 		    error(function(data, status) 
@@ -251,6 +300,12 @@
 		
 		/**********************************************************************/
 		
+		this.obtainSectionFromChapter = function(chapterid)
+		{
+			var chapter = this.obtainChapterFromId(chapterid);
+			var section = this.obtainSectionFromId(chapter.parent);
+			return section.id;
+		};
 		
 		
 		this.obtainChapterFromId = function(chapterid)
@@ -267,7 +322,7 @@
 			return chapter_slash_chapitre;
 		};
 
-		this.obtainSectionFromChapterId = function(sectionid)
+		this.obtainSectionFromId = function(sectionid)
 		{
 			var section_slash_partie = null;
 			this.thesaurus.nodes.forEach(function(section){
@@ -396,16 +451,13 @@
 		
 		this.obtainExperiencesForIdeas = function()
 		{
+			
 			var experiences = [];
 			var reperto = this;
-
-			var displayed_idees = this.display.idees.splice(0,6);
 			
-			
-			displayed_idees.forEach(function(idee)
+			this.display.idees.forEach(function(idee)
 			{
 				idee.experiences = 'loading';
-				console.log(idee);
 				this.obtainExperiencesForIdea(idee);
 			}, this);
 			
@@ -414,6 +466,11 @@
 		
 		this.obtainExperiencesForIdea = function(idee)
 		{
+			if (! idee)
+			{
+				return;
+			}
+			
 			var reperto = this;
 			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
@@ -547,29 +604,26 @@
 		};
 
 		this.tagThesaurus = function(thesaurus)
-		{
-//			this.availableFilters = {"keywords": []};
-//			var reperto = this;
-//			$http.get(odass_app.hostname + "/api/getmotclefs/9").
-//		    success(function(data, status) 
-//		    {
-//		    	reperto.availableFilters = data;
-//		    }).
-//		    error(function(data, status) 
-//		    {
-//		    	console.log("Erreur lors de la recuperation du fichier json - keywords");
-//		    });
-//
-//			
+		{		
 			return;
 		};
 		
 		
 		
 		/** Utilisé lors de la sélection d'un item dans un thésaurus */
-		this.selectThesaurusItem = function(jstree_event, thesaurus)
+		this.selectThesaurus = function()
 		{
+
+			this.display.idees = this.idees;
 			
+			this.display.section = null;
+			this.display.chapitre = null;
+			this.display.intro = true;
+			
+			delete this.display.breadcrumb.section;
+			delete this.display.breadcrumb.chapitre;
+			
+			this.setPagerIndex(0);
 		};
 		
 		
@@ -582,7 +636,7 @@
 			this.display.chapitre = null;
 			this.display.intro = null;
 			
-			this.display.breadcrumb.section = chapitre.section.titre;
+			this.display.breadcrumb.section = section.titre;
 			delete this.display.breadcrumb.chapitre;
 			this.setPagerIndex(0);
 		};
@@ -593,7 +647,7 @@
 			this.gatherIdeas(chapitre);
 
 			this.display.intro = null;
-			this.display.section = null;
+			this.display.section = section;
 			this.display.chapitre = chapitre;
 
 			this.display.breadcrumb.section = section.titre;
@@ -604,24 +658,21 @@
 		
 		this.gatherIdeas = function(section)
 		{
+			
 			var idees = [];
 			
-			for (var idee of this.cache.idees)
+			for (var idee of this.idees)
 			{
 				if (idee.parent == section.id)
 				{
 					idees.push(idee);
 				}
 			}
-			
 			idees.forEach(function(idee)
 			{
-				if (this.display.idees.indexOf(idee) == -1)
-				{
-					this.display.idees.push(idee);	
-				}
+				this.display.idees.push(idee);	
 			}, this);
-			
+
 			if (section.nodes && section.nodes.length > 0)
 			{
 				section.nodes.forEach(function(node)

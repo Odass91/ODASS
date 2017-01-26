@@ -302,6 +302,92 @@ p.red
 
 /** CAC */
 
+.infozone.PARTIE_16
+{
+	background-color: rgba(90,180,243,0.9) !important;
+}
+.infozone.PARTIE_17
+{
+	background-color: #ffe188 !important;
+}
+.infozone.PARTIE_18
+{
+	background-color: rgba(154,202,85,0.9) !important;
+}
+.infozone.PARTIE_19
+{
+	background-color: rgba(244,118,182,0.90) !important;
+}
+
+
+.PARTIE_16>.panel-heading
+{
+	background-color: rgba(90,180,243,0.9) !important;
+}
+
+.PARTIE_17>.panel-heading
+{
+	background-color: #ffe188 !important;
+}
+
+.PARTIE_18>.panel-heading
+{
+	background-color: rgba(154,202,85,0.9) !important;
+}
+
+.PARTIE_19>.panel-heading
+{
+	background-color: rgba(244,118,182,0.90) !important;
+}
+
+.PARTIE_16>.panel-body
+{
+	border-color: rgba(90,180,243,0.9) !important;
+}
+
+.PARTIE_17>.panel-body
+{
+	border-color: rgba(255,122,184,0.90) !important;
+}
+
+.PARTIE_18>.panel-body
+{
+	border-color: rgba(154,202,85,0.9) !important;
+}
+
+.PARTIE_19>.panel-body
+{
+	border-color: rgba(244,118,182,0.90) !important;
+}
+
+/* SLICK ARROWS */
+
+.PARTIE_16 .slick-prev:before, .PARTIE_16 .slick-next:before
+{
+    color: rgba(90,180,243,0.9) !important;
+}
+.PARTIE_17 .slick-prev:before, .PARTIE_17 .slick-next:before
+{
+    color: rgba(255,122,184,0.90) !important;
+}
+.PARTIE_18 .slick-prev:before, .PARTIE_18 .slick-next:before
+{
+    color: rgba(154,202,85,0.9) !important;
+}
+.PARTIE_19 .slick-prev:before, .PARTIE_19 .slick-next:before
+{
+    color: rgba(244,118,182,0.90) !important;
+}
+.experiences-wrapper
+{
+	position: absolute !important;
+	background-color:#ddeeaa;
+	margin: 20px;
+	height: 200px;
+	bottom: 0px;
+	left: 0px;
+}
+
 .thesaurus-item .panel-body
 {
 	height: 350px;

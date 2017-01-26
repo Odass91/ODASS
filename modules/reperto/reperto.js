@@ -398,7 +398,7 @@
 				if (initiative.parent)
 				{
 					var chapter = this.obtainChapterFromId(initiative.parent);
-					var section = this.obtainSectionFromChapterId(chapter.parent);
+					var section = this.obtainSectionFromId(chapter.parent);
 					
 					if (! this.printableGuide.indexes.chapters[chapter.id])
 					{

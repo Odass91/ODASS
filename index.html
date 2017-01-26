@@ -37,7 +37,7 @@
 			{
 				height: 200px;
 				width: 100%;
-				background-image: url('images/odass-logo-gris-clair.png');
+				background-image: url('images/odass-logo-noir.png');
 				background-position: 50% 10%;
 				background-repeat: no-repeat;
 				background-size: 150px 150px;
@@ -50,32 +50,40 @@
 			
 			.privacy
 			{
-				background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Linecons_locked-padlock.svg/1000px-Linecons_locked-padlock.svg.png');
+				background-image: url('images/valeurs-privacy.png');
+				background-size: 64px 64px;
+				opacity: 0.4;
 			}
 			
 			.strength
 			{
-				background-image: url('https://cdn1.iconfinder.com/data/icons/hands-pt-6/100/017_-_fist-512.png');
+				background-image: url('images/valeurs-union.png');
+				background-size: 64px 64px;
+				opacity: 0.4;
 			}
 			
 			.equality
 			{
-				background-image: url('https://cdn.pixabay.com/photo/2016/04/02/05/28/icon-1302201_960_720.png');
+				background-image: url('images/valeurs-equite.png');
+				background-size: 64px 64px;
+				opacity: 0.4;
 			}
 			
 			.universality
 			{
-				background-image: url('http://www.freeiconspng.com/uploads/world-wide-web-icon-png-12.png');
+				background-image: url('images/valeurs-universalite.png');
+				background-size: 64px 64px;
+				opacity: 0.4;
 			}
 			
 			.carousel-legende
 			{
-				color: white;
+				color: rgba(0,0,0,0.6) !important;
 				width: 100%;
 				height: 42px;
 				padding: 15px 2% 2% 15px;
 				position: absolute;
-				bottom: 10px;
+				bottom: 30px;
 				left: 2px;
 				right: 2px;
 				font-size: 24px !important;
@@ -157,7 +165,7 @@
 	<!-- DEBUG -->
 	<section class="row">
 		<div class="text-center">
-			<img id="logo-odass" src="images/odass-logo-gris-clair.png" alt="logo ODASS" class="img-responsive" ng-click="odass.changeBackground()">
+			<img id="logo-odass" src="images/odass-logo-noir.png" alt="logo ODASS" class="img-responsive" ng-click="odass.changeBackground()">
 		</div>
 	</section>
 	
@@ -196,13 +204,13 @@
 			</div>
 	</section>
 
-	<section class="row" style="position:relative; background-color: rgba(50,255,127,0.3)" >
+	<section class="row" style="position:relative; background-color: rgba(50,255,127,0.3);" >
 		
 		<div class="col-lg-12">
 		
 			  <slick infinite="true" slides-to-show="1" slides-to-scroll="1">
 			  
-			    <div class="" style="position:relative;">
+			    <div class="" style="position:relative; color: rgba(0,0,0,.6)">
 				  <div class="carousel-content universality"></div>
 			      <div class="carousel-legende">
 			        Nous croyons dans les valeurs mutualistes : tous nos outils sont développés au bénéfice de tout le monde
@@ -210,7 +218,7 @@
 			    </div>
 			    
 			    
-			    <div class="" style="position:relative;">
+			    <div class="" style="position:relative; color: rgba(0,0,0,.6)">
 				  <div class="carousel-content privacy"></div>
 			      <div class="carousel-legende">
 			        Nous respectons la vie privée : nous ne faisons pas de commerce avec vos données
@@ -218,7 +226,7 @@
 			    </div>
 			    
 			    
-			    <div class="" style="position:relative;">
+			    <div class="" style="position:relative; color: rgba(0,0,0,.6)">
 				  <div class="carousel-content equality"></div>
 			      <div class="carousel-legende">
 			        Nous voulons que tou.te.s aient accès au meilleur : avec notre modèle à prix libre chacun.e contribue selon ses moyens aux outils communs
@@ -226,7 +234,7 @@
 			    </div>
 			    
 			    
-			    <div style="position:relative;">
+			    <div style="position:relative; color: rgba(0,0,0,.6)">
 				  <div class="carousel-content strength"></div>
 			      <div class="carousel-legende">
 			        Nous savons que l’union fait la force : nos outils collaboratifs sont élaborés pour fédérer les citoyen.ne.s

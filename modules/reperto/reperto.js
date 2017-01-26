@@ -17,21 +17,14 @@
 			}
 		});
 		
-		this.backgrounds = ["background.png", 
-			"background-old.png",
-			"background-bedge-grunge.png",
-			"background-gray.png",
-			"background-light-alu.png",
-			"background-ricepaper2.png",
-			"background-ricepaper_v3.png",
-			"background-snow.png",
-			"background-white_plaster.png"
+		this.backgrounds = [
+			"background-ricepaper_v3.png"
 			];
+		$("body").css("background", "url('images/background-ricepaper_v3.png')");
 		this.backgroundindex = 0;
 		
 		this.changeBackground = function()
 		{
-			console.log("Changing background");
 			this.backgroundindex++;
 
 			if (this.backgroundindex == this.backgrounds.length)
@@ -39,8 +32,6 @@
 				this.backgroundindex = 0;
 			}
 			$("body").css("background", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
-			
-			$("#background-placeholder").html("image de fond : " + this.backgrounds[this.backgroundindex]);
 			
 		}
 		

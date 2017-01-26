@@ -305,39 +305,47 @@ p.red
 .infozone.PARTIE_16
 {
 	background-color: rgba(90,180,243,0.9) !important;
+	color: rgba(20,120,183,1) !important;
 }
 .infozone.PARTIE_17
 {
 	background-color: #ffe188 !important;
+	color: #7e5027 !important;
 }
 .infozone.PARTIE_18
 {
 	background-color: rgba(154,202,85,0.9) !important;
+	color: rgba(94,142,25,1) !important;
 }
 .infozone.PARTIE_19
 {
 	background-color: rgba(244,118,182,0.90) !important;
+	color: rgba(184,58,122,1) !important;
 }
 
 
 .PARTIE_16>.panel-heading
 {
 	background-color: rgba(90,180,243,0.9) !important;
+	color: rgba(20,120,183,1) !important;
 }
 
 .PARTIE_17>.panel-heading
 {
 	background-color: #ffe188 !important;
+	color: #7e5027 !important;
 }
 
 .PARTIE_18>.panel-heading
 {
 	background-color: rgba(154,202,85,0.9) !important;
+	color: rgba(94,142,25,1) !important;
 }
 
 .PARTIE_19>.panel-heading
 {
 	background-color: rgba(244,118,182,0.90) !important;
+	color: rgba(184,58,122,1) !important;
 }
 
 .PARTIE_16>.panel-body
@@ -347,7 +355,7 @@ p.red
 
 .PARTIE_17>.panel-body
 {
-	border-color: rgba(255,122,184,0.90) !important;
+	border-color: #ffe188 !important;
 }
 
 .PARTIE_18>.panel-body
@@ -368,7 +376,7 @@ p.red
 }
 .PARTIE_17 .slick-prev:before, .PARTIE_17 .slick-next:before
 {
-    color: rgba(255,122,184,0.90) !important;
+    color: #ffe188 !important;
 }
 .PARTIE_18 .slick-prev:before, .PARTIE_18 .slick-next:before
 {

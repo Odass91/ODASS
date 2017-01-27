@@ -45,7 +45,12 @@
 			
 			#page-accueil
 			{
-				background-image: url('images/vitrine-background-4.jpg');
+				background: url('images/vitrine-background-4.jpg') no-repeat bottom fixed;
+				-webkit-background-size: cover; /* pour anciens Chrome et Safari */
+				background-size: cover; /* version standardisée */
+				margin-left: -10px;
+				margin-right: -10px;
+				margin-top: 50px;
 			}
 			
 			.privacy
@@ -161,7 +166,7 @@
 			<div id="site-vitrine" ng-hide="odass.user.loggedIn">
 
 
-<div id="page-accueil" class="container-fluid" style="background-color:rgba(0,0,0,0.6);background-size: 100% 100%; background-opacity: 0.6; padding-top:50px;">
+<div id="page-accueil" class="container-fluid" style="">
 	<!-- DEBUG -->
 	<section class="row">
 		<div class="text-center">

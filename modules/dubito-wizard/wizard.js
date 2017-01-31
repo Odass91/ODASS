@@ -16,6 +16,7 @@
 		{
 			/** GET FAKE DATA */
 			var wizard = this;
+			this.step = 0;
 			this._debugTmpId = 1;
 			$http.get("data/quiz.json").
 		    success(function(data, status) 
@@ -105,6 +106,7 @@
 				this.brouillon.quiz = quiz;
 			}
 			this.mode = "edit";
+			this.step = 0;
 			
 			this.setupOrder();
 			
@@ -143,7 +145,6 @@
 				
 			};
 			
-			this.createQuizOnServer();
 		};
 		
 		this.initArrayFromMissingCards = function()
@@ -216,6 +217,11 @@
 			this.setupOrder();
 			
 			this.updateQuizOnServer();
+			
+			if (this.brouillon.quiz.cartes.length == this.brouillon.quiz.length)
+			{
+				this.step = 2;
+			}
 			
 		};
 		
@@ -547,17 +553,24 @@
 		
 		/** COMMUNICATION AVEC LE SERVEUR */
 		
-		this.createQuizOnServer = function()
+		this.createQuizOnServer = function(name)
 		{
 			
 			var wizard = this;
-			
-			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": wizard.brouillon.quiz.name}).then(
+			var quizname = name ? name : wizard.brouillon.quiz.name;
+			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": quizname}).then(
 				/**   SERVER ANSWER  */
 				function(data)
 				{
 					console.log(data);
-					wizard.brouillon.quiz.id = data.data.response.donnees.id;
+					
+					/** GESTION DE LA REPONSE */
+					if (data.data.response.donnees.id && !isNaN(parseInt(data.data.response.donnees.id)))
+					{
+						wizard.brouillon.quiz.id = parseInt(data.data.response.donnees.id);
+						wizard.step = 1;
+					}
+					//wizard.step = 1;
 				},
 				function (response)
 				{
@@ -579,6 +592,12 @@
 				function(response)
 				{
 					console.log("Modification du quiz, reponse du serveur : ", response);
+					/** GESTION DE LA REPONSE */
+					if (data.data.response.donnees.id && !isNaN(data.data.response.donnees.id))
+					{
+						wizard.brouillon.quiz.id = data.data.response.donnees.id;
+						wizard.step = 1;
+					}
 				},
 				function (response)
 				{

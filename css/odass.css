@@ -7,6 +7,8 @@
 }
 
 
+
+/** SMARTPHONE AND ALL */
 @media all and (max-width : 1200px)
 {
   	.modal-footer .glyphicon
@@ -26,7 +28,7 @@
 	
 	a, p, span, li, div
 	{
-		font-size: 11px !important;
+		font-size: 13px !important;
 	}
 
 	.glyphicon, .modal-footer button .glyphicon, .modal-footer a .glyphicon, #initiatives-area .initiative-title, .panel-title, .score
@@ -48,7 +50,7 @@
 }
 
 
-
+/** DESKTOP */
 @media all and (min-width : 1200px)
 {
   	.modal-footer .glyphicon
@@ -152,6 +154,11 @@ h1, h2, h3, h4
 .media
 {
 	margin-top: 45px;
+}
+
+#page-accueil .slick-prev:before, #page-accueil  .slick-next:before
+{
+    color: rgba(0,0,0,0.4) !important;
 }
 
 .module-description-text

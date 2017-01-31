@@ -17,10 +17,13 @@
 			}
 		});
 		
+		
 		this.backgrounds = [
 			"background-ricepaper_v3.png"
 			];
 		$("body").css("background", "url('images/background-ricepaper_v3.png')");
+		
+		
 		this.backgroundindex = 0;
 		
 		this.changeBackground = function()

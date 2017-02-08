@@ -6,6 +6,7 @@
 		var dubito = this;
 		$scope.$on('initModule', function(event, args)
 		{
+			console.log("[DUBITO] MESSAGE RECEIVED : ", args);
 			if (args.message == "dubito")
 			{
 				dubito.init();
@@ -30,7 +31,6 @@
 		    {
 		    	if (data)
 		    	{
-					console.log(data);
 					dubito.quizzes = data.message;
 		    	}
 		    }).

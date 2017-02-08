@@ -15,7 +15,7 @@
 	  	</p>
 	  	<ul class="list-group">
  			<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item">
- 				
+ 				toto
  				<button ng-disabled="quiz.cartes.length < quiz.length" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
  					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
  				</button>
@@ -35,9 +35,9 @@
  				<span class="text-warning" ng-show="quiz.cartes.length < quiz.length" style="font-size: 0.9em;">quiz incomplet : {{quiz.cartes.length}} / {{quiz.length}} cartes</span>
  			</li>
  		</ul>
-<!-- 		<p class="text-center" > -->
-<!-- 			<button class="btn btn-warning" ng-click="wizard.editQuiz()" ng-disabled="wizard.selectedQuiz == undefined">Choisissez le quiz à éditer !</button> -->
-<!-- 		</p> -->
+		<p class="text-center" >
+			<button class="btn btn-warning" ng-click="wizard.editQuiz()" ng-disabled="wizard.selectedQuiz == undefined">Choisissez le quiz à éditer !</button>
+		</p>
 	  </div>
 	</div>
 	

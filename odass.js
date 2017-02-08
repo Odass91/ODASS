@@ -62,7 +62,7 @@
 			{
 				this.module = "page-accueil";
 			}
-			
+			this.moduleRegistered = false;
 			this.initModule();
 			
 			if (! this.user.loggedIn)
@@ -175,18 +175,26 @@
 			{
 				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
 			}
-			
+			this.moduleRegistered = false;
 			this.initModule();
 		};
 		
 		this.initModule = function()
 		{
+			console.log("trying to initi module. Module registered = ", this.moduleRegistered);
 			var that = this;
 			setTimeout(function()
 			{
-				if (that.module)
+				if (that.module && ! this.moduleRegistered)
 				{
 					$scope.$broadcast('initModule', {"message": that.module});
+					console.log("MODULE : ", that.module);
+					if (that.module == "dubito")
+					{
+						console.log("BROADCASTING TO WIZARD : ", "wizard");
+						$scope.$broadcast('initModule', {"message": "wizard"});
+					}
+					setTimeout(that.initModule, 500);
 				}
 				else
 				{

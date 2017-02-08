@@ -2,13 +2,18 @@
 {
 	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
+		console.log("INITED");
 		var odass_app = $scope.$parent.odass;
 		var dubitowizard = this;
+		
 		$scope.$on('initModule', function(event, args)
 		{
+			console.log("[WIZARD] MESSAGE RECEIVED : ", args);
 			if (args.message == "wizard")
 			{
+				console.log("Init sequence started");
 				dubitowizard.init();
+				$scope.moduleRegistered = true;
 			}
 		});
 		
@@ -18,10 +23,12 @@
 			var wizard = this;
 			this.step = 0;
 			this._debugTmpId = 1;
-			$http.get("data/quiz.json").
+			
+			$http.get(odass_app.hostname + "/api/listquiz").
 		    success(function(data, status) 
 		    {
-		    	wizard.availableQuiz = data;
+		    	console.log("résultat : ", data);
+		    	wizard.availableQuiz = data.message;
 		    }).
 		    error(function(data, status) 
 		    {

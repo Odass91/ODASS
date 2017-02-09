@@ -301,6 +301,21 @@ p.red
 }
 
 /** DUBITO */
+
+.step-ok
+{
+	 text-transform: lowercase; 
+	 font-family: arial; 
+	 color: rgba(75,150,75,0.9);
+}
+
+.step-pas-ok
+{
+	 text-transform: lowercase; 
+	 font-family: arial; 
+	 color: orange;
+}
+
 .tab-content
 {
 	padding-top: 20px;

@@ -64,12 +64,14 @@
 		this.init = function()
 		{
 			/** INITIALISATION */
+            
+            var that = this;
 
 			this.display = {};
 			this.sectionByChapterId = {};
 			this.navigationmode = "tree";  // map | tree | print
 			
-			var guideid = "9";
+			var guideid = "14";
 			
 			if (window.location.search.indexOf("guideid") != -1)
 			{
@@ -135,8 +137,34 @@
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
+            
+            window.setTimeout(function()
+            {
+               that.reduceIntro();
+            }, 5000);
 		}
 		
+		this.reduceIntro = function()
+        {
+            if (!  this.intro_reduced)
+            {
+                this.intro_reduced = true;
+                $("#guide-intro .panel-body").addClass("animate-disappear");
+                $("#guide-intro .panel-body").removeClass("animate-appear");
+            }
+        }
+        
+		
+		this.expandIntro = function()
+        {
+            if (this.intro_reduced)
+            {
+                delete this.intro_reduced;
+                $("#guide-intro .panel-body").addClass("animate-appear");
+                $("#guide-intro .panel-body").removeClass("animate-disappear");
+            }
+        }
+        
 		this.loadIntroduction = function()
 		{
 			var reperto = this;
@@ -150,21 +178,9 @@
 		    		reperto.display.introduction = {};
 		    		reperto.display.introduction.titre = data.titre;
 			    	reperto.display.introduction.contenu = data.introduction;
-			    	if ( ! window.localStorage.odassRepertoIntroShown)
-					{
-			    		$("#introduction-cac").modal({"show": true, "backdrop": "static"});
-						$("#introduction-titre").html(data.titre);
-						$("#introduction-contenu").html(data.introduction);
-						window.localStorage.odassRepertoIntroShown = 0;
-					}
-			    	else
-			    	{
-			    		window.localStorage.odassRepertoIntroShown++;
-			    		if (window.localStorage.odassRepertoIntroShown == 5)
-			    		{
-			    			delete window.localStorage.odassRepertoIntroShown;
-			    		}
-			    	}
+                    $("#introduction-titre").html(data.titre);
+                    $("#introduction-contenu").html(data.introduction);
+					
 		    	}
 		    }).
 		    error(function(data, status) 
@@ -241,15 +257,14 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
+		    	var timestart = new Date();
 			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
+                var timeloaded = new Date();
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
-		    	var timestart = new Date();
 		    	reperto.associateIdeasAndSections();
-		    	var timeend = new Date();
-		    	console.log((timeend.getTime() - timestart.getTime())*1000);
 		    	reperto.experiences = {};
 		    	
 		    	reperto.cache = {};
@@ -277,6 +292,11 @@
 
 		    	reperto.guide_is_loaded = true;
 		    	reperto.setPagerIndex(0);
+                var timeend = new Date();
+		    	console.log("Guide chargé en ", (timeloaded.getTime() - timestart.getTime())/1000, "secondes");
+		    	console.log("Guide configuré en ", (timeend.getTime() - timeloaded.getTime())/1000, "secondes");
+                this.timestart = timestart;
+                this.timesetup = timeend;
 		    	
 		    }).
 		    error(function(data, status) 

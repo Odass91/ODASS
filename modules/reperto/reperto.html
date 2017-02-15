@@ -13,6 +13,43 @@
 	{
 		color: rgba(0,0,0,0.8);
 	}
+	#partenaire
+	{
+		background: url('images/logo-CAC.jpg') no-repeat;
+		-webkit-background-size: cover; /* pour anciens Chrome et Safari */
+		background-size: auto; 
+		margin: 5px;
+	}
+	
+	.animate-disappear
+	{
+     /*   animation: fade 5s;*/
+        display:none;
+	}
+	
+	.animate-appear
+	{
+     /*  animation: fade 5s;*/
+        display:block;
+        position:static;
+	}
+	
+	.open
+	{
+        position: relative;
+        top: -2px;
+        right: -21px;
+        color: inherit;
+	}
+	
+	@keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
 
 </style>
 
@@ -49,6 +86,24 @@
 <!-- 				</a> -->
 <!-- 			</div> -->
 			
+		</section>
+		
+		<section id="guide-intro">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+						<button type="button" class="close" aria-label="Close" ng-hide="reperto.intro_reduced" ng-click="reduce.reduceIntro()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<button type="button" class="close" aria-label="Open" ng-show="reperto.intro_reduced" ng-click="reperto.expandIntro()">
+							<span aria-hidden="true">&loz;</span>
+						</button>
+						<h4 id="introduction-titre"></h4>
+					</div>
+				
+		      		<div class="panel-body">
+		       			<div id="introduction-contenu"></div>
+		    		</div>
+		  		</div>
 		</section>
 		
 		<section id="catalogue" class="prettyprint" ng-show="reperto.navigationmode == 'print'">
@@ -104,11 +159,8 @@
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					  	<div class="panel panel-default">
-					  		<div class="panel-body">
-							  	<a href="http://www.associations-citoyennes.net/" target="_blank"> 
-									<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
-								</a>
-								
+					  		<div id="partenaire" class="panel-body">
+							  	<a href="http://www.associations-citoyennes.net/" target="_blank" style="display: block; width: 100%; height: 100%">&nbsp;</a>
 								<a title="Envoyez vos commentaires sur le guide" href="mailto:cac_repertoire@odass.org?subject=Guide%20National%20Ecologie" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
 							</div>
 						</div>
@@ -209,7 +261,7 @@
 	 
 	 
 			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white">
-				<h4>TOOLBOX</h4>
+				<h4>BOITE A OUTIL</h4>
 				<div>
 					<p>
 						<span ng-click="reperto.navigationmode = 'map'" class="btn btn-default">
@@ -269,24 +321,6 @@
 			</div>
 			
 		</section>
-		
-		
-		<div class="modal fade" id="introduction-cac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-		  	<div class="modal-dialog modal-lg" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header panel-heading">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 id="introduction-titre"></h4>
-					</div>
-				
-		      		<div class="modal-body">
-		       			<div id="introduction-contenu"></div>
-		    		</div>
-		  		</div>
-			</div>
-		</div>
 	
 	</div>
 </div>

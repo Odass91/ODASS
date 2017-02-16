@@ -1,5 +1,11 @@
 
 <style>
+
+    #repertomap {
+        width: 100%;
+        height: 100%;
+    }
+
 	.send-mail
 	{
 		font-size: 20px !important;
@@ -196,10 +202,10 @@
 
 
 			<!--  COLONNE PRINCIPALE  -->
-			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
+			 <div class="col-md-9" style="width: 150vh; height: 75vh;" ng-show="reperto.navigationmode == 'map'">
 				
 				
-				<div id="repertomap" style="height:600px;"></div>
+				<div id="repertomap"></div>
 				
 				
 				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;">
@@ -264,14 +270,14 @@
 				<h4>BOITE A OUTIL</h4>
 				<div>
 					<p>
-						<span ng-click="reperto.navigationmode = 'map'" class="btn btn-default">
+						<span ng-click="reperto.changeNavigationMode('map')" class="btn btn-default">
 							<span class="glyphicon glyphicon-map-marker"></span>
 							&nbsp;Navigation par carte
 							<span ng-show="reperto.navigationmode == 'map'" class="glyphicon glyphicon-check"></span>
 						</span>
 					</p>
 					<p>
-						<span ng-click="reperto.navigationmode = 'tree'" class="btn btn-default">
+						<span ng-click="reperto.changeNavigationMode('tree')" class="btn btn-default">
 							<span class="glyphicon glyphicon-th-list"></span>&nbsp;Navigation par arborescence
 							<span ng-show="reperto.navigationmode == 'tree'" class="glyphicon glyphicon-check"></span>
 						</span>

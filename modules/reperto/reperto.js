@@ -137,12 +137,24 @@
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
-            
             window.setTimeout(function()
             {
                that.reduceIntro();
             }, 5000);
-		}
+		};
+        
+        this.changeNavigationMode = function(mode)
+        {
+                this.navigationmode = mode;
+                if (mode == 'map')
+                {
+                    this.refreshMap();
+                }
+                if (mode == 'tree')
+                {
+                    //
+                }
+        }
 		
 		this.reduceIntro = function()
         {
@@ -286,8 +298,11 @@
 		    		reperto.display.pager = {"index": 0, "offset": 6};
 		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
 		    	}
-		    	
-		    	reperto.setupMap();
+		    	if (reperto.navigationmode == 'map')
+                {
+                    reperto.setupMap();
+                    reperto.refreshMap(100);
+                }
 		    	reperto.setupPrint();
 
 		    	reperto.guide_is_loaded = true;
@@ -525,16 +540,26 @@
 		
 		this.setupMap = function()
 		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
+			var mymap = L.map('repertomap').setView([48.713377, 2.244499], 10);
+            
+			this.reperto_carte = mymap;
+            this.reperto_baselayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
 			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			    maxZoom: 18,
 			    id: 'davidleray.2f171f1g',
 			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
-			}).addTo(mymap);
-			
-			this.reperto_carte = mymap;
+			});
+            this.reperto_baselayer.addTo(this.reperto_carte);
+            
 		};
+        
+        this.refreshMap = function(timeout)
+        {
+            var map = this.reperto_carte;
+            window.setTimeout(function(){
+                map.invalidateSize();
+            },timeout);
+        };
 		
 		
 		this.setupMarker = function(experience)

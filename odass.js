@@ -2,9 +2,18 @@
 {
 	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree', 'xeditable', 'slick']);
 	
+	odass.config(['$httpProvider', function($httpProvider) 
+	{
+		  
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+	}]);
+	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope', function($http, $location, $scope)
 	{
-		this.backgrounds = ["vitrine-background.jpg", 
+		this.backgrounds = 
+		[
+		 	"vitrine-background.jpg", 
 			"vitrine-background-1.jpg",
 			"vitrine-background-2.jpg",
 			"vitrine-background-3.jpg",
@@ -14,12 +23,12 @@
 			"vitrine-background-7.jpg",
 			"vitrine-background-8.jpg",
 			"vitrine-background-9.jpg"
-			];
+		];
+		
 		this.backgroundindex = 0;
 		
 		this.changeBackground = function()
 		{
-
 			this.backgroundindex++;
 
 			if (this.backgroundindex == this.backgrounds.length)
@@ -27,15 +36,19 @@
 				this.backgroundindex = 0;
 			}
 			$("#page-accueil").css("background-image", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
-			
 		}
 		
 		
 		this.init = function()
 		{
 			this.hostname = "http://perso.odass.org";
-			this.user = {"name": ""};
+			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
+			this.module = "page-accueil";
+			
 			this.debug = (window.location.search.match("debug=true")) ? true : false;
+			
+			this.moduleQueue = {};
+			
 			this.config = 
 			{
 				"google.maps.key": "AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc"
@@ -44,26 +57,11 @@
 			if (window.location.href.match("index-cac"))
 			{
 				this.user.loggedIn = true;
-				window.localStorage.odassLoggedIn = "cac";
+				this.user.name = "cac";
 				this.changeModule("annuaire");
 			}
 			
-			if (window.localStorage.odassLoggedIn)
-			{
-				this.user.name = window.localStorage.odassLoggedIn;
-				this.user.loggedIn = true;
-			}
-			
-			if (window.localStorage.odassModule)
-			{
-				this.module = window.localStorage.odassModule;
-			}
-			else
-			{
-				this.module = "page-accueil";
-			}
-			this.moduleRegistered = false;
-			this.initModule();
+			this.changeModule("page-accueil");
 			
 			if (! this.user.loggedIn)
 			{
@@ -101,7 +99,7 @@
 			var odass = this;
 			$http.post(odass.hostname + "/api/apilogin", 
 			{
-				"login": odass.user.name,
+				"login": "toto",
 				"motdepasse": password
 			}).then(
 			/**   SERVER ANSWER  */
@@ -110,7 +108,7 @@
 				if (response.data.message.Statut == "OK")
 				{
 					odass.user.loggedIn = true;
-					window.localStorage.odassLoggedIn = odass.user.name;
+					odass.user.modules = ["dashboard", "dubito", "wizard"];
 					odass.changeModule("dashboard");
 					$("#login-popup").modal('hide');
 				}
@@ -141,10 +139,8 @@
 				{
 					odass.loginFeedback = "Erreur serveur : exception sur le serveur";
 				}
+				odass.loginFeedback = data;
 			});
-				
-			
-			
 		};
 		
 		
@@ -154,7 +150,6 @@
 			this.user.name = "Anonyme"
 			this.user.loggedIn = false;
 			this.changeModule("page-accueil");
-			delete window.localStorage.odassLoggedIn;
 		};
 		
 		this.isModule = function(module)
@@ -164,8 +159,10 @@
 		
 		this.changeModule = function(module)
 		{
-			window.localStorage.odassModule = module;
-			this.module = window.localStorage.odassModule;
+			console.log("Changing module to : ", module);
+			this.module = module;
+			
+			console.log("USER LOGGED ?", this.user.loggedIn);
 			
 			if (! this.user.loggedIn)
 			{
@@ -175,32 +172,42 @@
 			{
 				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
 			}
-			this.moduleRegistered = false;
+			
 			this.initModule();
 		};
 		
 		this.initModule = function()
 		{
-			console.log("trying to initi module. Module registered = ", this.moduleRegistered);
-			var that = this;
-			setTimeout(function()
+			console.log("INIT MODULE", this.module);
+			
+			if (! this.moduleQueue[this.module])
 			{
-				if (that.module && ! this.moduleRegistered)
+				this.moduleQueue[this.module] = true;
+			}
+			
+			if (this.module == "dubito")
+			{
+				this.moduleQueue["wizard"] = true;
+				console.log("ODASS broadcast module init", "wizard");
+				$scope.$broadcast('initModule', {"message": "wizard"});
+			}
+			console.log("ODASS broadcast module init", this.module);
+			$scope.$broadcast('initModule', {"message": this.module});
+			
+			window.setTimeout(this.waitForModulesInit, 500);
+		};
+		
+		this.waitForModulesInit = function()
+		{
+			if (this.moduleQueue)
+			{
+				console.log(this.moduleQueue, this.moduleQueue.length);
+				for (key in this.moduleQueue)
 				{
-					$scope.$broadcast('initModule', {"message": that.module});
-					console.log("MODULE : ", that.module);
-					if (that.module == "dubito")
-					{
-						console.log("BROADCASTING TO WIZARD : ", "wizard");
-						$scope.$broadcast('initModule', {"message": "wizard"});
-					}
-					setTimeout(that.initModule, 500);
+					$scope.$broadcast('initModule', {"message": key});
 				}
-				else
-				{
-					setTimeout(that.init, 500);
-				}
-			}, 500);
+				window.setTimeout(this.waitForModulesInit, 500);
+			}
 		};
 		
 		$('#menu-odass-site a, #menu-odass-backoffice a').click(function (e) 

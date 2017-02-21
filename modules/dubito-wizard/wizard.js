@@ -11,9 +11,10 @@
 			console.log("[WIZARD] MESSAGE RECEIVED : ", args);
 			if (args.message == "wizard")
 			{
-				console.log("Init sequence started");
+				console.log("Wizard init sequence started");
 				dubitowizard.init();
-				$scope.moduleRegistered = true;
+				delete odass_app.moduleQueue["wizard"];
+				
 			}
 		});
 		
@@ -24,11 +25,11 @@
 			this.step = 0;
 			this._debugTmpId = 1;
 			
-			$http.get(odass_app.hostname + "/api/listquiz").
+			$http.get("http://127.0.0.1:8080/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	console.log("résultat : ", data);
-		    	wizard.availableQuiz = data.message;
+		    	wizard.availableQuiz = data;
 		    }).
 		    error(function(data, status) 
 		    {
@@ -37,7 +38,7 @@
 			
 			
 			this.library = [];
-			$http.get("data/librairie.json").
+			$http.get("http://127.0.0.1:8080/dubito/cartes/list").
 		    success(function(data, status) 
 		    {
 		    	wizard.library = data.cartes;

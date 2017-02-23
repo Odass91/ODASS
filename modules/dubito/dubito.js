@@ -10,11 +10,13 @@
 			if (args.message == "dubito")
 			{
 				dubito.init();
+				delete odass_app.moduleQueue["dubito"];
 			}
 		});
 		
 		this.init = function()
 		{
+            odass_app.hostname = "http://127.0.0.1:8080";
 			this.player = {"name": "Anonyme", "loggedIn": false};
 			this.quiz = {};
 			this.turns = [];
@@ -26,12 +28,13 @@
 			this.showSummary = false;
 			
 	        this.quizzes = [];
-	        $http.get(odass_app.hostname + "/api/listquiz").
+	        
+	        $http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	if (data)
 		    	{
-					dubito.quizzes = data.message;
+					dubito.quizzes = data;
 		    	}
 		    }).
 		    error(function(data, status) 
@@ -48,9 +51,7 @@
 
 	        this.selectedQuiz = {"intitule": "Electro-sensibilité", "played": 0, "id": "linky"};
 	        
-	        this.computeGraph();
-	        
-	        $scope.$broadcast('initModule', {"message": "wizard"});
+//	        this.computeGraph();
 		}
 		
 		
@@ -67,6 +68,54 @@
 		this.loadQuiz = function(dismissModal)
 		{
 			var dubito = this;
+			
+			
+			/** NODEJS */
+			console.log("TENTATIVE D'ACCES AU SERVEUR NODEJS");
+			$http.get("http://127.0.0.1:8080/dubito/quiz/1").success(function(data, status) 
+			{
+		    	$("#nodejs_comm").html("<p><strong>NODE JS OK</strong></p><p>" + data + "</p>");
+		   
+		    	
+		    	dubito.href = data.donnees.jeu.href;
+				
+				/** Game metadata initialization */
+				dubito.quiz.title = data.donnees.jeu.nom;
+				dubito.quiz.uuid = data.donnees.jeu.uuid;
+				dubito.quiz.description = data.donnees.jeu.presentation;
+				dubito.quiz.questions = data.donnees.tours.carte.length;
+				dubito.quiz.players = data.donnees.jeu.joueurs;
+				dubito.quiz.averageScore = data.donnees.jeu.scoreMoyen;
+				dubito.quiz.score = 0;
+
+				/** Game data initialization */
+				dubito.turns = data.donnees.tours.carte;
+				dubito.turn = 0;
+				dubito.card = dubito.turns[dubito.turn];
+				dubito.showLongAnswer = false;
+
+				/** Player initialization */
+				dubito.player.classement = 0;
+				
+				$("#quiz-screen").modal();
+				
+				if (dismissModal)
+				{
+					$("#quiz-choice").modal('hide');
+				}
+		    	
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("La connexion au serveur node a échoué, essayons avec symfony");
+		    	dubito.loadQuizWithSynfony(dismissModal);
+		    });
+		};
+		
+		this.loadQuizWithSynfony= function(dismissModal)
+		{
+			var dubito = this;
+			/** SYMFONY */
 			$http.post(odass_app.hostname + "/api/getquizz/" + dubito.selectedQuiz.titre, {"source": $location.absUrl()}).success(function(data)
 			{
 				dubito.donnees = data;

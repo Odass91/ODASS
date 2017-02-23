@@ -15,7 +15,7 @@
 	  	</p>
 	  	<ul class="list-group">
  			<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item">
- 				toto
+ 				{{quiz.jeu.nom}}
  				<button ng-disabled="quiz.cartes.length < quiz.length" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
  					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
  				</button>

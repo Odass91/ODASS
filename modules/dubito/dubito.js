@@ -16,6 +16,7 @@
 		
 		this.init = function()
 		{
+            odass_app.hostname = "http://127.0.0.1:8080";
 			this.player = {"name": "Anonyme", "loggedIn": false};
 			this.quiz = {};
 			this.turns = [];
@@ -28,12 +29,12 @@
 			
 	        this.quizzes = [];
 	        
-	        $http.get(odass_app.hostname + "/api/listquiz").
+	        $http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	if (data)
 		    	{
-					dubito.quizzes = data.message;
+					dubito.quizzes = data;
 		    	}
 		    }).
 		    error(function(data, status) 
@@ -71,7 +72,7 @@
 			
 			/** NODEJS */
 			console.log("TENTATIVE D'ACCES AU SERVEUR NODEJS");
-			$http.get("http://127.0.0.1:8080/dubito/1").success(function(data, status) 
+			$http.get("http://127.0.0.1:8080/dubito/quiz/1").success(function(data, status) 
 			{
 		    	$("#nodejs_comm").html("<p><strong>NODE JS OK</strong></p><p>" + data + "</p>");
 		   

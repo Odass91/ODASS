@@ -21,11 +21,12 @@
 		this.init = function()
 		{
 			/** GET FAKE DATA */
+            odass_app.hostname = "http://127.0.0.1:8080";
 			var wizard = this;
 			this.step = 0;
 			this._debugTmpId = 1;
 			
-			$http.get("http://127.0.0.1:8080/dubito/quiz/list").
+			$http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	console.log("résultat : ", data);
@@ -38,7 +39,8 @@
 			
 			
 			this.library = [];
-			$http.get("http://127.0.0.1:8080/dubito/cartes/list").
+			/*
+            $http.get("http://127.0.0.1:8080/dubito/cartes/list").
 		    success(function(data, status) 
 		    {
 		    	wizard.library = data.cartes;
@@ -56,7 +58,7 @@
 		    {
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
-			
+			*/
 			
 			/** DATA STRUCTURE */
 			this.quiz = null;
@@ -150,7 +152,6 @@
 				"renvoi": "",
 				"messages":{"good": "", "average": "", "poor": ""},
 				"cardIndex": 0
-				
 			};
 			
 		};
@@ -466,7 +467,7 @@
 		{
 			var wizard = this;
 			
-			$http.post(odass_app.hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
+			$http.post(odass_app.hostname + "/wizard/quiz/update/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
 			{
 				//
 			});
@@ -566,20 +567,14 @@
 			
 			var wizard = this;
 			var quizname = name ? name : wizard.brouillon.quiz.name;
-			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": quizname}).then(
+			$http.post(odass_app.hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz})
+            .then(
 				/**   SERVER ANSWER  */
 				function(data)
 				{
 					console.log(data);
-					
-					/** GESTION DE LA REPONSE */
-					if (data.data.response.donnees.id && !isNaN(parseInt(data.data.response.donnees.id)))
-					{
-						wizard.brouillon.quiz.id = parseInt(data.data.response.donnees.id);
-						wizard.step = 1;
-					}
-					//wizard.step = 1;
-				},
+					wizard.step = 1;
+                },
 				function (response)
 				{
 					console.log("Error serveur");
@@ -595,7 +590,7 @@
 
 			console.log(this.brouillon.quiz);
 			
-			$http.post(odass_app.hostname + "/api/modifierquiz", wizard.brouillon.quiz).then(
+			$http.post(odass_app.hostname + "/wizard/quiz/update/" + wizard.brouillon.quiz, {"quiz": wizard.brouillon.quiz}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{

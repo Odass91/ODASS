@@ -107,6 +107,7 @@ body
 
 body.loggedin
 {
+	background: url("../images/background-ricepaper_v3.png") !important;
 	background-opacity: 0.8 !important;
 }
 

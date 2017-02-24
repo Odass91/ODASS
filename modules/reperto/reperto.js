@@ -327,6 +327,11 @@
 			}, this);
 			return section_slash_partie;
 		};
+        
+        this.obtainClassNameFromPartieId = function(partieid)
+        {
+            return this.classNames[partieid];
+        }
 		
 		
 		

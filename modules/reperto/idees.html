@@ -48,7 +48,7 @@
 			<div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0" style="position:absolute; bottom: 15px; left: 15px; right:15px; height: 150px; background-image: url('images/placeholder.png')">
 
 			</div>
-			<slick style="position: relative; bottom: -20px;" ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" autoplay="false" infinite="false" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
+			<slick style="position: relative; bottom: -20px;" ng-hide="idee.experiences == 'loading' || idee.experiences.length == 0" dots="true" autoplay="false" infinite="false" slides-to-show="1" slides-to-scroll="1" init-onload=true data="idee.experiences">
 					
 					<div ng-repeat="experience in idee.experiences track by $index">
 						<div class="panel panel-default" style="border: none;">

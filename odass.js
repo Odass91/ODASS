@@ -54,16 +54,22 @@
 				"google.maps.key": "AIzaSyBhHyThm-0LHPSoC2umkTwWNwDZyMom2Oc"
 			};
 			
+			this.changeModule("page-accueil");
+            
 			if (window.location.href.match("index-cac"))
 			{
 				this.user.loggedIn = true;
 				this.user.name = "cac";
 				this.changeModule("annuaire");
 			}
-			
-			this.changeModule("page-accueil");
-			
-			if (! this.user.loggedIn)
+			else
+            {
+                this.user.loggedIn = true;
+                this.user.name = "david";
+                this.changeModule("dashboard");
+            }
+            
+            if (! this.user.loggedIn)
 			{
 				$('#menu-odass-site a#' + this.module + '-item').tab('show');
 			}
@@ -71,6 +77,9 @@
 			{
 				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
 			}
+			/*DEBUG mode*/
+            
+			/**/
 		};
 		
 		
@@ -99,7 +108,7 @@
 			var odass = this;
 			$http.post(odass.hostname + "/api/apilogin", 
 			{
-				"login": "toto",
+				"login": odass.user.name,
 				"motdepasse": password
 			}).then(
 			/**   SERVER ANSWER  */
@@ -159,10 +168,7 @@
 		
 		this.changeModule = function(module)
 		{
-			console.log("Changing module to : ", module);
 			this.module = module;
-			
-			console.log("USER LOGGED ?", this.user.loggedIn);
 			
 			if (! this.user.loggedIn)
 			{
@@ -173,13 +179,14 @@
 				$('#menu-odass-backoffice a#' + this.module + '-item').tab('show');
 			}
 			
-			this.initModule();
+			if (module != "page-accueil")
+            {
+                this.initModule();
+            }
 		};
 		
 		this.initModule = function()
 		{
-			console.log("INIT MODULE", this.module);
-			
 			if (! this.moduleQueue[this.module])
 			{
 				this.moduleQueue[this.module] = true;
@@ -188,25 +195,24 @@
 			if (this.module == "dubito")
 			{
 				this.moduleQueue["wizard"] = true;
-				console.log("ODASS broadcast module init", "wizard");
 				$scope.$broadcast('initModule', {"message": "wizard"});
 			}
-			console.log("ODASS broadcast module init", this.module);
+            console.log("EMISSION DU MESSAGE", this.module);
 			$scope.$broadcast('initModule', {"message": this.module});
 			
-			window.setTimeout(this.waitForModulesInit, 500);
+			window.setTimeout(this.waitForModulesInit, 500, this);
 		};
 		
-		this.waitForModulesInit = function()
+		this.waitForModulesInit = function(contexte)
 		{
-			if (this.moduleQueue)
+            console.log("WAITING FOR TOMORROW", Object.keys(contexte.moduleQueue).length);
+			if (contexte.moduleQueue && Object.keys(contexte.moduleQueue).length > 0)
 			{
-				console.log(this.moduleQueue, this.moduleQueue.length);
-				for (key in this.moduleQueue)
+				for (key in contexte.moduleQueue)
 				{
 					$scope.$broadcast('initModule', {"message": key});
 				}
-				window.setTimeout(this.waitForModulesInit, 500);
+				window.setTimeout(contexte.waitForModulesInit, 500, contexte);
 			}
 		};
 		

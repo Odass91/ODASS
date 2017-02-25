@@ -1,4 +1,15 @@
-<section ng-repeat="idee in reperto.display.idees" class="idee-item item col-lg-6" id="initiative-{{initiative.id}}" 
+<style>
+    .ellipsis {
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        display: block;
+        white-space: nowrap;
+    }
+</style>
+
+<section ng-repeat="idee in reperto.display.idees" class="idee-item item col-lg-6" id="initiative-{{idee.id}}" 
 			ng-click="reperto.toggleDisplayInitiative(idee)"
 			ng-show="reperto.isPaginationVisible($index)"
 >
@@ -7,8 +18,8 @@
 	<div class="panel panel-success {{reperto.sectionByChapterId[idee.parent].id}}">
 		<div class="panel-heading" style="min-height:52px !important; height: 52px !important;">
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="{{idee.id}}">{{idee.titre}}</span>
-				<span class="pull-right">
+				<span class="{{idee.id}} ellipsis" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}}</span>
+				<span class="pull-right" ng-hide="true">
 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>
 				</span>
@@ -17,12 +28,12 @@
 		<div class="panel-body" style="padding-bottom: 20px;" ng-class="{'experiences-visibles': idee.display.experiences && idee.display.experiences.length > 0}">
 			<p style="" ng-hide="idee.displayLong">
 				<span ng-bind-html="idee.description"></span>
-				<a href="" ng-click="idee.displayLong=true">Voir plus</a>
+				<a href="" ng-click="reperto.switchDisplay(true, idee)">Voir plus</a>
 			</p>
 			
 			<p style="" ng-show="idee.displayLong">
 				<span ng-bind-html="idee.descriptionlongue"></span>
-				<a href="" ng-click="idee.displayLong=false">Voir moins</a>
+				<a href="" ng-click="reperto.switchDisplay(false, idee)">Voir moins</a>
 			</p>
 			
 			<p ng-show="idee.references && idee.references.length > 0">
@@ -59,7 +70,7 @@
 								</h4>
 							</div>
 							
-							<div class="panel-body" style="height: 130px; max-height: 130px; overflow:auto;">
+							<div class="panel-body" style="height: 120px; max-height: 120px; overflow:auto; font-size: 0.9em; padding: 5px;">
 								
 								<p style="" ng-hide="experience.displayLong">
 									<span ng-bind-html="experience.description"></span>

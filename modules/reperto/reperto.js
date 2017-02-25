@@ -6,17 +6,15 @@
 	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", function($http, $location, $scope)
 	{
 		var reperto = this;
-             console.log("TEST D");
 		
 		var odass_app = $scope.$parent.odass;
 		
 		$scope.$on('initModule', function(event, args)
 		{
-            console.log("RECEPTION DU MESSAGE", args.message);
 			if (args.message == "annuaire")
 			{
-                delete odass_app.moduleQueue["annuaire"];
 				reperto.init();
+                delete odass_app.moduleQueue["annuaire"];
 			}
 		});
 		
@@ -50,7 +48,6 @@
 		this.init = function()
 		{
 			/** INITIALISATION */
-            console.log("TEST");
 
 			this.display = {};
 			this.sectionByChapterId = {};
@@ -261,6 +258,11 @@
 
 		    	reperto.guide_is_loaded = true;
 		    	reperto.setPagerIndex(0);
+                
+                window.setTimeout(function()
+                {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }, 500);
 		    	
 		    }).
 		    error(function(data, status) 
@@ -430,7 +432,21 @@
 		
 		/************************************************************************/
 		
-		
+		this.switchDisplay = function(displaylong, idee)
+        {
+            idee.displayLong = displaylong;
+            console.log( $("#initiative-" + idee.id));
+            if (displaylong == true)
+            {
+                $("#initiative-" + idee.id).removeClass("col-lg-6");
+                $("#initiative-" + idee.id).addClass("col-lg-12");
+            }
+            else
+            {
+                $("#initiative-" + idee.id).removeClass("col-lg-12");
+                $("#initiative-" + idee.id).addClass("col-lg-6");  
+            } 
+        }
 		
 		this.obtainExperiencesForIdeas = function()
 		{
@@ -506,6 +522,8 @@
 		{
 
 			this.display.idees = this.idees;
+
+    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
 			
 			this.display.section = null;
 			this.display.chapitre = null;

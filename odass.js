@@ -197,7 +197,6 @@
 				this.moduleQueue["wizard"] = true;
 				$scope.$broadcast('initModule', {"message": "wizard"});
 			}
-            console.log("EMISSION DU MESSAGE", this.module);
 			$scope.$broadcast('initModule', {"message": this.module});
 			
 			window.setTimeout(this.waitForModulesInit, 500, this);
@@ -205,7 +204,6 @@
 		
 		this.waitForModulesInit = function(contexte)
 		{
-            console.log("WAITING FOR TOMORROW", Object.keys(contexte.moduleQueue).length);
 			if (contexte.moduleQueue && Object.keys(contexte.moduleQueue).length > 0)
 			{
 				for (key in contexte.moduleQueue)

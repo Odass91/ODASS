@@ -64,9 +64,6 @@
 			}
 			else
             {
-                this.user.loggedIn = true;
-                this.user.name = "david";
-                this.changeModule("dashboard");
             }
             
             if (! this.user.loggedIn)

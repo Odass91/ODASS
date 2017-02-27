@@ -65,7 +65,7 @@
 							</div>
 						</div>
 					  	
-					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{item.id}}">
+					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{reperto.cssClasses[item.id]}}">
 							<div class="panel-heading" role="tab" id="headingOne">
 						      	
 					        	<a class="pull-right" role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">replier</a>
@@ -138,10 +138,10 @@
 			</div>
 			
 			<div ng-hide="reperto.navigationmode == 'print'" 
-						class="col-lg-3 {{reperto.display.section.id}} infozone" 
+						class="col-lg-3 {{reperto.cssClasses[reperto.display.section.id]}} infozone" 
 						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
 			>
-				<h4>INFO</h4>
+				<h4>INFO       </h4>
 				<p ng-show="reperto.display.section">
 					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
 					

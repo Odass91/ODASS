@@ -20,6 +20,8 @@
 		
 		
 		$("body").css("background", "url('images/background-ricepaper_v3.png')");
+        
+        this.css_parties = ["PARTIE_A", "PARTIE_B", "PARTIE_C", "PARTIE_D"];
 		
 		
 		this.reinit= function()
@@ -221,6 +223,20 @@
 				}, this);
 			}, this);
 		};
+        
+        this.updateCSSClasses = function()
+        {
+            this.cssClasses = {};
+            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            this.thesaurus.nodes.forEach(function(PARTIE)
+            {
+                if (! this.cssClasses[PARTIE.id])
+                {
+                        this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                }
+            }, this);
+            
+        };
 		
 		this.loadThesaurus = function()
 		{
@@ -258,7 +274,7 @@
 
 		    	reperto.guide_is_loaded = true;
 		    	reperto.setPagerIndex(0);
-                
+                reperto.updateCSSClasses();
                 window.setTimeout(function()
                 {
                     $('[data-toggle="tooltip"]').tooltip();

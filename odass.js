@@ -64,6 +64,10 @@
 			}
 			else
             {
+                /* DEBUG 
+                this.user.loggedIn = true;
+                this.user.name = "david";
+                this.changeModule("annuaire");*/
             }
             
             if (! this.user.loggedIn)

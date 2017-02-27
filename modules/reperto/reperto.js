@@ -435,7 +435,6 @@
 		this.switchDisplay = function(displaylong, idee)
         {
             idee.displayLong = displaylong;
-            console.log( $("#initiative-" + idee.id));
             if (displaylong == true)
             {
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
@@ -445,7 +444,11 @@
             {
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
-            } 
+            }
+            
+            // get slick object
+            var slider = $("#slick-"+ idee.id + ".slixperiences")[0];
+            slider.slick.refresh();
         }
 		
 		this.obtainExperiencesForIdeas = function()

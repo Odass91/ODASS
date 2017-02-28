@@ -65,7 +65,7 @@
 			        		<div class="form-group">
 								<span class="editable-content">
 									<label><strong>(obligatoire) Nom : </strong></label>
-									<a href="#" editable-text="wizard.brouillon.quiz.name" onbeforesave="wizard.createQuizOnServer($data)">{{ wizard.brouillon.quiz.name || "empty" }}</a>
+									<a href="#" editable-text="wizard.brouillon.quiz.jeu.nom" onbeforesave="wizard.createQuizOnNode($data)">{{ wizard.brouillon.quiz.jeu.nom || "Nouveau nom" }}</a>
 									<span class="glyphicon glyphicon-pencil" ></span>
 								</span>
 							</div>
@@ -73,7 +73,7 @@
 							<div class="form-group">
 								<span class="editable-content">
 									<label><strong>(facultatif) Description : </strong></label>
-									<a href="#" editable-text="wizard.brouillon.quiz.description">{{ wizard.brouillon.quiz.description || "cliquez ici pour remplir la description" }}</a>
+									<a href="#" editable-text="wizard.brouillon.quiz.jeu.presentation">{{ wizard.brouillon.quiz.jeu.presentation || "cliquez ici pour remplir la description" }}</a>
 									<span class="glyphicon glyphicon-pencil" ></span>
 								</span>
 							</div>

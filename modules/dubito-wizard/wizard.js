@@ -25,7 +25,12 @@
 			$http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
-		    	wizard.availableQuiz = data.message;
+		    	console.log(data);
+		    	wizard.availableQuiz = [];
+		    	Object.keys(data).forEach(function(quiz_uuid)
+		    	{
+		    		wizard.availableQuiz.push({"jeu": {"nom": data[quiz_uuid], "uuid": quiz_uuid}});
+		    	}, this);
 		    }).
 		    error(function(data, status) 
 		    {
@@ -64,26 +69,7 @@
 				}	
 			};
 			
-			this.quizConfig = 
-			{
-				"name": "nouveau quiz",
-				"description": "Texte introductif",
-				"length":  
-				{
-					"showTicksValues": true,
-				    "stepsArray": 
-				    [
-				      	{value: 12, legend: 'Quiz - 12 questions'},
-				      	{value: 36, legend: 'Mini-jeu - 36 questions'},
-				      	{value: 108, legend: 'Jeu - 108 questions'}
-				    ]
-				},
-				"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"],
-				"social": ["facebook", "twitter", "email"]
-			};
-			
 			this.brouillon = {};
-			
 			this.mode = "create";
 		};
 		
@@ -126,26 +112,30 @@
 			
 			this.brouillon.quiz = 
 			{
-				"name": "nouveau quiz",
-				"length": 12,
-				"category": "société",
-				"keywords": [],
-				"options":
+				"jeu": 
 				{
-					"vibility": "public",
-					"social": ["twitter", "facebook", "mail"]
+					"nom":"Nouveau quiz",
+					"uuid":"",
+					"presentation":"quiz vide",
+					"conclusion": {"good": "", "average": "", "poor": ""},
+					"href":"http://w.ldh.fr",
+					"source":"y731hmcmf6Ayvmmwxbslxtdjswj5w3h8gl96b6sf1dAnp6bfpfwmjpfAqA6nzgtr31dydcxkxdAp92b7vvvk9ccnb8sml0hAxd7bk21",
+					"encrypt":"file:///home/admin/git/ODASS/index.html",
+					"scoreMoyen":"0.5969979296708",
+					"joueurs":"",
+					"longueur": 12,
+					"cartesOrdonnees":
+					[
+						
+					],
+					"cartes":
+					[
+					 	
+					]
 				},
-				"cartesOrdonnees":
-				[
-					
-				],
-				"cartes":
-				[
-				 	
-				],
-				"renvoi": "",
-				"messages":{"good": "", "average": "", "poor": ""},
-				"cardIndex": 0
+				"tours":
+				{
+				}
 				
 			};
 			
@@ -555,9 +545,32 @@
 			
 		};
 		
-		/** COMMUNICATION AVEC LE SERVEUR */
+		this.log = function(message)
+		{
+			alert(message);
+		};
 		
-		this.createQuizOnServer = function(name)
+		/** COMMUNICATION AVEC LE SERVEUR */
+		this.createQuizOnNode = function(name)
+		{
+			var wizard = this;
+			wizard.brouillon.quiz.jeu.nom = name ? name : wizard.brouillon.quiz.jeu.nom;
+			$http.post(odass_app.hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz}).then(
+				/**   SERVER ANSWER  */
+				function(data)
+				{
+					wizard.log("Jeu sauvé.");
+					wizard.step = 1;
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+		
+	
+		this.createQuizOnSymfony = function(name)
 		{
 			
 			var wizard = this;

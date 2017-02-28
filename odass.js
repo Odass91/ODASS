@@ -42,6 +42,7 @@
 		this.init = function()
 		{
 			this.hostname = "http://perso.odass.org";
+			this.hostname = "http://127.0.0.1:8080";
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -64,10 +65,10 @@
 			}
 			else
             {
-                /* DEBUG 
+                /* DEBUG */
                 this.user.loggedIn = true;
                 this.user.name = "david";
-                this.changeModule("annuaire");*/
+                this.changeModule("dubito");
             }
             
             if (! this.user.loggedIn)
@@ -196,8 +197,10 @@
 			if (this.module == "dubito")
 			{
 				this.moduleQueue["wizard"] = true;
+				console.log("ODASS> broadcast message : ", "wizard");
 				$scope.$broadcast('initModule', {"message": "wizard"});
 			}
+			console.log("ODASS> broadcast message : ", this.module);
 			$scope.$broadcast('initModule', {"message": this.module});
 			
 			window.setTimeout(this.waitForModulesInit, 500, this);
@@ -205,6 +208,7 @@
 		
 		this.waitForModulesInit = function(contexte)
 		{
+			console.log("WINDOW> waiting for tomorrow ", contexte.moduleQueue);
 			if (contexte.moduleQueue && Object.keys(contexte.moduleQueue).length > 0)
 			{
 				for (key in contexte.moduleQueue)

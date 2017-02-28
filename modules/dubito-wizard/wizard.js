@@ -7,10 +7,11 @@
 		
 		$scope.$on('initModule', function(event, args)
 		{
+			console.log("WIZARD> receiving message", args.message);
 			if (args.message == "wizard")
 			{
 				dubitowizard.init();
-				$scope.moduleRegistered = true;
+				delete odass_app.moduleQueue["wizard"];
 			}
 		});
 		
@@ -21,7 +22,7 @@
 			this.step = 0;
 			this._debugTmpId = 1;
 			
-			$http.get(odass_app.hostname + "/api/listquiz").
+			$http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	wizard.availableQuiz = data.message;

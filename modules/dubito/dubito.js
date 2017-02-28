@@ -6,9 +6,11 @@
 		var dubito = this;
 		$scope.$on('initModule', function(event, args)
 		{
+			console.log("DUBITO> receiving message", args.message);
 			if (args.message == "dubito")
 			{
 				dubito.init();
+				delete odass_app.moduleQueue["dubito"];
 			}
 		});
 		
@@ -25,17 +27,17 @@
 			this.showSummary = false;
 			
 	        this.quizzes = [];
-	        $http.get(odass_app.hostname + "/api/listquiz").
+	        $http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	if (data)
 		    	{
-					dubito.quizzes = data.message;
+					dubito.quizzes = data;
 		    	}
 		    }).
 		    error(function(data, status) 
 		    {
-		    	console.log("Erreur lors de la recuperation du fichier json");
+		    	console.log("Erreur lors de la recuperation du fichier json", data);
 		    });
 	        
 	        // nom du quiz à récupérer en paramètre de l'URL
@@ -48,8 +50,6 @@
 	        this.selectedQuiz = {"intitule": "Electro-sensibilité", "played": 0, "id": "linky"};
 	        
 	        this.computeGraph();
-	        
-	        $scope.$broadcast('initModule', {"message": "wizard"});
 		}
 		
 		

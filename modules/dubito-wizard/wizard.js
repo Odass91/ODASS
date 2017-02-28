@@ -82,25 +82,41 @@
 			$("#edit-quiz-choice").modal();
 		};
 		
-		this.editQuiz = function(quiz)
+		this.editQuiz = function(quizuuid)
 		{
+			console.log("Edit quiz : ", quizuuid);
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
 			
-			if (!quiz) 
+			if (! quizuuid) 
 			{
 				this.brouillon.quiz = this.selectedQuiz;
+				this.setupOrder();
 			}
 			else
 			{
-				this.brouillon.quiz = quiz;
+				this.fetchJSONQuiz(quizuuid);
 			}
 			this.mode = "edit";
 			this.step = 0;
 			
-			this.setupOrder();
 			
 			$("#quiz-dashboard").modal();
+		};
+		
+		this.fetchJSONQuiz = function(uuid)
+		{
+			var wizard = this;
+			$http.get("data/library/quiz-" + uuid + ".json").
+		    success(function(data, status) 
+		    {
+		    	wizard.brouillon.quiz = data;
+		    	wizard.setupOrder();
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });
 		};
 		
 		this.createQuiz = function()
@@ -416,10 +432,10 @@
 			
 			var wizard = this;
 			
-			this.brouillon.quiz.cartes.forEach(function(carte)
+			this.brouillon.quiz.jeu.cartes.forEach(function(carte)
 			{
 				var clonedCard = jQuery.extend(true, {}, carte);
-				wizard.brouillon.quiz.cartesOrdonnees.push(carte);
+				wizard.brouillon.quiz.jeu.cartesOrdonnees.push(carte);
 			});
 			
 //			$("#quiz-ending").modal("hide");
@@ -468,18 +484,18 @@
 		this.addKeyword = function()
 		{
 			var keyword = $("#add-keyword").val();
-			if (this.brouillon.quiz.keywords.indexOf(keyword) == -1)
+			if (this.brouillon.quiz.jeu.keywords.indexOf(keyword) == -1)
 			{
-				this.brouillon.quiz.keywords.push(keyword);
+				this.brouillon.quiz.jeu.keywords.push(keyword);
 			}
 		};
 		
 		this.removeKeyword = function(keyword)
 		{
-			if (this.brouillon.quiz.keywords.indexOf(keyword) != -1)
+			if (this.brouillon.quiz.jeu.keywords.indexOf(keyword) != -1)
 			{
-				var index = this.brouillon.quiz.keywords.indexOf(keyword);
-				this.brouillon.quiz.keywords.splice(index, 1);
+				var index = this.brouillon.quiz.jeu.keywords.indexOf(keyword);
+				this.brouillon.quiz.jeu.keywords.splice(index, 1);
 			}
 		};
 		
@@ -512,32 +528,32 @@
 		this.updateOrder = function()
 		{
 			/** Ordre de création */
-			for (var i=0; i < this.brouillon.quiz.cartes.length - 1; i++)
+			for (var i=0; i < this.brouillon.quiz.jeu.cartes.length - 1; i++)
 			{
-				var currentCarte = this.brouillon.quiz.cartes[i];
-				var nextCarte = (i < this.brouillon.quiz.cartes.length - 1) ? this.brouillon.quiz.cartes[i + 1] : null;
+				var currentCarte = this.brouillon.quiz.jeu.cartes[i];
+				var nextCarte = (i < this.brouillon.quiz.jeu.cartes.length - 1) ? this.brouillon.quiz.jeu.cartes[i + 1] : null;
 				currentCarte.questionSuivante = nextCarte ? nextCarte.id : "#";
 				
 			}
 			
 			/** Gestion des contraintes */
 			
-			this.brouillon.quiz.ordonnancement = [[]];
+			this.brouillon.quiz.jeu.ordonnancement = [[]];
 			var currentPushIndex = 0;
 			
-			for (var i=0; i < this.brouillon.quiz.cartesOrdonnees.length; i++)
+			for (var i=0; i < this.brouillon.quiz.jeu.cartesOrdonnees.length; i++)
 			{
-				var currentCarte = this.brouillon.quiz.cartesOrdonnees[i];
+				var currentCarte = this.brouillon.quiz.jeu.cartesOrdonnees[i];
 				
 				if (currentCarte.anchored)
 				{
-					this.brouillon.quiz.ordonnancement.push(currentCarte);
-					this.brouillon.quiz.ordonnancement.push([]);
+					this.brouillon.quiz.jeu.ordonnancement.push(currentCarte);
+					this.brouillon.quiz.jeu.ordonnancement.push([]);
 					currentPushIndex += 2;
 				}
 				else
 				{
-					this.brouillon.quiz.ordonnancement[currentPushIndex].push(currentCarte);
+					this.brouillon.quiz.jeu.ordonnancement[currentPushIndex].push(currentCarte);
 				}
 			}
 			
@@ -574,7 +590,7 @@
 		{
 			
 			var wizard = this;
-			var quizname = name ? name : wizard.brouillon.quiz.name;
+			var quizname = name ? name : wizard.brouillon.quiz.jeu.name;
 			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": quizname}).then(
 				/**   SERVER ANSWER  */
 				function(data)
@@ -604,7 +620,7 @@
 
 			console.log(this.brouillon.quiz);
 			
-			$http.post(odass_app.hostname + "/api/modifierquiz", wizard.brouillon.quiz).then(
+			$http.post(odass_app.hostname + "/api/modifierquiz", wizard.brouillon.quiz.jeu).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -612,7 +628,7 @@
 					/** GESTION DE LA REPONSE */
 					if (data.data.response.donnees.id && !isNaN(data.data.response.donnees.id))
 					{
-						wizard.brouillon.quiz.id = data.data.response.donnees.id;
+						wizard.brouillon.quiz.jeu.uuid = data.data.response.donnees.uuid;
 						wizard.step = 1;
 					}
 				},

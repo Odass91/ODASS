@@ -14,13 +14,14 @@
 	  		Sélectionnez le quiz à modifier. Une fois toutes les cartes créées, vous pourrez le publier. Une fois publié, vous ne pourrez plus modifier le quiz !
 	  	</p>
 	  	<ul class="list-group">
+ 				
  			<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item">
- 				<button ng-disabled="quiz.cartes.length < quiz.length" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
- 					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
+ 				<button type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" ng-click="wizard.editQuiz(quiz.jeu.uuid)">
+	 				<span class="glyphicon glyphicon-pencil" alt="Modifier le quiz"></span>
  				</button>
  				
- 				<button ng-show="quiz.status != 'published'" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" ng-click="wizard.editQuiz(quiz)">
-	 				<span class="glyphicon glyphicon-pencil" alt="Modifier le quiz"></span>
+ 				<button ng-hide="true" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
+ 					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
  				</button>
  				
  				
@@ -34,7 +35,7 @@
  				<span class="text-warning" ng-show="quiz.cartes.length < quiz.length" style="font-size: 0.9em;">quiz incomplet : {{quiz.cartes.length}} / {{quiz.length}} cartes</span>
  			</li>
  		</ul>
-		<p class="text-center" >
+		<p class="text-center" ng-hide="true">
 			<button class="btn btn-warning" ng-click="wizard.editQuiz()" ng-disabled="wizard.selectedQuiz == undefined">Choisissez le quiz à éditer !</button>
 		</p>
 	  </div>

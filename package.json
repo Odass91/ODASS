@@ -1,0 +1,27 @@
+{
+  "name": "odass",
+  "version": "1.0.0",
+  "description": "serveur de fichiers pour odass",
+  "main": "odass_server.js",
+  "dependencies": {
+    "express": "^4.14.1",
+    "json-loader": "^0.5.4",
+    "load-json-file": "^2.0.0",
+    "mysql": "^2.13.0",
+    "write-json-file": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kobhal/ODASS.git"
+  },
+  "author": "David Leray",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kobhal/ODASS/issues"
+  },
+  "homepage": "https://github.com/kobhal/ODASS#readme"
+}

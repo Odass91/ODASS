@@ -14,26 +14,15 @@
 			if (args.message == "annuaire")
 			{
 				reperto.init();
+                delete odass_app.moduleQueue["annuaire"];
 			}
 		});
 		
-		this.backgrounds = [
-			"background-ricepaper_v3.png"
-			];
-		$("body").css("background", "url('images/background-ricepaper_v3.png')");
-		this.backgroundindex = 0;
 		
-		this.changeBackground = function()
-		{
-			this.backgroundindex++;
-
-			if (this.backgroundindex == this.backgrounds.length)
-			{
-				this.backgroundindex = 0;
-			}
-			$("body").css("background", "url('images/" + this.backgrounds[this.backgroundindex] + "')");
-			
-		}
+		$("body").css("background", "url('images/background-ricepaper_v3.png')");
+        
+        this.css_parties = ["PARTIE_A", "PARTIE_B", "PARTIE_C", "PARTIE_D"];
+		
 		
 		this.reinit= function()
 		{
@@ -234,6 +223,20 @@
 				}, this);
 			}, this);
 		};
+        
+        this.updateCSSClasses = function()
+        {
+            this.cssClasses = {};
+            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            this.thesaurus.nodes.forEach(function(PARTIE)
+            {
+                if (! this.cssClasses[PARTIE.id])
+                {
+                        this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                }
+            }, this);
+            
+        };
 		
 		this.loadThesaurus = function()
 		{
@@ -268,12 +271,14 @@
 		    		reperto.display.pager = {"index": 0, "offset": 6};
 		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
 		    	}
-		    	
-		    	reperto.setupMap();
-		    	reperto.setupPrint();
 
 		    	reperto.guide_is_loaded = true;
 		    	reperto.setPagerIndex(0);
+                reperto.updateCSSClasses();
+                window.setTimeout(function()
+                {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }, 500);
 		    	
 		    }).
 		    error(function(data, status) 
@@ -324,6 +329,11 @@
 			}, this);
 			return section_slash_partie;
 		};
+        
+        this.obtainClassNameFromPartieId = function(partieid)
+        {
+            return this.classNames[partieid];
+        }
 		
 		
 		
@@ -438,7 +448,24 @@
 		
 		/************************************************************************/
 		
-		
+		this.switchDisplay = function(displaylong, idee)
+        {
+            idee.displayLong = displaylong;
+            if (displaylong == true)
+            {
+                $("#initiative-" + idee.id).removeClass("col-lg-6");
+                $("#initiative-" + idee.id).addClass("col-lg-12");
+            }
+            else
+            {
+                $("#initiative-" + idee.id).removeClass("col-lg-12");
+                $("#initiative-" + idee.id).addClass("col-lg-6");  
+            }
+            
+            // get slick object
+            var slider = $("#slick-"+ idee.id + ".slixperiences")[0];
+            slider.slick.refresh();
+        }
 		
 		this.obtainExperiencesForIdeas = function()
 		{
@@ -477,13 +504,6 @@
 						experience.display.format = "court";
 						experience.category = Math.floor(Math.random() * 10);
 					}, this);
-					idee.experiences.forEach(function(exp)
-					{
-						if (exp.geoloc)
-						{
-							reperto.setupMarker(exp);
-						}
-					}, reperto);
 				}
 				else
 				{
@@ -500,38 +520,6 @@
 		
 		/** MAP */
 		
-		this.setupMap = function()
-		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
-			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'davidleray.2f171f1g',
-			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
-			}).addTo(mymap);
-			
-			this.reperto_carte = mymap;
-		};
-		
-		
-		this.setupMarker = function(experience)
-		{
-			if (! this.reperto_carte)
-			{
-				this.setupMap();
-			}
-			if (experience.geoloc)
-			{
-				var x_pos = 42 + (Math.random() * 8);
-				var y_pos = -1 + (Math.random() * 10);
-				var icon = L.icon({
-					'iconUrl': 'images/markers/marker-'+ this.availableFilters.keywords[experience.category].color + '.png'
-				})
-				var marker = L.marker([x_pos, y_pos], {"icon": icon});
-				experience.marker = marker;
-			}
-		};
-		
 		this.isCategorieActive = function(categorie)
 		{
 			if (! this.activeCategories)
@@ -539,59 +527,6 @@
 				this.activeCategories = {};
 			}
 			return (this.activeCategories[categorie.label] != undefined);
-		};
-		
-		this.toggleCategory = function(categorie)
-		{
-			if (this.activeCategories == undefined)
-			{
-				this.activeCategories = [];
-			}
-
-			if (this.activeCategories[categorie.label] == undefined)
-			{
-				this.addCategoryToMap(categorie);
-				this.activeCategories[categorie.label] = true;
-			}
-			else
-			{
-				this.removeCategoryToMap(categorie);
-				delete this.activeCategories[categorie.label];
-			}
-		};
-		
-		this.addCategoryToMap = function(categorie)
-		{
-			this.display.idees.forEach(function(idee)
-			{
-				if (idee.experiences)
-				{
-					idee.experiences.forEach(function (experience)
-					{
-						if (this.availableFilters.keywords[experience.category].label == categorie.label)
-						{
-							experience.marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
-						}
-					}, this);
-				}
-			}, this);
-		};
-		
-		this.removeCategoryToMap = function(categorie)
-		{
-			this.display.idees.forEach(function(idee)
-			{
-				if (idee.experiences)
-				{
-					idee.experiences.forEach(function (experience)
-					{
-						if (this.availableFilters.keywords[experience.category].label == categorie.label)
-						{
-							experience.marker.remove();
-						}
-					}, this);
-				}
-			}, this);
 		};
 
 		this.tagThesaurus = function(thesaurus)
@@ -606,6 +541,8 @@
 		{
 
 			this.display.idees = this.idees;
+
+    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
 			
 			this.display.section = null;
 			this.display.chapitre = null;

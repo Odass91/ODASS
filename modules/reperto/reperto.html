@@ -34,54 +34,6 @@
 					</span>
 				</p>
 			</div>
-			
-			<div class="col-md-3">
-				
-<!-- 				<filters-box></filters-box> -->
-			</div>
-			
-<!-- 			<div class="col-md-1"> -->
-<!-- 				<a class="btn btn-info icon-action" ng-click="reperto.init()"> -->
-<!-- 					<span class="glyphicon glyphicon-refresh"></span> -->
-<!-- 				</a> -->
-<!-- 				<a class="btn btn-info icon-action" ng-click="reperto.displaySavedInitiatives()"> -->
-<!-- 					<span class="glyphicon glyphicon-star"></span> -->
-<!-- 				</a> -->
-<!-- 			</div> -->
-			
-		</section>
-		
-		<section id="catalogue" class="prettyprint" ng-show="reperto.navigationmode == 'print'">
-		
-			<div class="toolbox">
-				<span class="btn btn-primary" ng-click="reperto.exportToPdf()"><span class="glyphicon glyphicon-print"></span> IMPRIMER</span> &nbsp;
-				<span class="btn btn-default" ng-click="reperto.navigationmode='tree'"><span class="glyphicon glyphicon-arrow-left"></span> RETOUR</span>
-			</div>
-			
-			<div id="printzone" class="sheet A4 portrait">
-				<h1 ng-bind-html="reperto.printableGuide.titre"></h1>
-				<p class="guide description" ng-bind-html="reperto.printableGuide.description"></p>
-				<section class="partie" ng-repeat="partie in reperto.printableGuide.parties">
-					<h2 ng-bind-html="partie.titre"></h2>
-					<p class="partie description" ng-bind-html="partie.description"></p>
-					<article ng-repeat="chapitre in partie.chapitres">
-						<h3 ng-bind-html="chapitre.titre"></h3>
-						<p class="chapitre description" ng-bind-html="chapitre.description"></p>
-						<div class="idee" ng-repeat="idee in chapitre.idees">
-							<h4 ng-bind-html="idee.titre"></h4>
-							<p class="idee description" ng-bind-html="idee.description"></p>
-							<ul class="experiences">
-								<li class="experience" ng-repeat="experience in idee.experiences">
-									<h5 ng-bind-html="experience.label"></h5>
-									<div class="experience description" ng-bind-html="experience.descriptionlongue"></div>
-									<div class="contact"><a ng-repeat="contact in experience.references" href="{{contact.lien}}">{{contact.label}}</a></div>
-									<div class="localisation"></div>
-								</li>
-							</ul>
-						</div>
-					</article>
-				</section>
-			</div>
 		</section>
 		
 		<section id="annuaire-body" class="row">
@@ -104,16 +56,16 @@
 				
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					  	<div class="panel panel-default">
-					  		<div class="panel-body">
+					  		<div class="panel-body" style="padding: 2px 20px 2px 2px">
 							  	<a href="http://www.associations-citoyennes.net/" target="_blank"> 
 									<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
 								</a>
 								
-								<a title="Envoyez vos commentaires sur le guide" href="mailto:cac_repertoire@odass.org?subject=Guide%20National%20Ecologie" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
+								<a title="Envoyez vos commentaires sur le guide" href="mailto:cac_repertoire@odass.org?subject=Guide%20National%20Ecologie" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
 							</div>
 						</div>
 					  	
-					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{item.id}}">
+					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{reperto.cssClasses[item.id]}}">
 							<div class="panel-heading" role="tab" id="headingOne">
 						      	
 					        	<a class="pull-right" role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">replier</a>
@@ -144,26 +96,6 @@
 
 
 			<!--  COLONNE PRINCIPALE  -->
-			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
-				
-				
-				<div id="repertomap" style="height:600px;"></div>
-				
-				
-				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;">
-					<div class="col-md-1 filter" ng-repeat="categorie in reperto.availableFilters.keywords" 
-						style="background-color:#{{categorie.color}}; padding:5px 2px 5px 2px; color: white; font-size: 0.9em"
-						ng-click="reperto.toggleCategory(categorie)" 
-						ng-class="{ 'active': reperto.isCategorieActive(categorie)}">
-						<span class="glyphicon" ng-class="{ 'glyphicon-eye-open': reperto.isCategorieActive(categorie), 'glyphicon-eye-close': ! reperto.isCategorieActive(categorie)}"></span>
-						&nbsp;{{categorie.label}}
-					</div>
-				
-				</div>
-			 </div>
-			 
-			 
-			 
 			 
 			
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
@@ -205,44 +137,11 @@
 				</div>
 			</div>
 			
-			
-	 
-	 
-			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white">
-				<h4>TOOLBOX</h4>
-				<div>
-					<p>
-						<span ng-click="reperto.navigationmode = 'map'" class="btn btn-default">
-							<span class="glyphicon glyphicon-map-marker"></span>
-							&nbsp;Navigation par carte
-							<span ng-show="reperto.navigationmode == 'map'" class="glyphicon glyphicon-check"></span>
-						</span>
-					</p>
-					<p>
-						<span ng-click="reperto.navigationmode = 'tree'" class="btn btn-default">
-							<span class="glyphicon glyphicon-th-list"></span>&nbsp;Navigation par arborescence
-							<span ng-show="reperto.navigationmode == 'tree'" class="glyphicon glyphicon-check"></span>
-						</span>
-						</p>
-					<p ng-hide="true"><span class="btn btn-default" ng-click="reperto.changeBackground()"><span class="glyphicon glyphicon-picture"></span> Changer le fond</span></p>
-				
-					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
-						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
-					</span>
-					
-					<span ng-show="reperto.printableGuide.activeInitiatives.length > 0">
-						<p>{{reperto.printableGuide.activeInitiatives.length}} sauvées.</p>
-						<p><span ng-click="reperto.refreshPrintableCatalogue()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
-					</span>
-				</div>
-			</div>
-			
-			
 			<div ng-hide="reperto.navigationmode == 'print'" 
-						class="col-lg-3 {{reperto.display.section.id}} infozone" 
+						class="col-lg-3 {{reperto.cssClasses[reperto.display.section.id]}} infozone" 
 						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
 			>
-				<h4>INFO</h4>
+				<h4>INFO       </h4>
 				<p ng-show="reperto.display.section">
 					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
 					
@@ -269,7 +168,6 @@
 			</div>
 			
 		</section>
-		
 		
 		<div class="modal fade" id="introduction-cac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 		  	<div class="modal-dialog modal-lg" role="document">

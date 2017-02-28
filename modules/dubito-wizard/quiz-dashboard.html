@@ -64,22 +64,22 @@
 			        		
 			        		<div class="form-group">
 								<span class="editable-content">
-									<label><strong>Nom : </strong></label>
-									<a href="#" editable-text="wizard.brouillon.quiz.name">{{ wizard.brouillon.quiz.name || "empty" }}</a>
+									<label><strong>(obligatoire) Nom : </strong></label>
+									<a href="#" editable-text="wizard.brouillon.quiz.name" onbeforesave="wizard.createQuizOnServer($data)">{{ wizard.brouillon.quiz.name || "empty" }}</a>
 									<span class="glyphicon glyphicon-pencil" ></span>
 								</span>
 							</div>
 							
 							<div class="form-group">
 								<span class="editable-content">
-									<label><strong>Description : </strong></label>
+									<label><strong>(facultatif) Description : </strong></label>
 									<a href="#" editable-text="wizard.brouillon.quiz.description">{{ wizard.brouillon.quiz.description || "cliquez ici pour remplir la description" }}</a>
 									<span class="glyphicon glyphicon-pencil" ></span>
 								</span>
 							</div>
 							
 							
-							<div class="form-group" style="padding-bottom: 25px;">
+							<div class="form-group" style="padding-bottom: 25px;" ng-show="false">
 								<label for="email">Quel type de jeu voulez vous créer ? </label>
 								<rzslider rz-slider-model="wizard.brouillon.quiz.length" rz-slider-options="wizard.quizConfig.length"></rzslider>			
 							</div>
@@ -92,10 +92,22 @@
 			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 			          <span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">2.</span> Gestion des cartes
 			        </a>
+			        
+			        <span ng-show="wizard.step > 0" class="pull-right">
+				        <span class="step-ok">étape 1 validée</span>
+				    </span>
+			        <span ng-show="wizard.step == 0" class="pull-right">
+			        	<span class="step-pas-ok">vous devez terminer l'étape en cours</span>
+			        </span>
 			      </h4>
 			    </div>
 			    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-			      <div class="panel-body">
+			      <div class="panel-body" style="position:relative">
+			      		<div ng-hide="wizard.step > 0" style="position: absolute; top:0px; bottom:0px; left:0px; right:0px;background:red; z-index:1; background-color: rgba(255,255,255,0.8)">
+			      			<div style="margin:auto; text-align: center; padding-top: 25px; font-size: 24px; font-weight:bold;">
+			      				Vous devez faire l'étape 1 avant de continuer
+			      			</div>
+			      		</div>
 						<quiz-order></quiz-order>
 			      </div>
 			    </div>
@@ -106,10 +118,21 @@
 			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
 			          <span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">3.</span> Fin de jeu
 			        </a>
+			        <span ng-show="wizard.step > 1" class="pull-right">
+			        	<span class="step-ok">étape 2 validée</span>
+			        </span>
+			        <span ng-show="wizard.step <= 1" class="pull-right">
+			        	<span class="step-pas-ok">vous devez terminer l'étape en cours</span>
+			        </span>
 			      </h4>
 			    </div>
 			    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-			      <div class="panel-body">
+			      <div class="panel-body" style="position:relative">
+			      		<div ng-hide="wizard.step > 1" style="position: absolute; top:0px; bottom:0px; left:0px; right:0px;background:red; z-index:1; background-color: rgba(255,255,255,0.8)">
+			      			<div style="margin:auto; text-align: center; padding-top: 25px; font-size: 24px; font-weight:bold;">
+			      				Vous devez faire l'étape 2 avant de continuer
+			      			</div>
+			      		</div>
 						<quiz-ending></quiz-ending>
 			      </div>
 			    </div>

@@ -30,7 +30,6 @@
 		    {
 		    	if (data)
 		    	{
-					console.log(data);
 					dubito.quizzes = data.message;
 		    	}
 		    }).

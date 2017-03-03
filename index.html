@@ -145,6 +145,11 @@
 						</ul>
 						<!--  USER MENU -->
 						<ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="#" ng-click="odass.switchToDubitoDemoMode(true)" style="color: rgba(0,50,50,0.8); font-size: 0.7em">
+                                    <span class="glyphicon glyphicon-knight"></span> jouer à la démo dubito
+                                </a>
+                            </li>
 							<li ng-show="odass.debug"><a href="#" data-toggle="modal" data-target="#login-popup"><span class="glyphicon glyphicon-wrench"></span></a></li>
 							<li ng-hide="odass.user.loggedIn"><a href="#" data-toggle="modal" data-target="#login-popup"><span class="glyphicon glyphicon-log-in"></span> Connexion</a></li>
 						</ul>
@@ -606,6 +611,7 @@
 		<script type="text/javascript" src="libs/bootstrap/js/bootstrap.js"></script>
 		<script type="text/javascript" src="libs/angular.js"></script>
 		<script type="text/javascript" src="libs/angular-sanitize.js"></script>
+		<script type="text/javascript" src="libs/ng-file-upload.min.js"></script>
 		<script type="text/javascript" src="libs/Chart.js"></script>
 		<script type="text/javascript" src="libs/jstree.js"></script>
 		<script type="text/javascript" src="libs/defiant.min.js"></script>
@@ -619,7 +625,7 @@
 		<script type="text/javascript" src="libs/jspdf.min.js"></script>
 		<script type="text/javascript" src="libs/pdfmake.min.js"></script>
 		<script type="text/javascript" src="libs/html2canvas.js"></script>
-		<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+		<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 		
 		<script type="text/javascript" src="odass.js"></script>
 		<script type="text/javascript" src="modules/dubito/dubito.js"></script>
@@ -629,7 +635,7 @@
 		
 		<script type="text/javascript" src="wizard/wizard.js"></script-->
 		
-		<script type="text/javascript">
+		<script type="text/javascript" src="">
 			$(function () {
 			  $('[data-toggle="popover"]').popover();
 			})

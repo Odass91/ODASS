@@ -1,16 +1,16 @@
 <div class="modal fade" id="quiz-card" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content panel-default">
-	  <div class="modal-header panel-heading">
-		<h4 class="modal-title" id="exampleModalLabel">{{ dubito.card.enonce }}</h4>
+	  <div class="modal-header panel-heading" >
+		<h4 class="modal-title" id="exampleModalLabel">{{ dubito.card.intitule }}</h4>
 	  </div>
 	  <div class="modal-body">
 		
 		<div class="col-lg-12" style="padding: 10px;">
 		
 			<ul class="col-lg-6 nav nav-pills nav-stacked" ng-hide="dubito.displayRecommandation">
-				<li class="answer" ng-repeat="choice in dubito.card.propositions" ng-class="{'active': dubito.isCorrectAnswer(dubito.card, $index)}" >
-					<a href="#" ng-click="dubito.checkAnswer(dubito.card, choice.id)" ng-bind-html="choice.enonce"></a>
+				<li class="answer" ng-repeat="choice in dubito.card.choix" ng-class="{'active': dubito.isCorrectAnswer(dubito.card, choice.id)}" >
+					<a href="#" ng-click="dubito.checkAnswer(dubito.card, choice.id)" ng-bind-html="choice.intitule"></a>
 				</li>
 			</ul>
 			
@@ -31,9 +31,9 @@
 						
 						<p><strong><span ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></span></strong></p>
 						
-						<p ng-bind-html="card.explicationCourte" ng-show="! dubito.showLongAnswer"></p>
+						<p ng-bind-html="card.reponseCourte" ng-show="! dubito.showLongAnswer"></p>
 						
-						<p ng-bind-html="card.explicationLongue" ng-show="dubito.showLongAnswer" style="overflow:auto; max-height: 170px;"></p>
+						<p ng-bind-html="card.reponseLongue" ng-show="dubito.showLongAnswer" style="overflow:auto; max-height: 170px;"></p>
 						
 						<a href="#" ng-click="dubito.toggleLongAnswer()">
 							<span class="glyphicon glyphicon-menu-right" ng-show="! dubito.showLongAnswer"> </span> <span ng-show="! dubito.showLongAnswer">En savoir plus</span>
@@ -77,11 +77,11 @@
 				</form>
 			</div>
 			
-			<div class="text-center">
-				<button ng-hide="(dubito.turn == dubito.quiz.questions - 1) || ! dubito.hasAnswered" type="button" class="btn btn-success" ng-click="dubito.nextTurn()">
-		  			 Question suivante&nbsp;<span class="glyphicon glyphicon-arrow-right" ></span>
+			<div class="col-lg-12 text-center">
+				<button ng-hide="(dubito.turn == dubito.quiz.questions - 1) || ! dubito.hasAnswered" type="button" class="btn btn-success btn-lg" ng-click="dubito.nextTurn()">
+		  			 Question suivante
 		  		</button>
-		  		<button ng-show="(dubito.turn == dubito.quiz.questions - 1) && dubito.hasAnswered" type="button" class="btn btn-info" ng-click="dubito.endQuiz()" data-dismiss="modal" data-backdrop="static" data-keyboard="false">
+		  		<button ng-show="(dubito.turn == dubito.quiz.questions - 1) && dubito.hasAnswered" type="button" class="btn btn-info btn-lg" ng-click="dubito.endQuiz()" data-dismiss="modal" data-backdrop="static" data-keyboard="false">
 					<span class="glyphicon glyphicon-stats" ></span> Voir les scores
 				</button>
 			</div>

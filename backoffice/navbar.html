@@ -29,13 +29,15 @@
 				<!-- TODO module panneau d'affichage -->
 				<!--  li><a id="newsletter-item" href="" ng-click="odass.changeModule('newsletter')">INFO</a></li-->
 				<!--  li><a id="newsletter-item" href="" ng-click="odass.changeModule('newsletter')">liste des initiatives qu'on équipe</a></li-->
+                
+				<li>  
+                    <a id="dubito-item" href="" ng-click="odass.changeModule('dubito')">DUBITO</a>
+				</li>
+				<li>
+                    <a id="annuaire-item" href="" ng-click="odass.changeModule('annuaire')">CAC</a>
+                </li>
 
-				<li><a id="dubito-item" href=""
-					ng-click="odass.changeModule('dubito')">DUBITO</a></li>
-				<li><a id="annuaire-item" href=""
-					ng-click="odass.changeModule('annuaire')">CAC</a></li>
-
-				<li><a id="annuaire-item" href=""><span id="background-placeholder"></span></a></li>
+				<!--li><a id="annuaire-item" href=""><span id="background-placeholder"></span></a></li-->
 				
 				<!-- ORGANIZIO -->
 				<!-- >li class="dropdown">
@@ -91,7 +93,7 @@
 			</ul>
 
 			<!--  USER MENU -->
-			<ul class="nav navbar-nav navbar-right">
+			<ul class="nav navbar-nav navbar-right">						
 				<li ng-show="odass.debug"><a href="#" data-toggle="modal"
 					data-target="#login-popup"><span
 						class="glyphicon glyphicon-wrench"></span></a></li>

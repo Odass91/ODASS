@@ -1,6 +1,6 @@
 (function()
 {
-	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree', 'xeditable', 'slick']);
+	var odass = angular.module("odass", ['ngSanitize', 'html5.sortable', 'rzModule', 'ui.tree', 'xeditable', 'slick', 'ngFileUpload']);
 	
 	odass.config(['$httpProvider', function($httpProvider) 
 	{
@@ -9,7 +9,7 @@
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
 	}]);
 	
-	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope', function($http, $location, $scope)
+	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)
 	{
 		this.backgrounds = 
 		[
@@ -66,9 +66,15 @@
 			else
             {
                 /* DEBUG */
-                this.user.loggedIn = true;
+                /*this.user.loggedIn = true;
                 this.user.name = "david";
-                this.changeModule("dubito");
+                this.changeModule("dubito");*/
+            }
+            
+            /* DEMO */
+            if($location.search().quiz)
+            {
+				this.switchToDubitoDemoMode();
             }
             
             if (! this.user.loggedIn)
@@ -84,6 +90,21 @@
 			/**/
 		};
 		
+        this.switchToDubitoDemoMode = function(force)
+        {
+            this.user.loggedIn = true;
+            this.user.name = "demo";
+            var options = {"mode": "dubito"};
+            if ($location.search().quiz)
+            {
+                options["quiz-uuid"] = $location.search().quiz
+            }
+            if ($location.search().create || force)
+            {
+                options.mode = "full";
+            }
+            this.changeModule("dubito", options);
+        }
 		
 		this.debugAPIcall = function()
 		{
@@ -168,7 +189,7 @@
 			return (this.module == module);
 		};
 		
-		this.changeModule = function(module)
+		this.changeModule = function(module, options)
 		{
 			this.module = module;
 			
@@ -183,11 +204,11 @@
 			
 			if (module != "page-accueil")
             {
-                this.initModule();
+                this.initModule(options);
             }
 		};
 		
-		this.initModule = function()
+		this.initModule = function(options)
 		{
 			if (! this.moduleQueue[this.module])
 			{
@@ -198,24 +219,24 @@
 			{
 				this.moduleQueue["wizard"] = true;
 				console.log("ODASS> broadcast message : ", "wizard");
-				$scope.$broadcast('initModule', {"message": "wizard"});
+				$scope.$broadcast('initModule', {"message": "wizard", "options": options});
 			}
 			console.log("ODASS> broadcast message : ", this.module);
-			$scope.$broadcast('initModule', {"message": this.module});
+			$scope.$broadcast('initModule', {"message": this.module, "options": options});
 			
-			window.setTimeout(this.waitForModulesInit, 500, this);
+			window.setTimeout(this.waitForModulesInit, 500, this, options);
 		};
 		
-		this.waitForModulesInit = function(contexte)
+		this.waitForModulesInit = function(contexte, options)
 		{
 			console.log("WINDOW> waiting for tomorrow ", contexte.moduleQueue);
 			if (contexte.moduleQueue && Object.keys(contexte.moduleQueue).length > 0)
 			{
 				for (key in contexte.moduleQueue)
 				{
-					$scope.$broadcast('initModule', {"message": key});
+					$scope.$broadcast('initModule', {"message": key, "options": options});
 				}
-				window.setTimeout(contexte.waitForModulesInit, 500, contexte);
+				window.setTimeout(contexte.waitForModulesInit, 500, contexte, options);
 			}
 		};
 		

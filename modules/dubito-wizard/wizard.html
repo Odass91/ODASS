@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <section  ng-controller="WizardController as wizard">
 	<div class="panel panel-danger">
 	  <div class="panel-heading"><h3 class="panel-title">Créer un nouveau quiz</h3></div>
@@ -25,7 +26,7 @@
  				</button>
  				
  				
- 				<button ng-show="quiz.cartes.length == quiz.length" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
+ 				<button ng-click="wizard.deleteQuizOnNode(quiz.jeu.uuid)" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
 	 				<span class="glyphicon glyphicon-trash" alt="Supprimer le quiz"></span>
  				</button>
  				

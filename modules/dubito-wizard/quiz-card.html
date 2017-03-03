@@ -17,7 +17,7 @@
 			<div class="col-sm-12">
 				<div class="alert alert-info" role="alert">
 					<strong>Carte #{{wizard.brouillon.quiz.cardIndex + 1}}.</strong> 
-					Vous avez créé <strong>{{wizard.brouillon.quiz.cartes.length}}</strong> cartes sur {{wizard.brouillon.quiz.length}}.
+					Vous avez créé <strong>{{wizard.brouillon.quiz.jeu.cartes.length}}</strong> cartes sur {{wizard.brouillon.quiz.jeu.longueur}}.
 					
 				</div>
 			</div>
@@ -110,35 +110,20 @@
 	  
 	  <div class="modal-footer">
 	  
-		<p class="col-xs-4 col-lg-4">
-	  		<button type="button" class="btn btn-primary" ng-click="wizard.returnToTitleScreen()" data-dismiss="modal">
-				<span class="glyphicon glyphicon-arrow-left" ></span> Retour
-			</button>
+		<p class="col-xs-2 col-lg-2">
+	  		
 	  	</p>
 	  	
-	  	<p class="col-xs-4 col-lg-4">
-	  		<button type="button" class="btn btn-info" ng-click="wizard.previousCard()" ng-disabled="wizard.brouillon.quiz.cardIndex == 0">
-	  			<span class="glyphicon glyphicon-arrow-left" ></span>
+	  	<p class="col-xs-8 col-lg-8">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex)">
+	  			<span class="glyphicon glyphicon-floppy-save" ></span> Sauver
 	  		</button>
-	  		<button type="button" class="btn btn-warning" ng-click="wizard.deleteCard()">
-	  			<span class="glyphicon glyphicon-trash" ></span>
-	  		</button>
-	  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" ng-disabled="wizard.brouillon.quiz.cartes.length == wizard.brouillon.quiz.length">
-	  			<span class="glyphicon glyphicon-plus" ></span>
-	  		</button>
-	  		<button type="button" class="btn btn-info" ng-click="wizard.nextCard()" ng-disabled="wizard.brouillon.quiz.cardIndex == wizard.brouillon.quiz.cartes.length - 1">
-	  			<span class="glyphicon glyphicon-arrow-right" ></span>
-	  		</button>
+	  		<button type="button" class="btn btn-info" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex, true)">
+	  			<span class="glyphicon glyphicon-save" ></span> Sauver et revenir à la liste de cartes
+	  		</button> 
 		</p>
 		
-	  	<p class="col-xs-4 col-lg-4">
-	  	
-	  		<button type="button" class="btn btn-success" ng-click="wizard.setupEnding()" data-dismiss="modal">
-	  			<span class="glyphicon glyphicon-forward" ></span> Finaliser
-	  		</button>
-			<button type="button" class="btn btn-danger" ng-click="wizard.saveAndQuit()" data-dismiss="modal">
-	  			<span class="glyphicon glyphicon-save" ></span> Terminer
-	  		</button>
+	  	<p class="col-xs-2 col-lg-2">
 	  	</p>
 	  </div>
 	</div>

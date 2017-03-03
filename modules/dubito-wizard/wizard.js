@@ -1,13 +1,14 @@
 (function()
 {
-	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', '$scope', function($http, $location, $scope)
+	var odass = angular.module("odass").controller('WizardController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)
 	{
 		var odass_app = $scope.$parent.odass;
 		var dubitowizard = this;
+        this.cartesOrdonnees = [];
 		
 		$scope.$on('initModule', function(event, args)
 		{
-			console.log("WIZARD> receiving message", args.message);
+			//console.log("WIZARD> receiving message", args.message);
 			if (args.message == "wizard")
 			{
 				dubitowizard.init();
@@ -22,20 +23,7 @@
 			this.step = 0;
 			this._debugTmpId = 1;
 			
-			$http.get(odass_app.hostname + "/dubito/quiz/list").
-		    success(function(data, status) 
-		    {
-		    	console.log(data);
-		    	wizard.availableQuiz = [];
-		    	Object.keys(data).forEach(function(quiz_uuid)
-		    	{
-		    		wizard.availableQuiz.push({"jeu": {"nom": data[quiz_uuid], "uuid": quiz_uuid}});
-		    	}, this);
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json");
-		    });
+			this.refreshGameList();
 			
 			
 			this.library = [];
@@ -65,17 +53,35 @@
 			{
 				"stop": function(list, dropped_index)
 				{
-					wizard.updateQuizOnServer();
+					wizard.updateQuizOnNode();
 				}	
 			};
 			
-			this.brouillon = {};
+			this.brouillon = {"quiz":{"jeu":{"cartesOrdonnees": []}}};
 			this.mode = "create";
 		};
 		
 		
 		
 		/** Methods */
+        this.refreshGameList = function()
+        {
+            var wizard = this;
+            $http.get(odass_app.hostname + "/dubito/quiz/list").
+		    success(function(data, status) 
+		    {
+		    	console.log(data);
+		    	wizard.availableQuiz = [];
+		    	Object.keys(data).forEach(function(quiz_uuid)
+		    	{
+		    		wizard.availableQuiz.push({"jeu": {"nom": data[quiz_uuid], "uuid": quiz_uuid}});
+		    	}, this);
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });
+        }
 		
 		this.selectQuiz = function()
 		{
@@ -99,8 +105,6 @@
 			}
 			this.mode = "edit";
 			this.step = 0;
-			
-			
 			$("#quiz-dashboard").modal();
 		};
 		
@@ -112,6 +116,15 @@
 		    {
 		    	wizard.brouillon.quiz = data;
 		    	wizard.setupOrder();
+                console.log(wizard.brouillon.quiz);
+                if (wizard.brouillon.quiz.jeu.uuid && wizard.brouillon.quiz.jeu.uuid != "")
+                {
+                    wizard.step = 1;
+                }
+                if (wizard.brouillon.quiz.jeu.cartes.length == wizard.brouillon.quiz.jeu.longueur)
+                {
+                    wizard.step = 2;
+                }
 		    }).
 		    error(function(data, status) 
 		    {
@@ -125,14 +138,14 @@
 			
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
-			
+			this.step = 0;
 			this.brouillon.quiz = 
 			{
 				"jeu": 
 				{
 					"nom":"Nouveau quiz",
 					"uuid":"",
-					"presentation":"quiz vide",
+					"presentation":"Présentez votre quiz en quelques mots.",
 					"conclusion": {"good": "", "average": "", "poor": ""},
 					"href":"http://w.ldh.fr",
 					"source":"y731hmcmf6Ayvmmwxbslxtdjswj5w3h8gl96b6sf1dAnp6bfpfwmjpfAqA6nzgtr31dydcxkxdAp92b7vvvk9ccnb8sml0hAxd7bk21",
@@ -160,9 +173,9 @@
 		this.initArrayFromMissingCards = function()
 		{
 			var length = 0;
-			if (this.brouillon && this.brouillon.quiz && this.brouillon.quiz.length)
+			if (this.brouillon && this.brouillon.quiz && this.brouillon.quiz.jeu && this.brouillon.quiz.jeu.longueur)
 			{
-				length = this.brouillon.quiz.length - (this.brouillon.quiz.cartes ? this.brouillon.quiz.cartes.length : 0 );
+				length = this.brouillon.quiz.jeu.longueur - (this.brouillon.quiz.jeu.cartes ? this.brouillon.quiz.jeu.cartes.length : 0 );
 			}
 			return (new Array(length));
 		};
@@ -183,7 +196,7 @@
 		{
 			this.brouillon.carte = 
 			{
-				"id": "#",
+				"id": "",
 				"intitule": "Intitulé de la question ?",
 				"choix":
 				[
@@ -210,7 +223,7 @@
 				"references": []
 			};
 			
-			this.createCardOnServer();
+			this.createCardOnNode();
 		};
 		
 		this.selectCorrectAnswer = function(carte, choix)
@@ -222,13 +235,13 @@
 		{			
 			this.initNewCard();
 			
-			this.brouillon.quiz.cartes.push(this.brouillon.carte);
-			this.brouillon.quiz.cardIndex = this.brouillon.quiz.cartes.length - 1;
+			this.brouillon.quiz.jeu.cartes.push(this.brouillon.carte);
+			this.brouillon.quiz.cardIndex = this.brouillon.quiz.jeu.cartes.length - 1;
 			this.setupOrder();
 			
-			this.updateQuizOnServer();
+			this.updateQuizOnNode();
 			
-			if (this.brouillon.quiz.cartes.length == this.brouillon.quiz.length)
+			if (this.brouillon.quiz.jeu.cartes.length == this.brouillon.quiz.jeu.longueur)
 			{
 				this.step = 2;
 			}
@@ -258,9 +271,9 @@
 				if (carte.selected)
 				{
 					delete carte.selected;
-					if (this.brouillon.quiz.cartes.length < this.brouillon.quiz.length)
+					if (this.brouillon.quiz.jeu.cartes.length < this.brouillon.quiz.jeu.longueur)
 					{
-						this.brouillon.quiz.cartes.push(carte);
+						this.brouillon.quiz.jeu.cartes.push(carte);
 					}
 				}
 			}, this);
@@ -289,51 +302,66 @@
 
 		this.previousCard = function()
 		{
+            this.saveCard(this.brouillon.quiz.cardIndex);
 			if (this.brouillon.quiz.cardIndex > 0)
 			{
 				this.brouillon.quiz.cardIndex--;
 			}
 			
-			this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
+			this.brouillon.carte = this.brouillon.quiz.jeu.cartes[this.brouillon.quiz.cardIndex];
 		};
 		
 		this.nextCard = function()
 		{
-			this.brouillon.quiz.cardIndex++;
-			this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
+            this.saveCard(this.brouillon.quiz.cardIndex);
+            if (this.brouillon.quiz.cardIndex < this.brouillon.quiz.jeu.longueur)
+            {
+                this.brouillon.quiz.cardIndex++;
+                this.brouillon.carte = this.brouillon.quiz.jeu.cartes[this.brouillon.quiz.cardIndex];
+            }
+                
 		};
 
+        this.saveCard = function(index, leave)
+        {
+            this.brouillon.quiz.jeu.cartes[index] = this.brouillon.carte;
+            if (leave)
+            {
+                $("#quiz-dashboard").modal();
+                $("#wizard-quiz-card").modal("hide");
+            }
+			this.updateCardOnNode();
+        };
+        
 		this.editCard = function(options)
 		{
-
 			/** Save old one or make the popup appear */
 			
 			$("#quiz-dashboard").modal("hide");
 			$("#quiz-order").modal("hide");
 			$("#wizard-quiz-card").modal();
 			
-			if (this.brouillon.quiz.cartes.length == 0)
+			if (this.brouillon.quiz.jeu.cartes.length == 0)
 			{
 				this.initNewCard();
-				this.brouillon.quiz.cartes.push(this.brouillon.carte);
+				this.brouillon.quiz.jeu.cartes.push(this.brouillon.carte);
 				this.brouillon.quiz.cardIndex = 0;
 			}
 			else
 			{
-				
 				if (options.index != undefined)
 				{
 					this.brouillon.quiz.cardIndex = options.index;
-					this.brouillon.carte = this.brouillon.quiz.cartes[options.index];
+					this.brouillon.carte = this.brouillon.quiz.jeu.cartes[options.index];
 				}
 				
 				if (options.id != undefined)
 				{
 					var index = -1;
 				
-					this.brouillon.quiz.cartes.forEach(function (carte)
+					this.brouillon.quiz.jeu.cartes.forEach(function (carte)
 					{
-						index = (carte.id == options.id) ? this.brouillon.quiz.cartes.indexOf(carte) : index;
+						index = (carte.id == options.id) ? this.brouillon.quiz.jeu.cartes.indexOf(carte) : index;
 					}, this);
 					
 					if (index != -1)
@@ -343,12 +371,12 @@
 				}
 			}
 			
-			this.updateQuizOnServer();
+			this.updateQuizOnNode();
 		};
 
 		this.deleteSelectedCards = function()
 		{
-			this.brouillon.quiz.cartesOrdonnees.forEach(function(carte)
+			this.brouillon.quiz.jeu.cartesOrdonnees.forEach(function(carte)
 			{
 				if (carte.selected)
 				{
@@ -366,7 +394,7 @@
 			var selectedCard = null;
 			var selectedIndex = 0;
 		
-			this.brouillon.quiz.cartes.forEach(function(carte)
+			this.brouillon.quiz.jeu.cartes.forEach(function(carte)
 			{
 				if (carte.id == id)
 				{
@@ -385,6 +413,8 @@
 			{
 				
 			}
+			
+			this.updateQuizOnNode();
 		};
 		
 		this.deleteCardWithIndex = function(index)
@@ -394,20 +424,20 @@
 				index = this.brouillon.quiz.cardIndex;
 			}
 			var deletedIndex = index;
-			var deletedCardId = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex].id;
+			var deletedCardId = this.brouillon.quiz.jeu.cartes[this.brouillon.quiz.cardIndex].id;
 			if (this.brouillon.quiz.cardIndex == 0)
 			{
-				this.brouillon.carte = this.brouillon.quiz.cartes[1];
+				this.brouillon.carte = this.brouillon.quiz.jeu.cartes[1];
 			}
 			else
 			{
 				this.brouillon.quiz.cardIndex--;
-				this.brouillon.carte = this.brouillon.quiz.cartes[this.brouillon.quiz.cardIndex];
+				this.brouillon.carte = this.brouillon.quiz.jeu.cartes[this.brouillon.quiz.cardIndex];
 			}
-			this.brouillon.quiz.cartes.splice(deletedIndex, 1);
+			this.brouillon.quiz.jeu.cartes.splice(deletedIndex, 1);
 			
-			this.deleteCardOnServer(deletedCardId);
-			this.updateQuizOnServer();
+			//this.deleteCardOnServer(deletedCardId);
+			this.updateQuizOnNode();
 			
 		};
 		
@@ -428,7 +458,7 @@
 				this.createQuiz();
 			}
 			
-			this.brouillon.quiz.cartesOrdonnees = [];
+			this.brouillon.quiz.jeu.cartesOrdonnees = [];
 			
 			var wizard = this;
 			
@@ -444,6 +474,7 @@
 		
 		this.returnToTitleScreen = function()
 		{
+            this.refreshGameList();
 			$("#quiz-type").modal("hide");
 			$("#quiz-library").modal("hide");
 			$("#wizard-quiz-card").modal("hide");
@@ -453,8 +484,32 @@
 			$("#quiz-dashboard").modal();
 		}
 		
+		this.upload = function(file)
+        {
+            var wizard = this;
+          //"http://127.0.0.1:8080/wizard/quiz/upload"
+            Upload.upload(
+            {
+                url: 'http://127.0.0.1:8080/wizard/quiz/upload',
+                data: {file: file, 'uuid': wizard.brouillon.quiz.jeu.uuid}
+            }).then(function (resp) 
+            {
+                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ', resp.data );
+                wizard.brouillon.quiz.jeu.theme={"color": "white", "imagehref": resp.data};
+                wizard.updateQuizOnNode();
+            }, function (resp) 
+            {
+                console.log('Error status: ' + resp.status);
+            }, function (evt) 
+            {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            });
+        };
+		
 		this.leave = function()
 		{
+            this.refreshGameList();
 			$("#quiz-type").modal("hide");
 			$("#quiz-library").modal("hide");
 			$("#quiz-dashboard").modal("hide");
@@ -468,10 +523,10 @@
 		{
 			var wizard = this;
 			
-			$http.post(odass_app.hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
+			/*$http.post(odass_app.hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
 			{
 				//
-			});
+			});*/
 			this.leave();
 		};
 		
@@ -522,7 +577,7 @@
 		this.toggleAnchor = function(carte)
 		{
 			carte.anchored = !carte.anchored;
-			this.updateQuizOnServer();
+			this.updateQuizOnNode();
 		}
 		
 		this.updateOrder = function()
@@ -557,8 +612,12 @@
 				}
 			}
 			
-			//
-			
+			this.cartesOrdonnees = this.brouillon.quiz.jeu.cartesOrdonnees;
+            this.brouillon.quiz.jeu.tours = [];
+			this.brouillon.quiz.jeu.cartesOrdonnees.forEach(function(carte)
+            {
+                this.brouillon.quiz.jeu.tours.push(carte);
+            }, this);
 		};
 		
 		this.log = function(message)
@@ -566,17 +625,103 @@
 			alert(message);
 		};
 		
-		/** COMMUNICATION AVEC LE SERVEUR */
+		/** COMMUNICATION AVEC LE SERVEUR NODE */
+        
 		this.createQuizOnNode = function(name)
 		{
+            if (this.brouillon.quiz.jeu.uuid && this.brouillon.quiz.jeu.uuid != "")
+            {
+                this.updateQuizOnNode();
+            }
+			else
+            {
+                var wizard = this;
+                wizard.brouillon.quiz.jeu.nom = name ? name : wizard.brouillon.quiz.jeu.nom;
+                $http.post(odass_app.hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz}).then
+                (
+                    /**   SERVER ANSWER  */
+                    function(res)
+                    {
+                        wizard.step = 1;
+                        wizard.refreshGameList();
+                        wizard.brouillon.quiz.jeu.uuid = res.data;
+                    },
+                    function (response)
+                    {
+                        console.log("Error serveur");
+                    }
+                );
+            }
+		};
+        
+		this.updateQuizOnNode = function(description)
+		{
 			var wizard = this;
-			wizard.brouillon.quiz.jeu.nom = name ? name : wizard.brouillon.quiz.jeu.nom;
-			$http.post(odass_app.hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz}).then(
+			if (description)
+            {
+                wizard.brouillon.quiz.jeu.presentation = description;
+            }
+			this.updateOrder();
+			
+			$http.post(odass_app.hostname + "/wizard/quiz/update", {"quiz": wizard.brouillon.quiz}).then(
 				/**   SERVER ANSWER  */
-				function(data)
+				function(response)
 				{
-					wizard.log("Jeu sauvé.");
-					wizard.step = 1;
+                    wizard.refreshGameList();
+					//console.log("Modification du quiz, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+        
+        this.deleteQuizOnNode = function(uuid)
+		{
+			var wizard = this;
+			$http.get(odass_app.hostname + "/wizard/quiz/delete/" + uuid).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+                    wizard.refreshGameList();
+					//console.log("Suppression du quiz, reponse du serveur : ", response);
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+        
+        this.createCardOnNode = function()
+		{
+			var wizard = this;
+			$http.get(odass_app.hostname + "/wizard/card/creer").then
+			(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+                    //console.log("reponse de creation carte : ", response);
+                    wizard.brouillon.carte.id = response.data;
+                },
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+		};
+        
+		this.updateCardOnNode = function()
+		{
+			var wizard = this;
+			
+			$http.post(odass_app.hostname + "/wizard/card/update", {"carte": wizard.brouillon.carte}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+					//console.log("Mise à jour d'une carte, reponse du serveur : ", response);
+                    wizard.updateQuizOnNode();
 				},
 				function (response)
 				{
@@ -585,6 +730,7 @@
 			);
 		};
 		
+		/** COMMUNICATION AVEC LE SERVEUR SYMFONY */
 	
 		this.createQuizOnSymfony = function(name)
 		{
@@ -594,9 +740,7 @@
 			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": quizname}).then(
 				/**   SERVER ANSWER  */
 				function(data)
-				{
-					console.log(data);
-					
+				{					
 					/** GESTION DE LA REPONSE */
 					if (data.data.response.donnees.id && !isNaN(parseInt(data.data.response.donnees.id)))
 					{
@@ -612,7 +756,7 @@
 			);
 		};
 		
-		this.updateQuizOnServer = function()
+		this.updateQuizOnSymfony = function()
 		{
 			var wizard = this;
 			
@@ -639,7 +783,7 @@
 			);
 		};
 		
-		this.createCardOnServer = function()
+		this.createCardOnSymfony = function()
 		{
 			var wizard = this;
 			
@@ -659,7 +803,7 @@
 			);
 		};
 		
-		this.updateCardOnServer = function()
+		this.updateCardOnSymfony = function()
 		{
 			var wizard = this;
 			
@@ -676,7 +820,7 @@
 			);
 		};
 		
-		this.deleteCardOnServer = function(index)
+		this.deleteCardOnSymfony = function(index)
 		{
 			var wizard = this;
 			var cardId = index ? index : wizard.brouillon.carte.id;

@@ -52,10 +52,10 @@
 	  <div class="modal-body">
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<div class="panel panel-default">
-			    	<div class="panel-heading" role="tab" id="headingOne">
+			    	<div class="panel-heading" role="tab" id="headingOne" style="color:{{wizard.brouillon.quiz.jeu.theme.color ? wizard.brouillon.quiz.jeu.theme.color : 'white'}};background-image:url({{wizard.brouillon.quiz.jeu.theme.imagehref ? wizard.brouillon.quiz.jeu.theme.imagehref : 'data/image-sample.jpg'}})">
 			      		<h4 class="panel-title">
-			        		<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-			          			<span style="font-weight:900; color:rgba(0,0,0,0.4); font-size:14px; font-family: fantasy">1.</span> Informations générales
+			        		<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:{{wizard.brouillon.quiz.jeu.theme.color ? wizard.brouillon.quiz.jeu.theme.color : 'white'}};">
+			          			<span style="font-weight:900; font-size:14px; font-family: fantasy;">1.</span> Informations générales
 			        		</a>
 			      		</h4>
 			    	</div>
@@ -73,10 +73,15 @@
 							<div class="form-group">
 								<span class="editable-content">
 									<label><strong>(facultatif) Description : </strong></label>
-									<a href="#" editable-text="wizard.brouillon.quiz.jeu.presentation">{{ wizard.brouillon.quiz.jeu.presentation || "cliquez ici pour remplir la description" }}</a>
+									<a href="#" editable-text="wizard.brouillon.quiz.jeu.presentation" onbeforesave="wizard.updateQuizOnNode($data)">{{ wizard.brouillon.quiz.jeu.presentation || "cliquez ici pour remplir la description" }}</a>
 									<span class="glyphicon glyphicon-pencil" ></span>
 								</span>
 							</div>
+							<div class="form-group">
+                                <div class="btn btn-default" ngf-select="wizard.upload($file)"><span class="glyphicon glyphicon-picture"> </span> Changer l'image du quiz
+                                </div>
+                                <img src="{{wizard.brouillon.quiz.jeu.theme.imagehref}}" height="40" ng-show="wizard.brouillon.quiz.jeu.theme.imagehref"></img>
+                            </div>
 							
 							
 							<div class="form-group" style="padding-bottom: 25px;" ng-show="false">
@@ -150,12 +155,12 @@
 		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
 				<span class="glyphicon glyphicon-remove" ></span> Quitter
 			</button>
-		  	</p>
-		  	<p class="col-xs-6 col-lg-6 text-right">
-		  		<button type="button" class="btn btn-success" ng-click="wizard.addCard()" data-dismiss="modal">
-		  			<span class="glyphicon glyphicon-arrow-right" ></span> Quitter et sauver
-		  		</button>
-			</p>
+        </p>
+	  	<p class="col-xs-6 col-lg-6 text-left" ng-show="wizard.brouillon.quiz.jeu.uuid && wizard.brouillon.quiz.jeu.uuid != ''">
+		  		<button type="button" class="btn btn-default" ng-click="wizard.updateQuizOnNode()">
+				<span class="glyphicon glyphicon-floppy" ></span> Sauver
+			</button>
+        </p>
 	  </div>
 	</div>
   </div>

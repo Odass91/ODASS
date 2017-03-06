@@ -17,8 +17,8 @@
 	  	<ul class="list-group">
  				
  			<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item">
-                <img src="images/dubito/quiz-draft.png" width="20" height="20" ng-show="{{quiz.status == 'draft'}}"></img>
-                <img src="images/dubito/quiz-published.png" width="20" height="20" ng-show="{{quiz.status == 'live'}}"></img>
+                <img src="images/dubito/quiz-draft.png" width="20" height="20" ng-show="{{quiz.status == 'draft'}}" title="le quiz n'est pas terminé"></img>
+                <img src="images/dubito/quiz-published.png" width="20" height="20" ng-show="{{quiz.status == 'live'}}" title="le quiz est accessible !"></img>
  			
  				<span data-toggle="popover" data-content="Vous avez créé {{quiz.cartes}}/{{quiz.longueur}} cartes" data-placement="top" ng-show="{{quiz.cartes < quiz.longueur}}" class="glyphicon glyphicon-exclamation-sign text-warning pull-right"  style="font-size: 0.9em;"></span>
  				
@@ -26,15 +26,15 @@
 	 				<span class="glyphicon glyphicon-pencil" alt="Modifier le quiz"></span>
  				</button>
  				
- 				<button ng-show="quiz.cartes == quiz.longueur && quiz.status == 'draft'" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
- 					<span class="glyphicon glyphicon-play" alt="Publier le quiz" ng-click="wizard.publishQuiz(quiz)"></span>
+ 				<button ng-show="quiz.cartes == quiz.longueur && quiz.status == 'draft'" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;"  ng-click="wizard.publishQuiz(quiz)">
+ 					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
  				</button>
  				
- 				<button ng-show="quiz.cartes == quiz.longueur" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" data-toggle="popover" title="{{quiz.jeu.nom}}" data-content="http://www.odass.org/?quiz={{quiz.jeu.uuid}}" data-placement="top">
+ 				<button ng-show="quiz.cartes == quiz.longueur" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" data-toggle="popover" title="lien de partage" data-content="http://www.odass.org/?quiz={{quiz.uuid}}" data-placement="top">
  					<span class="glyphicon glyphicon-share" alt="Partager le quiz"></span>
  				</button>
  				
- 				<button ng-click="wizard.deleteQuizOnNode(quiz.jeu.uuid)" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
+ 				<button ng-click="wizard.deleteQuizOnNode(quiz.uuid)" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
 	 				<span class="glyphicon glyphicon-trash" alt="Supprimer le quiz"></span>
  				</button>
  				

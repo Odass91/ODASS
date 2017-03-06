@@ -164,12 +164,14 @@
         
         this.publishQuiz = function(quiz)
         {
-            this.fetchJSONQuiz(quizuuid);
             console.log(quiz);
             
+            this.fetchJSONQuiz(quiz.uuid);
+            
             var wizard = this;
-            window.setTimeout(function(){
-                
+            window.setTimeout(function()
+            {
+            	console.log("publishing...");
                 quiz.status = "live";
                 wizard.brouillon.quiz.jeu.status = "live";
                 wizard.updateQuizOnNode();

@@ -79,8 +79,15 @@
 			this.brouillon = {"quiz":{"jeu":{"cartesOrdonnees": []}}};
 			this.mode = "create";
             
-            setTimeout(function(){
+            setTimeout(function()
+            {
                 $('[data-toggle="popover"]').popover();
+                
+                $('#theme-navigation a').click(function (e) 
+                {
+            	  e.preventDefault()
+            	  $(this).tab('show');
+                })
             }, 1000);
 		};
 		

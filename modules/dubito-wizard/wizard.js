@@ -56,9 +56,32 @@
 					wizard.updateQuizOnNode();
 				}	
 			};
-			
+            
+            
+			this.config = 
+			{
+                "slider":
+                {
+                    "opacity":
+                    {
+                        floor: 0,
+                        ceil: 100,
+                        step: 10,     
+                        showTicks: true,
+                        showTicksValues: true,
+                        onChange: function () 
+                        {
+                            //wizard.opacity.change = this.brouillon.quiz.value * 10;
+                        },
+                    }
+                }
+            }
 			this.brouillon = {"quiz":{"jeu":{"cartesOrdonnees": []}}};
 			this.mode = "create";
+            
+            setTimeout(function(){
+                $('[data-toggle="popover"]').popover();
+            }, 1000);
 		};
 		
 		
@@ -70,18 +93,26 @@
             $http.get(odass_app.hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
-		    	console.log(data);
 		    	wizard.availableQuiz = [];
 		    	Object.keys(data).forEach(function(quiz_uuid)
 		    	{
-		    		wizard.availableQuiz.push({"jeu": {"nom": data[quiz_uuid], "uuid": quiz_uuid}});
+                    console.log(data);
+                    var nom = data[quiz_uuid].nom;
+                    var score = data[quiz_uuid].score;
+                    var status = data[quiz_uuid].status;
+                    var audience = data[quiz_uuid].audience;
+                    var cartes = data[quiz_uuid].cartes;
+                    var longueur = data[quiz_uuid].longueur;
+                    var uuid = quiz_uuid;
+                    
+		    		wizard.availableQuiz.push({"nom": nom, "uuid": uuid, "score": score, "audience": audience, "status": status, "cartes": cartes, "longueur":longueur});
 		    	}, this);
 		    }).
 		    error(function(data, status) 
 		    {
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
-        }
+        };
 		
 		this.selectQuiz = function()
 		{
@@ -116,7 +147,6 @@
 		    {
 		    	wizard.brouillon.quiz = data;
 		    	wizard.setupOrder();
-                console.log(wizard.brouillon.quiz);
                 if (wizard.brouillon.quiz.jeu.uuid && wizard.brouillon.quiz.jeu.uuid != "")
                 {
                     wizard.step = 1;
@@ -131,6 +161,21 @@
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
 		};
+        
+        this.publishQuiz = function(quiz)
+        {
+            this.fetchJSONQuiz(quizuuid);
+            console.log(quiz);
+            
+            var wizard = this;
+            window.setTimeout(function(){
+                
+                quiz.status = "live";
+                wizard.brouillon.quiz.jeu.status = "live";
+                wizard.updateQuizOnNode();
+                wizard.refreshGameList();
+            }, 500);
+        };
 		
 		this.createQuiz = function()
 		{
@@ -144,14 +189,15 @@
 				"jeu": 
 				{
 					"nom":"Nouveau quiz",
+                    "status": "draft",
 					"uuid":"",
 					"presentation":"Présentez votre quiz en quelques mots.",
 					"conclusion": {"good": "", "average": "", "poor": ""},
-					"href":"http://w.ldh.fr",
-					"source":"y731hmcmf6Ayvmmwxbslxtdjswj5w3h8gl96b6sf1dAnp6bfpfwmjpfAqA6nzgtr31dydcxkxdAp92b7vvvk9ccnb8sml0hAxd7bk21",
-					"encrypt":"file:///home/admin/git/ODASS/index.html",
-					"scoreMoyen":"0.5969979296708",
-					"joueurs":"",
+					"href":"http://www.odass.org",
+					"source":"",
+					"encrypt":"",
+					"score":"0",
+					"audience":"0",
 					"longueur": 12,
 					"cartesOrdonnees":
 					[
@@ -160,7 +206,25 @@
 					"cartes":
 					[
 					 	
-					]
+					],
+                    "theme":
+                    {
+                        "header":
+                        {
+                            "color": "rgba(0,0,0,0.6)",
+                            "backgroundColor": "rgba(0,0,15,0.1)",
+                            "imagehref":"data/upload/card-header-default.png"
+                        },
+                        
+                        "body":
+                        {
+                            "color": "rgba(0,0,0,0.6)",
+                            "backgroundColor": "rgba(0,0,15,0.1)",
+                            "imagehref":"data/upload/card-body-default.png",
+                            "opacity": 50
+                        }
+                    }
+                    
 				},
 				"tours":
 				{
@@ -170,6 +234,8 @@
 			
 		};
 		
+        
+        
 		this.initArrayFromMissingCards = function()
 		{
 			var length = 0;
@@ -191,13 +257,23 @@
 			$("#quiz-dashboard").modal();
 			$("#quiz-library").modal("hide");
 		};
+        
+        this.isCompleteQuiz = function(quiz)
+        {
+            return (quiz.jeu.longueur == quiz.jeu.cartes.length);
+        };
 		
 		this.initNewCard = function()
 		{
 			this.brouillon.carte = 
 			{
 				"id": "",
-				"intitule": "Intitulé de la question ?",
+				"intitule": 
+				{
+                    "texte": "Intitulé de la question ?",
+                    "image": "",
+                    "video": ""
+                },
 				"choix":
 				[
 				 	{
@@ -220,7 +296,16 @@
 				"reponse": "1",
 				"reponseCourte": "Explication courte",
 				"reponseLongue": "Explication longue",
-				"references": []
+				"references": [],
+                "theme":
+                {
+                    "header":
+                    {
+                        "backgroundColor": "rgba(0,56,15,0.4)",
+                        "color": "rgba()",
+                        "animation":""
+                    }
+                }
 			};
 			
 			this.createCardOnNode();
@@ -484,8 +569,9 @@
 			$("#quiz-dashboard").modal();
 		}
 		
-		this.upload = function(file)
+		this.upload = function(file, target)
         {
+            console.log(this.brouillon.quiz.jeu.theme);
             var wizard = this;
           //"http://127.0.0.1:8080/wizard/quiz/upload"
             Upload.upload(
@@ -495,7 +581,14 @@
             }).then(function (resp) 
             {
                 console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ', resp.data );
-                wizard.brouillon.quiz.jeu.theme={"color": "white", "imagehref": resp.data};
+                if (target == 'card')
+                {
+                    wizard.brouillon.carte.intitule.image = resp.data;
+                }
+                else
+                {
+                wizard.brouillon.quiz.jeu.theme[target].imagehref = resp.data;
+                }
                 wizard.updateQuizOnNode();
             }, function (resp) 
             {
@@ -653,7 +746,7 @@
                 );
             }
 		};
-        
+      
 		this.updateQuizOnNode = function(description)
 		{
 			var wizard = this;
@@ -865,4 +958,5 @@
 	odass.directive("quizCard", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-card.html'};});
 	odass.directive("quizEnding", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-ending.html'};});
 	odass.directive("quizOrder", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-order.html'};});
+	odass.directive("quizTheme", function(){return{restrict: 'E', templateUrl: 'modules/dubito-wizard/quiz-theme.html'};});
 })();

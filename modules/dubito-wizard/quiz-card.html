@@ -25,7 +25,14 @@
 	  		<div class="col-sm-6">
 				<div class="form-group">
 					<label for="intituleQuestion">Intitulé de la question : </label>
-					<input id="intituleQuestion" ng-model="wizard.brouillon.carte.intitule" type="text" class="form-control"></input>
+					<input id="intituleQuestion" ng-model="wizard.brouillon.carte.intitule.texte" type="text" class="form-control"></input>
+					  <div class="form-group">
+                        <div class="btn btn-default" ngf-select="wizard.upload($file, 'card')">
+                            <span class="glyphicon glyphicon-picture"> </span>
+                        </div> Changer l'image de la question
+                        <img src="{{wizard.brouillon.carte.intitule.image}}" height="20" ng-show="wizard.brouillon.carte.intitule.image"></img>
+                    </div>
+            
 				</div>
 				<h4>Indiquez les différentes réponses possibles : </h4>
 				<p><em>(cochez la réponse correcte)</em></p>

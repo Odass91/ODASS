@@ -14,7 +14,7 @@
 			}
 			if (args.options)
             {
-                
+                dubito.switchDemoMode(args.options);
             }
 		});
 		
@@ -42,19 +42,52 @@
 	        this.computeGraph();
 		};
         
-        this.switchDemoMode = function(mode)
+        
+        
+        this.obtainCSSforCard = function(quiz, target)
         {
-            if (mode == 'play')
+            var cssString = "";
+            if (quiz && quiz.theme)
+            {
+                
+                var root = quiz.theme[target];
+                if (root.color)
+                {
+                    cssString += "color:" + root.color + ";";   
+                }
+                if (root.backgroundColor)
+                {
+                    cssString += "background-color:" + root.backgroundColor + ";";   
+                }
+                if (root.imagehref)
+                {
+                    cssString += "background-image:url('" + root.imagehref + "');"; 
+                    cssString += "background-size:cover;";   
+                    cssString += "background-repeat:no-repeat;";   
+                }
+                
+                
+                return cssString;
+            }
+        };
+        this.switchDemoMode = function(options)
+        {
+            if (options.mode == 'play')
             {
                 this.mode = ['dubito'];
             }
-            if (mode == 'create')
+            if (options.mode == 'create')
             {
                 this.mode = ['wizard'];   
             }
-            if (mode == 'full')
+            if (options.mode == 'full')
             {
                 this.mode = ['wizard', 'dubito'];   
+            }
+            if (options.quizuuid)
+            {
+                console.log(options.quizuuid);
+                this.loadQuiz(false, options.quizuuid);
             }
         };
 		
@@ -74,7 +107,15 @@
 					that.quizzes = [];
                     Object.keys(data).forEach(function(quiz_uuid)
                     {
-                        that.quizzes.push({"jeu": {"nom": data[quiz_uuid], "uuid": quiz_uuid}});
+                        var nom = data[quiz_uuid].nom;
+                        var score = data[quiz_uuid].score;
+                        var status = data[quiz_uuid].status;
+                        var audience = data[quiz_uuid].audience;
+                        var uuid = quiz_uuid;
+                        if (status == "published")
+                        {
+                            that.quizzes.push({"jeu": {"nom": nom, "uuid": quiz_uuid, "score": score, "audience": audience}});
+                        }
                     }, that);
 		    	}
 		    }).
@@ -100,6 +141,12 @@
 		this.fetchJSONQuiz = function(uuid)
 		{
 			var dubito = this;
+            if (!uuid)
+            {
+                    return;
+            }
+            console.log(uuid);
+            console.log("data/library/quiz-" + uuid + ".json");
 			$http.get("data/library/quiz-" + uuid + ".json").
 		    success(function(data, status) 
 		    {
@@ -139,9 +186,10 @@
             $("#quiz-screen").modal();
         };
         
-		this.loadQuiz = function(dismissModal)
+		this.loadQuiz = function(dismissModal, quizuuid)
 		{
-			this.fetchJSONQuiz(this.selectedQuiz);
+            var id = quizuuid ? quizuuid : this.selectedQuiz;
+			this.fetchJSONQuiz(id);
             
             if (dismissModal)
             {

@@ -175,7 +175,7 @@ app.get('/', function(req, res)
     {        
     	var rparam = JSON.parse(jsonString);
     	var quiz = rparam.quiz;
-    	
+    	console.log(quiz);
     	saveQuizToLibraryFile(quiz, quiz.jeu.uuid, function(err)
 	    {
 	        if (err)
@@ -219,7 +219,15 @@ function saveQuizToLibraryFile(quiz, uuid, callback)
 	console.log("essai d'écriture dans la librairie");
 	jsonloader('data/quiz-list.json').then(librairie => 
     {
-        librairie[uuid] = quiz.jeu.nom;
+        librairie[uuid] = 
+        {
+            "nom": quiz.jeu.nom, 
+            "status": quiz.jeu.status, 
+            "score": quiz.jeu.score, 
+            "audience": quiz.jeu.audience, 
+            "cartes": quiz.jeu.cartes.length, 
+            "longueur": quiz.jeu.longueur
+        };
     	fs.writeFile('data/quiz-list.json', JSON.stringify(librairie), callback);
     });
 }

@@ -97,7 +97,11 @@
             var options = {"mode": "dubito"};
             if ($location.search().quiz)
             {
-                options["quiz-uuid"] = $location.search().quiz
+                options["quizuuid"] = $location.search().quiz
+            }
+            else
+            {
+                options["quizuuid"] = "1488732618191";
             }
             if ($location.search().create || force)
             {

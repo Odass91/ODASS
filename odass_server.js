@@ -251,7 +251,6 @@ function saveCardToLibraryFolder(card, cardid, callback)
 function saveCardToLibraryFile(card, id, callback) 
 {
 	console.log("essai d'écriture dans la librairie de cartes");
-    console.log(card, id);
 	jsonloader('data/card-list.json').then(function(librairie)
     {
         librairie[id] = card;

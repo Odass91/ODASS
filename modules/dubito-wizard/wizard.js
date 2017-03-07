@@ -79,8 +79,15 @@
 			this.brouillon = {"quiz":{"jeu":{"cartesOrdonnees": []}}};
 			this.mode = "create";
             
-            setTimeout(function(){
+            setTimeout(function()
+            {
                 $('[data-toggle="popover"]').popover();
+                
+                $('#theme-navigation a').click(function (e) 
+                {
+            	  e.preventDefault()
+            	  $(this).tab('show');
+                })
             }, 1000);
 		};
 		
@@ -164,12 +171,14 @@
         
         this.publishQuiz = function(quiz)
         {
-            this.fetchJSONQuiz(quizuuid);
             console.log(quiz);
             
+            this.fetchJSONQuiz(quiz.uuid);
+            
             var wizard = this;
-            window.setTimeout(function(){
-                
+            window.setTimeout(function()
+            {
+            	console.log("publishing...");
                 quiz.status = "live";
                 wizard.brouillon.quiz.jeu.status = "live";
                 wizard.updateQuizOnNode();

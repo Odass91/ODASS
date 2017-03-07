@@ -84,11 +84,10 @@
             {
                 this.mode = ['wizard', 'dubito'];   
             }
-            if (options.quizuuid)
-            {
-                console.log(options.quizuuid);
-                this.loadQuiz(false, options.quizuuid);
-            }
+//            if (options.quizuuid)
+//            {
+//                this.loadQuiz(false, options.quizuuid);
+//            }
         };
 		
 		this.fetchQuizzes = function(contexte)
@@ -112,7 +111,7 @@
                         var status = data[quiz_uuid].status;
                         var audience = data[quiz_uuid].audience;
                         var uuid = quiz_uuid;
-                        if (status == "published")
+                        if (status == "live")
                         {
                             that.quizzes.push({"jeu": {"nom": nom, "uuid": quiz_uuid, "score": score, "audience": audience}});
                         }

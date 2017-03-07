@@ -582,10 +582,9 @@
         {
             console.log(this.brouillon.quiz.jeu.theme);
             var wizard = this;
-          //"http://127.0.0.1:8080/wizard/quiz/upload"
             Upload.upload(
             {
-                url: 'http://127.0.0.1:8080/wizard/quiz/upload',
+                url: 'http://node.odass.org/wizard/quiz/upload',
                 data: {file: file, 'uuid': wizard.brouillon.quiz.jeu.uuid}
             }).then(function (resp) 
             {

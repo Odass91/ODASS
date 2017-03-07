@@ -42,7 +42,7 @@
 		this.init = function()
 		{
 			this.hostname = "http://perso.odass.org";
-			this.hostname = "http://127.0.0.1:8080";
+			this.hostname = "http://node.odass.org:8080";
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			

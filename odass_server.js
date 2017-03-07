@@ -39,7 +39,7 @@ app.get('/', function(req, res)
 {
 	//console.log("demande de la liste de jeu");
     
-    jsonloader('data/quiz-list.json').then(json => 
+    jsonloader('data/quiz-list.json').then(function(json)
     {
         res.json(json);
     });
@@ -47,7 +47,7 @@ app.get('/', function(req, res)
 .get('/wizard/card/creer', function (req, res)
 {
 	console.log("creation d'une carte");
-    jsonloader('data/card-list.json').then(json => 
+    jsonloader('data/card-list.json').then(function(json)
     {
         var card_id = (Object.keys(json).length + 1) + "";
         console.log("card_id", card_id);
@@ -217,7 +217,7 @@ function saveQuizToLibraryFile(quiz, uuid, callback)
 {
     
 	console.log("essai d'écriture dans la librairie");
-	jsonloader('data/quiz-list.json').then(librairie => 
+	jsonloader('data/quiz-list.json').then(function(librairie) 
     {
         librairie[uuid] = 
         {
@@ -252,7 +252,7 @@ function saveCardToLibraryFile(card, id, callback)
 {
 	console.log("essai d'écriture dans la librairie de cartes");
     console.log(card, id);
-	jsonloader('data/card-list.json').then(librairie => 
+	jsonloader('data/card-list.json').then(function(librairie)
     {
         librairie[id] = card;
     	fs.writeFile('data/card-list.json', JSON.stringify(librairie), callback);
@@ -262,7 +262,7 @@ function saveCardToLibraryFile(card, id, callback)
 
 function deleteQuizFromLibraryFile(uuid, callback)
 {
-    jsonloader('data/quiz-list.json').then(librairie => 
+    jsonloader('data/quiz-list.json').then(function(librairie)
     {
         delete librairie[uuid];
         fs.writeFile('data/quiz-list.json', JSON.stringify(librairie), callback);

@@ -8,6 +8,11 @@
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
 	}]);
+    
+    odass.config(function ($locationProvider)
+    {
+        $locationProvider.html5Mode(true).hashPrefix("!");
+    });
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)
 	{
@@ -96,9 +101,12 @@
             this.user.loggedIn = true;
             this.user.name = "demo";
             var options = {"mode": "dubito"};
+            
             console.log("window.location.search", window.location.search.match("quiz="));
+            
             console.log("$location.search().quiz", $location.search().quiz);
-            console.log("$location.search()", $location.search());
+            console.log("$location.search()", $location.search("quiz"));
+            
             if (window.location.search.match("quiz="))
             {
                 options["quizuuid"] = $location.search().quiz

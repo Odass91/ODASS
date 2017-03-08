@@ -30,7 +30,7 @@
  					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
  				</button>
  				
- 				<button ng-show="quiz.cartes == quiz.longueur" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" data-toggle="popover" title="lien de partage" data-content="http://{{$location.host()}}/?quiz={{quiz.uuid}}" data-placement="top">
+ 				<button ng-show="quiz.cartes == quiz.longueur" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" data-toggle="popover" title="lien de partage" data-content="http://{{window.location.hostname}}/?quiz={{quiz.uuid}}" data-placement="top">
  					<span class="glyphicon glyphicon-share" alt="Partager le quiz"></span>
  				</button>
  				

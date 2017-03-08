@@ -11,7 +11,7 @@
     
     odass.config(function ($locationProvider)
     {
-        $locationProvider.html5Mode(true).hashPrefix("!");
+        $locationProvider.html5Mode(false).hashPrefix("!");
     });
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)

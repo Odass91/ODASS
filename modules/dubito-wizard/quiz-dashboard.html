@@ -154,10 +154,21 @@
 				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
 				          <span style="color:rgba(0,0,0,0.4); font-size:14px;" class="glyphicon glyphicon-picture"></span> APPARENCE & COULEUR
 				        </a>
+				        <span ng-show="wizard.step > 0" class="pull-right">
+					        <span class="step-ok">étape 1 validée</span>
+					    </span>
+				        <span ng-show="wizard.step == 0" class="pull-right">
+				        	<span class="step-pas-ok">vous devez terminer l'étape en cours</span>
+				        </span>
 				      </h4>
 				    </div>
 				    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 				      <div class="panel-body" style="position:relative">
+                            <div ng-hide="wizard.step > 0" style="position: absolute; top:0px; bottom:0px; left:0px; right:0px;background:red; z-index:1; background-color: rgba(255,255,255,0.8)">
+				      			<div style="margin:auto; text-align: center; padding-top: 25px; font-size: 24px; font-weight:bold;">
+				      				Vous devez faire l'étape 1 avant de continuer
+				      			</div>
+				      		</div>
 							<quiz-theme></quiz-theme>
 				      </div>
 				    </div>

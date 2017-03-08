@@ -119,6 +119,7 @@
 		    {
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
+            $('[data-toggle="popover"]').popover();
         };
 		
 		this.selectQuiz = function()

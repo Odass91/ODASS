@@ -122,7 +122,7 @@
 		    {
 		    	console.log("Erreur lors de la recuperation du fichier json", data);
 		    });
-            
+            $('[data-toggle="popover"]').popover();
 	        window.setTimeout(that.fetchQuizzes, 5000, that);
         }
 		

@@ -43,6 +43,7 @@
 		{
 			this.hostname = "http://perso.odass.org";
 			this.hostname = "http://node.odass.org";
+			//this.hostname = "http://127.0.0.1:8080";
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -72,7 +73,7 @@
             }
             
             /* DEMO */
-            if($location.search().quiz)
+            if(window.location.search.match("quiz="))
             {
 				this.switchToDubitoDemoMode();
             }
@@ -95,7 +96,10 @@
             this.user.loggedIn = true;
             this.user.name = "demo";
             var options = {"mode": "dubito"};
-            if ($location.search().quiz)
+            console.log("window.location.search", window.location.search.match("quiz="));
+            console.log("$location.search().quiz", $location.search().quiz);
+            console.log("$location.search()", $location.search());
+            if (window.location.search.match("quiz="))
             {
                 options["quizuuid"] = $location.search().quiz
             }

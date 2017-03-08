@@ -107,10 +107,6 @@
                 quizuuid = quizuuid[1];
                 options["quizuuid"] = quizuuid;
             }
-            else
-            {
-                options["quizuuid"] = "1488732618191";
-            }
             options.mode = "full";
             this.changeModule("dubito", options);
         }

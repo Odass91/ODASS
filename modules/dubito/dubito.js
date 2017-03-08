@@ -12,6 +12,7 @@
 				dubito.init();
 				delete odass_app.moduleQueue["dubito"];
 			}
+
 			if (args.options)
             {
                 dubito.switchDemoMode(args.options);
@@ -84,10 +85,10 @@
             {
                 this.mode = ['wizard', 'dubito'];   
             }
-//            if (options.quizuuid)
-//            {
-//                this.loadQuiz(false, options.quizuuid);
-//            }
+            if (options.quizuuid)
+            {
+                this.loadQuiz(false, options.quizuuid);
+            }
         };
 		
 		this.fetchQuizzes = function(contexte)

@@ -101,24 +101,17 @@
             this.user.loggedIn = true;
             this.user.name = "demo";
             var options = {"mode": "dubito"};
-            
-            console.log("window.location.search", window.location.search.match("quiz="));
-            
-            console.log("$location.search().quiz", $location.search().quiz);
-            console.log("$location.search()", $location.search("quiz"));
-            
             if (window.location.search.match("quiz="))
             {
-                options["quizuuid"] = $location.search().quiz
+                var quizuuid = window.location.search.split("quiz=");
+                quizuuid = quizuuid[1];
+                options["quizuuid"] = quizuuid;
             }
             else
             {
                 options["quizuuid"] = "1488732618191";
             }
-            if ($location.search().create || force)
-            {
-                options.mode = "full";
-            }
+            options.mode = "full";
             this.changeModule("dubito", options);
         }
 		

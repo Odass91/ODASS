@@ -187,6 +187,11 @@
             }, 500);
         };
 		
+        this.obtainShareLink = function(quiz)
+        {
+            return ("http://" + window.location.hostname + "/?quiz=" + quiz.uuid);
+        };
+        
 		this.createQuiz = function()
 		{
 			$("#quiz-dashboard").modal();

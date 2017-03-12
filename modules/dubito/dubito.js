@@ -137,7 +137,6 @@
 			return (new Array(number));
 		}
 		
-		
 		this.fetchJSONQuiz = function(uuid)
 		{
 			var dubito = this;
@@ -145,8 +144,6 @@
             {
                     return;
             }
-            console.log(uuid);
-            console.log("data/library/quiz-" + uuid + ".json");
 			$http.get("data/library/quiz-" + uuid + ".json").
 		    success(function(data, status) 
 		    {

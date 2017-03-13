@@ -85,16 +85,16 @@
 			this.availableFilters = 
 			{
 			    "keywords": [
-			    	{"label": "CATEGORIE A", "color": "00aadd"},
-			    	{"label": "CATEGORIE B", "color": "5db026"},
-			    	{"label": "CATEGORIE C", "color": "6e8126"},
-			    	{"label": "CATEGORIE D", "color": "0068a2"},
-			    	{"label": "CATEGORIE E", "color": "396a78"},
-			    	{"label": "CATEGORIE F", "color": "613b6b"},
-			    	{"label": "CATEGORIE G", "color": "af2f38"},
-		    		{"label": "CATEGORIE H", "color": "e34cb8"},
-		    		{"label": "CATEGORIE I", "color": "ffc932"},
-		    		{"label": "CATEGORIE J", "color": "e8352b"}
+			    	{"label": "A", "color": "00aadd"},
+			    	{"label": "B", "color": "5db026"},
+			    	{"label": "C", "color": "6e8126"},
+			    	{"label": "D", "color": "0068a2"},
+			    	{"label": "E", "color": "396a78"},
+			    	{"label": "F", "color": "613b6b"},
+			    	{"label": "G", "color": "af2f38"},
+		    		{"label": "H", "color": "e34cb8"},
+		    		{"label": "I", "color": "ffc932"},
+		    		{"label": "J", "color": "e8352b"}
 		    	]
 			
 			};
@@ -112,6 +112,8 @@
 				    "keywords": [],
 				    "geoloc": []
 			};
+			
+			this.cache = {};
 			
 			this.showSummary = false;
 			
@@ -463,8 +465,8 @@
             }
             
             // get slick object
-            var slider = $("#slick-"+ idee.id + ".slixperiences")[0];
-            slider.slick.refresh();
+//            var slider = $("#slick-"+ idee.id + ".slixperiences")[0];
+//            slider.slick.refresh();
         }
 		
 		this.obtainExperiencesForIdeas = function()
@@ -490,32 +492,42 @@
 			}
 			
 			var reperto = this;
-			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
-		    success(function(data, status) 
-		    {
-				idee.display = {};
-				
-				if (data.experiences)
-				{
-					idee.experiences = data.experiences;
-					idee.experiences.forEach(function(experience)
+			console.log(idee.id);
+			if (! reperto.cache[idee.id])
+			{
+				$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
+			    success(function(data, status) 
+			    {
+					idee.display = {};
+					reperto.cache[idee.id] = true;
+					if (data.experiences)
 					{
-						experience.display = {};
-						experience.display.format = "court";
-						experience.category = Math.floor(Math.random() * 10);
-					}, this);
-				}
-				else
-				{
+						var expindex = {};
+						data.experiences.forEach(function(experience)
+						{
+							if (! expindex[experience.id])
+							{
+								console.log(experience);
+								experience.display = {};
+								experience.display.format = "court";
+								experience.category = Math.floor(Math.random() * 10);
+								idee.experiences.push(experience);
+								expindex[experience.id] = "loaded";
+							}
+						}, this);
+					}
+					else
+					{
+						idee.experiences  = [];
+					}
+			    }).
+			    error(function(data, status) 
+			    {
+					idee.display = {};
 					idee.experiences  = [];
-				}
-		    }).
-		    error(function(data, status) 
-		    {
-				idee.display = {};
-				idee.experiences  = [];
-		    	console.log("Erreur lors de la recuperation du fichier json - experiences");
-		    });
+			    	console.log("Erreur lors de la recuperation du fichier json - experiences");
+			    });
+			}
 		};
 		
 		/** MAP */

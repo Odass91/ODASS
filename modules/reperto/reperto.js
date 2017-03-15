@@ -55,7 +55,7 @@
 			this.sectionByChapterId = {};
 			this.navigationmode = "tree";  // map | tree | print
 			
-			var guideid = "9";
+			var guideid = "14";
 			
 			if (window.location.search.indexOf("guideid") != -1)
 			{
@@ -76,7 +76,7 @@
 			this.modeTest = modetest;
 			this.emailContact = "contact@odass.org";
 			
-			this.loadIntroduction();
+			//this.loadIntroduction();
 			
 			this.filteredActions = [];
 			
@@ -174,14 +174,20 @@
         {
             var left =  $("#" + id).css("left");
             var width =  Math.ceil(($("#" + id).width()) / n);
-            $("#" + id).animate( {left: "+=" + width}, 1000, function() {});
+            if ((left -width) > 0)
+            {
+                $("#" + id).animate( {left: "+=" + width}, 1000, function() {});
+            }
         };
         
         this.nextExperience = function(id, n)
         {
             var left =  $("#" + id).css("left");
             var width =  Math.ceil(($("#" + id).width()) / n);
-            $("#" + id).animate( {left: "-=" + width}, 1000, function() {});
+            if (left < ($("#" + id).width() - width))
+            {
+                $("#" + id).animate( {left: "-=" + width}, 1000, function() {});
+            }
         };
                                     
         this.toggleDetails = function(id, item)
@@ -227,10 +233,10 @@
 			var startindex = this.display.pager.index;
 			var endindex = Math.max(this.display.pager.index + this.display.pager.offset, this.display.idees.length - 1);
 			
-			for (var index = startindex; index < endindex; index++)
+			/*for (var index = startindex; index < endindex; index++)
 			{
 				this.obtainExperiencesForIdea(this.display.idees[index]);
-			}
+			}*/
 			
 		};
 		
@@ -267,7 +273,7 @@
 		    success(function(data, status) 
 		    {
 		    	reperto.thesaurus = data.thesaurus;
-		    	reperto.idees = data.idees;
+		    	reperto.idees = [data.idees[1]];
 		    	var timestart = new Date();
 		    	reperto.associateIdeasAndSections();
 		    	var timeend = new Date();
@@ -296,6 +302,17 @@
 
 		    	reperto.guide_is_loaded = true;
 		    	reperto.setPagerIndex(0);
+                
+                
+                /****/
+                console.log(reperto.display.idees[0].experiences);
+                reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
+                console.log(reperto.display.idees[0].experiences);
+                /****/
+                
+                
+                
+                
                 reperto.updateCSSClasses();
                 window.setTimeout(function()
                 {
@@ -503,7 +520,9 @@
 			this.display.idees.forEach(function(idee)
 			{
 				idee.experiences = 'loading';
+                console.log(idee.experiences);
 				this.obtainExperiencesForIdea(idee);
+                console.log(idee.experiences);
 			}, this);
 			
 			this.guide_is_loaded = true;
@@ -517,41 +536,43 @@
 			}
 			
 			var reperto = this;
-			if (! reperto.cache[idee.id])
-			{
-				$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
-			    success(function(data, status) 
-			    {
-					idee.display = {};
-					reperto.cache[idee.id] = true;
-					if (data.experiences)
-					{
-						var expindex = {};
-						data.experiences.forEach(function(experience)
-						{
-							if (! expindex[experience.id] && experience.label)
-							{
-								console.log(experience.id, experience.label);
-								experience.display = {};
-								experience.display.format = "court";
-								experience.category = Math.floor(Math.random() * 10);
-								idee.experiences.push(experience);
-								expindex[experience.id] = "loaded";
-							}
-						}, this);
-					}
-					else
-					{
-						idee.experiences  = [];
-					}
-			    }).
-			    error(function(data, status) 
-			    {
-					idee.display = {};
-					idee.experiences  = [];
-			    	console.log("Erreur lors de la recuperation du fichier json - experiences");
-			    });
-			}
+			
+            $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
+            success(function(data, status) 
+            {
+                idee.display = {};
+                idee.experiences = [];
+                reperto.cache[idee.id] = true;
+                if (data.experiences)
+                {
+                    console.log("obtainExperiencesForIdea", data.experiences);
+                    var expindex = {};
+                    console.log(idee.experiences);
+                    data.experiences.forEach(function(experience)
+                    {
+                        if (! expindex[experience.id] && experience.label)
+                        {
+                            console.log(experience.id, experience.label);
+                            experience.display = {};
+                            experience.display.format = "court";
+                            experience.category = Math.floor(Math.random() * 10);
+                            idee.experiences.push(experience);
+                            expindex[experience.id] = "loaded";
+                        }
+                    }, this);
+                    console.log(idee.experiences);
+                }
+                else
+                {
+                    idee.experiences  = [];
+                }
+            }).
+            error(function(data, status) 
+            {
+                idee.display = {};
+                idee.experiences  = [];
+                console.log("Erreur lors de la recuperation du fichier json - experiences");
+            });
 		};
 		
 		/** MAP */

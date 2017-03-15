@@ -233,10 +233,10 @@
 			var startindex = this.display.pager.index;
 			var endindex = Math.max(this.display.pager.index + this.display.pager.offset, this.display.idees.length - 1);
 			
-			/*for (var index = startindex; index < endindex; index++)
+			for (var index = startindex; index < endindex; index++)
 			{
 				this.obtainExperiencesForIdea(this.display.idees[index]);
-			}*/
+			}
 			
 		};
 		
@@ -273,7 +273,7 @@
 		    success(function(data, status) 
 		    {
 		    	reperto.thesaurus = data.thesaurus;
-		    	reperto.idees = [data.idees[1]];
+		    	reperto.idees = data.idees;
 		    	var timestart = new Date();
 		    	reperto.associateIdeasAndSections();
 		    	var timeend = new Date();
@@ -306,7 +306,7 @@
                 
                 /****/
                 console.log(reperto.display.idees[0].experiences);
-                reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
+                //reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
                 console.log(reperto.display.idees[0].experiences);
                 /****/
                 

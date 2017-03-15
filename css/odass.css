@@ -602,18 +602,15 @@ p.red
 .footer-tab.contact
 {
     background-color: rgba(90,180,243,0.9);
-    color: rgba(90,180,243,1);
 }
 .footer-tab.geoloc
 {
-    background-color: rgba(244,118,182,0.90); 
-    color: rgba(244,118,182,1);
+    background-color: rgba(244,118,182,0.90);
 }
 
 .footer-tab.references
 {
     background-color: rgba(255,225,136,0.90);
-    color: rgba(255,225,136,1);
 }
 
 .footer-tab.contact:hover

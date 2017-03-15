@@ -138,21 +138,10 @@
 		    		reperto.display.introduction = {};
 		    		reperto.display.introduction.titre = data.titre;
 			    	reperto.display.introduction.contenu = data.introduction;
-			    	if ( ! window.localStorage.odassRepertoIntroShown)
-					{
-			    		$("#introduction-cac").modal({"show": true, "backdrop": "static"});
-						$("#introduction-titre").html(data.titre);
-						$("#introduction-contenu").html(data.introduction);
-						window.localStorage.odassRepertoIntroShown = 0;
-					}
-			    	else
-			    	{
-			    		window.localStorage.odassRepertoIntroShown++;
-			    		if (window.localStorage.odassRepertoIntroShown == 5)
-			    		{
-			    			delete window.localStorage.odassRepertoIntroShown;
-			    		}
-			    	}
+			    	
+                    $("#introduction-titre").html(data.titre);
+                    $("#introduction-contenu").html(data.introduction);
+						
 		    	}
 		    }).
 		    error(function(data, status) 
@@ -179,7 +168,38 @@
 			{
 				target.addClass("collapse");
 			}
-		}
+		};
+        
+        this.previousExperience = function(id, n)
+        {
+            var left =  $("#" + id).css("left");
+            var width =  Math.ceil(($("#" + id).width()) / n);
+            $("#" + id).animate( {left: "+=" + width}, 1000, function() {});
+        };
+        
+        this.nextExperience = function(id, n)
+        {
+            var left =  $("#" + id).css("left");
+            var width =  Math.ceil(($("#" + id).width()) / n);
+            $("#" + id).animate( {left: "-=" + width}, 1000, function() {});
+        };
+                                    
+        this.toggleDetails = function(id, item)
+        {
+            console.log("toggling details", $("#" + item + "-" + id + ".info-block"));
+            
+            if ($("#" + item + "-" + id + ".info-block").hasClass("active"))
+            {
+                console.log("has class");
+                $(".info-block.active").removeClass("active");
+            }
+            else
+            {
+                $(".info-block.active").removeClass("active");
+                $("#" + item + "-" + id + ".info-block").addClass("active");
+            }
+        }
+                                    
 		
 		this.isPaginationVisible = function(index)
 		{
@@ -455,11 +475,16 @@
             idee.displayLong = displaylong;
             if (displaylong == true)
             {
+                $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
                 $("#initiative-" + idee.id).addClass("col-lg-12");
+                
+                $("#initiative-" + idee.id).addClass("focus");
             }
             else
             {
+                
+                $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
             }
@@ -492,7 +517,6 @@
 			}
 			
 			var reperto = this;
-			console.log(idee.id);
 			if (! reperto.cache[idee.id])
 			{
 				$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
@@ -505,9 +529,9 @@
 						var expindex = {};
 						data.experiences.forEach(function(experience)
 						{
-							if (! expindex[experience.id])
+							if (! expindex[experience.id] && experience.label)
 							{
-								console.log(experience);
+								console.log(experience.id, experience.label);
 								experience.display = {};
 								experience.display.format = "court";
 								experience.category = Math.floor(Math.random() * 10);

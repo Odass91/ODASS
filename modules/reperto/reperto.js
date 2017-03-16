@@ -172,21 +172,29 @@
         
         this.previousExperience = function(id, n)
         {
-            var left =  $("#" + id).css("left");
+            var left =  parseInt($("#" + id).css("left"));
             var width =  Math.ceil(($("#" + id).width()) / n);
-            if ((left -width) > 0)
+            if ((Math.abs(left) + width) < ($("#" + id).width()))
             {
                 $("#" + id).animate( {left: "+=" + width}, 1000, function() {});
+            }
+            else
+            {
+                $("#" + id).animate( {left: "0"}, 1000, function() {});
             }
         };
         
         this.nextExperience = function(id, n)
         {
-            var left =  $("#" + id).css("left");
+            var left =  parseInt($("#" + id).css("left"));
             var width =  Math.ceil(($("#" + id).width()) / n);
-            if (left < ($("#" + id).width() - width))
+            if ((Math.abs(left) + width) < ($("#" + id).width()))
             {
                 $("#" + id).animate( {left: "-=" + width}, 1000, function() {});
+            }
+            else
+            {
+                $("#" + id).animate( {left: "0"}, 1000, function() {});
             }
         };
                                     

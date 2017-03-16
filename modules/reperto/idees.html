@@ -118,7 +118,7 @@
                                     <div style="height:60%; position: relative">
                                      	<div class="footer-content row" style="height:60%;">
                                             <div id="contacts-{{experience.id}}" class="col-lg-12 info-block active contact" style="padding: 7px;background-color: rgba(90,180,243,0.9);">
-                                                <p ng-show="experience.contacts && experience.contacts.length > 0" style="">
+                                                <p ng-show="experience.contacts && experience.contacts.length > 0"  style="padding: 7px;">
                                                     <span class="glyphicon glyphicon-user"></span>&nbsp; 
                                                     <span ng-repeat="contact in experience.contacts">
                                                         
@@ -128,7 +128,7 @@
                                                         <br />
                                                     </span>
                                                 </p>
-                                                <p ng-hide="experience.contacts && experience.contacts.length > 0" style="">
+                                                <p ng-hide="experience.contacts && experience.contacts.length > 0" style="padding: 7px;">
                                                      <span class="glyphicon glyphicon-user"></span>&nbsp; Il n'y a pas de contact associé à cette expérience.
                                                 </p>
                                             </div>
@@ -136,13 +136,13 @@
                                                 {{experience.geoloc}}
                                             </div>
                                             <div id="references-{{experience.id}}" class="col-lg-12 info-block references" style="padding: 7px; background-color: rgba(255,225,136,0.90);">
-                                                <p ng-show="experience.references && experience.references.length > 0">
+                                                <p ng-show="experience.references && experience.references.length > 0"  style="padding: 7px;">
                                                     <span class="glyphicon glyphicon glyphicon-link"></span>&nbsp; 
                                                     <span ng-repeat="lien in experience.references">
                                                         <a target="_" href="{{lien.lien}}">{{lien.nom}}</a><br />
                                                     </span>
                                                 </p>
-                                                <p ng-hide="experience.references && experience.references.length > 0">
+                                                <p ng-hide="experience.references && experience.references.length > 0"  style="padding: 7px;">
                                                     Il n'y a pas de lien enregistré pour cette expérience
                                                 </p>
                                             </div>

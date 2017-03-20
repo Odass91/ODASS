@@ -61,7 +61,7 @@
 									<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
 								</a>
 								
-								<a title="Envoyez vos commentaires sur le guide" href="mailto:cac_repertoire@odass.org?subject=Guide%20National%20Ecologie" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
+								<a title="Envoyez vos commentaires sur le guide" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
 							</div>
 						</div>
 					  	
@@ -169,18 +169,85 @@
 			
 		</section>
 		
-		<div class="modal fade" id="introduction-cac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		<div class="modal fade" id="ajouter-experience" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 		  	<div class="modal-dialog modal-lg" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header panel-heading">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 id="introduction-titre"></h4>
+						<h4>Ajouter une expérience</h4>
 					</div>
 				
 		      		<div class="modal-body">
-		       			<div id="introduction-contenu"></div>
+		       			<p>Vous souhaitez ajouter une expérience? Vous pouvez remplir le formulaire suivant :</p>
+		       			
+                        <h5>Pour vous contacter : </h5>
+                        <div class="form-group col-xs-6">    
+                            <label for="contact-nom">Nom : </label>
+                            <input type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-prenom">Prénom : </label>
+                            <input type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-email">Email : </label>
+                            <input type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-telephone">Numéro de téléphone : </label>
+                            <input type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
+                        </div>
+                            
+                        
+                        
+                        <h5>pour l'expérience :</h5>
+                        <div>
+                            <div class="form-group col-xs-6">    
+                                <label for="experience-titre">Titre : </label>
+                                <input type="text" class="form-control" id="experience-titre" placeholder="Titre (40 caractères max)" maxlength="40"> 
+                            </div>
+                            <div class="form-group col-xs-3">    
+                                <label for="experience-cp">Code Postal : </label>
+                                <input type="number" class="form-control" id="experience-cp" placeholder="91200" maxlength="5"> 
+                            </div>
+                            <div class="form-group col-xs-3">    
+                                <label for="experience-ville">Ville : </label>
+                                <input type="text" class="form-control" id="experience-ville" placeholder="Palaiseau"> 
+                            </div>
+                            
+                            <div class="form-group col-xs-12">    
+                                <label for="experience-titre">Description : </label>
+                                <textarea class="form-control" id="experience-titre" placeholder="Titre (40 caractères max)" rows="5"> </textarea>
+                            </div>
+                            
+                            <div class="form-group col-xs-12">    
+                                <label for="experience-portee">Portée : </label>
+                                <label class="radio-inline"><input type="radio" name="experience-portee">Locale</label>
+                                <label class="radio-inline"><input type="radio" name="experience-portee">Départementale</label>
+                                <label class="radio-inline"><input type="radio" name="experience-portee">Nationale</label> 
+                            </div>
+                            
+                            <div class="form-group col-xs-6">    
+                                <label for="experience-reference-nom">Référence (optionnel): </label>
+                                <input type="number" class="form-control" id="experience-reference-nom" placeholder="91200"> 
+                            </div>
+                            
+                            <div class="form-group col-xs-6">    
+                                <label for="experience-reference-href">Lien (optionnel): </label>
+                                <input type="number" class="form-control" id="experience-reference-href" placeholder="http://www.votresite.org"> 
+                            </div>
+                            
+                            <div class="form-group col-xs-12">    
+                                <label for="experience-engagement">Etes vous engagé.e dans cette expérience ? </label>
+                                <label class="radio-inline"><input type="radio" name="experience-engagement">Oui</label>
+                                <label class="radio-inline"><input type="radio" name="experience-engagement">Non</label>
+                                <p> Si vous n'êtes pas personnellement engagé.e dans cette expérience, nous contacterons la personne que vous aurez indiquée pour obtenir son accord avant de publier cette expérience.</p>
+                            </div>
+                            
+                        </div>
+                        <p>Toute l'équipe du CAC vous remercie pour votre participation.</p>
 		    		</div>
 		  		</div>
 			</div>

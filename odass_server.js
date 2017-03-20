@@ -175,7 +175,6 @@ app.get('/', function(req, res)
     {        
     	var rparam = JSON.parse(jsonString);
     	var quiz = rparam.quiz;
-    	console.log(quiz);
     	saveQuizToLibraryFile(quiz, quiz.jeu.uuid, function(err)
 	    {
 	        if (err)
@@ -204,10 +203,19 @@ app.get('/', function(req, res)
 {
     res.setHeader('Content-Type', 'text/plain');
     res.status(404).send('Page introuvable !');
+})
+.get('/dubito/play/new/:uuid', function (req, res)
+{
+    
+})
+.post('/dubito/play/turn/:uuid', function (req, res)
+{
+    
+})
+.post('/dubito/play/end/:uuid', function (req, res)
+{
+    
 });
-
-
-
 
 /** UTIL FUNCTIONS */
 

@@ -504,11 +504,13 @@
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
                 $("#initiative-" + idee.id).addClass("col-lg-12");
                 
+                $("#initiative-" + idee.id).addClass("shrinkExpandAnimation");
                 $("#initiative-" + idee.id).addClass("focus");
             }
             else
             {
                 
+                $("#initiative-" + idee.id).removeClass("shrinkExpandAnimation");
                 $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
@@ -558,7 +560,7 @@
                     console.log(idee.experiences);
                     data.experiences.forEach(function(experience)
                     {
-                        if (! expindex[experience.id] && experience.label)
+                        if (! expindex[experience.id] && experience.label && experience.contacts)
                         {
                             console.log(experience.id, experience.label);
                             experience.display = {};

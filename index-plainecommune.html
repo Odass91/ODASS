@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="odass">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="libs/fullcalendar/fullcalendar.css"/>
+		<link rel="stylesheet" href="libs/themes/default/style.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/odass.css"/>
+		<link rel="stylesheet" type="text/css" href="css/rzslider.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/angular-ui-tree.css">
+		<link rel="stylesheet" type="text/css" href="css/angular-ui-tree-app.css">
+		<link rel="stylesheet" type="text/css" href="css/xeditable.css">
+		<style>
+			html, body { height: 100%; margin: 0; padding: 0; }
+ 			#map { height: 100%; }
+		</style>
+	</head>
+
+	<body ng-controller="OdassController as odass" class="loggedin">
+	
+		<div class="container-fluid page-wrap">
+			<reperto></reperto>
+		</div>
+		
+		
+		<script type="text/javascript" src="libs/jquery.js"></script>
+		<script type="text/javascript" src="libs/moment.js"></script>
+		<script type="text/javascript" src="libs/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="libs/angular.js"></script>
+		<script type="text/javascript" src="libs/defiant.min.js"></script>
+		<script type="text/javascript" src="libs/html5-sortable.js"></script>
+		<script type="text/javascript" src="libs/angular-sanitize.js"></script>
+		<script type="text/javascript" src="libs/rzslider.min.js"></script>
+		<script type="text/javascript" src="libs/xeditable.js"></script>
+		<script type="text/javascript" src="libs/angular-ui-tree.min.js"></script>
+		
+		<script type="text/javascript" src="odass.js"></script>
+		<script type="text/javascript" src="modules/reperto/repertopc.js"></script>
+		
+		<script type="text/javascript">
+			$(function () {
+			  $('[data-toggle="popover"]').popover();
+			})
+		</script>
+	</body>
+	
+	<!--  page accueil -->
+	<!--  page outils -->
+	<!--  page service -->
+	<!--  page partenaire -->
+</html>

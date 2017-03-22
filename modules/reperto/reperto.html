@@ -1,5 +1,49 @@
 
 <style>
+
+    #repertomap {
+        width: 100%;
+        height: 100%;
+    }
+	
+	#partenaire
+	{
+		background: url('images/logo-CAC.jpg') no-repeat;
+		-webkit-background-size: cover; /* pour anciens Chrome et Safari */
+		background-size: auto; 
+		margin: 5px;
+	}
+	
+	.animate-disappear
+	{
+     /*   animation: fade 5s;*/
+        display:none;
+	}
+	
+	.animate-appear
+	{
+     /*  animation: fade 5s;*/
+        display:block;
+        position:static;
+	}
+	
+	.open
+	{
+        position: relative;
+        top: -2px;
+        right: -21px;
+        color: inherit;
+	}
+	
+	@keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    
 	.send-mail
 	{
 		font-size: 20px !important;
@@ -35,6 +79,24 @@
 				</p>
 			</div>
 		</section>
+		
+		<section id="guide-intro">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+						<button type="button" class="close" aria-label="Close" ng-hide="reperto.intro_reduced" ng-click="reduce.reduceIntro()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<button type="button" class="close" aria-label="Open" ng-show="reperto.intro_reduced" ng-click="reperto.expandIntro()">
+							<span aria-hidden="true">&loz;</span>
+						</button>
+						<h4 id="introduction-titre"></h4>
+					</div>
+				
+		      		<div class="panel-body">
+		       			<div id="introduction-contenu"></div>
+		    		</div>
+		  		</div>
+        </section>
 		
 		<section id="annuaire-body" class="row">
 				
@@ -95,8 +157,16 @@
 
 
 
-			<!--  COLONNE PRINCIPALE  -->
-			 
+			 <!--  COLONNE PRINCIPALE  -->
+			 <div class="col-md-9" style="" ng-show="reperto.navigationmode == 'map'">
+				
+				
+				<div id="repertomap" style="height:600px;"></div>
+				
+				
+				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;"></div>
+            </div>
+            
 			
 			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
 				<p class="">
@@ -167,7 +237,48 @@
 				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
 			</div>
 			
+			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
+				<h4>BOITE A OUTILS</h4>
+				<div>
+					<p>
+						<span ng-click="reperto.changeNavigationMode('map')" class="btn btn-default">
+							<span class="glyphicon glyphicon-map-marker"></span>
+							&nbsp;Localiser les expériences sur une carte
+							<span ng-show="reperto.navigationmode == 'map'" class="glyphicon glyphicon-check"></span>
+						</span>
+					</p>
+					<p>
+						<span ng-click="reperto.changeNavigationMode('tree')" class="btn btn-default">
+							<span class="glyphicon glyphicon-th-list"></span>&nbsp;Naviguer dans l'arborescence des expériences
+							<span ng-show="reperto.navigationmode == 'tree'" class="glyphicon glyphicon-check"></span>
+						</span>
+						</p>
+					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
+						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
+					</span>
+					
+					<span ng-show="reperto.printableGuide.activeInitiatives.length > 0">
+						<p>{{reperto.printableGuide.activeInitiatives.length}} sauvées.</p>
+						<p><span ng-click="reperto.refreshPrintableCatalogue()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
+					</span>
+				</div>
+</div>
+			
 		</section>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		<div class="modal fade" id="ajouter-experience" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 		  	<div class="modal-dialog modal-lg" role="document">

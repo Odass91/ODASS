@@ -76,7 +76,7 @@
 			this.modeTest = modetest;
 			this.emailContact = "contact@odass.org";
 			
-			//this.loadIntroduction();
+			this.loadIntroduction();
 			
 			this.filteredActions = [];
 			
@@ -123,7 +123,25 @@
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
-		}
+           
+            window.setTimeout(function()
+                {
+                that.reduceIntro();
+                }, 5000);
+            };
+            
+            this.changeNavigationMode = function(mode)
+            {
+                    this.navigationmode = mode;
+                    if (mode == 'map')
+                    {
+                        this.refreshMap();
+                    }
+                    if (mode == 'tree')
+                    {
+                        //
+                    }
+        }
 		
 		this.loadIntroduction = function()
 		{
@@ -312,13 +330,17 @@
 		    	reperto.setPagerIndex(0);
                 
                 
-                /****/
+                /****
                 console.log(reperto.display.idees[0].experiences);
                 //reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
                 console.log(reperto.display.idees[0].experiences);
-                /****/
+                ****/
                 
-                
+                if (reperto.navigationmode == 'map')
+                {
+                    reperto.setupMap();
+                    reperto.refreshMap(100);
+                }
                 
                 
                 reperto.updateCSSClasses();
@@ -515,10 +537,7 @@
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
             }
-            
-            // get slick object
-//            var slider = $("#slick-"+ idee.id + ".slixperiences")[0];
-//            slider.slick.refresh();
+
         }
 		
 		this.obtainExperiencesForIdeas = function()
@@ -530,9 +549,7 @@
 			this.display.idees.forEach(function(idee)
 			{
 				idee.experiences = 'loading';
-                console.log(idee.experiences);
 				this.obtainExperiencesForIdea(idee);
-                console.log(idee.experiences);
 			}, this);
 			
 			this.guide_is_loaded = true;
@@ -555,22 +572,22 @@
                 reperto.cache[idee.id] = true;
                 if (data.experiences)
                 {
-                    console.log("obtainExperiencesForIdea", data.experiences);
                     var expindex = {};
-                    console.log(idee.experiences);
                     data.experiences.forEach(function(experience)
                     {
                         if (! expindex[experience.id] && experience.label && experience.contacts)
                         {
-                            console.log(experience.id, experience.label);
                             experience.display = {};
                             experience.display.format = "court";
                             experience.category = Math.floor(Math.random() * 10);
                             idee.experiences.push(experience);
                             expindex[experience.id] = "loaded";
+                            if (experience.geoloc.latitude)
+                            {
+                                reperto.setupMarker(experience);
+                            }
                         }
-                    }, this);
-                    console.log(idee.experiences);
+                    });
                 }
                 else
                 {
@@ -585,8 +602,142 @@
             });
 		};
 		
-		/** MAP */
+        /** MAP */
+        
+        this.refreshMap = function(timeout)
+        {
+            var map = this.reperto_carte;
+            window.setTimeout(function(){
+                map.invalidateSize();
+            },timeout);
+        };
 		
+		this.setupMap = function()
+		{
+			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
+			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
+			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			    maxZoom: 18,
+			    id: 'davidleray.2f171f1g',
+			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
+			}).addTo(mymap);
+			
+			this.reperto_carte = mymap;
+		};
+		
+		
+		this.setupMarker = function(experience)
+		{
+			if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+			console.log("setupMarker", experience);
+			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
+			{
+				var latitude_pos = experience.geoloc.latitude;
+				var longitude_pos = experience.geoloc.longitude;
+                
+				var icon = L.icon({
+					'iconUrl': 'images/markers/marker-00aadd.png'
+				});
+				var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
+                marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+				experience.marker = marker;
+                this.activeMarker = null;
+			}
+		};
+		
+		this.isCategorieActive = function(categorie)
+		{
+			if (! this.activeCategories)
+			{
+				this.activeCategories = {};
+			}
+			return (this.activeCategories[categorie.label] != undefined);
+		};
+        
+        this.centerMap = function(experience)
+        {
+            if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+            if (experience.geoloc.latitude && experience.geoloc.longitude)
+            {
+                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 6);
+                if (this.activeMarker)
+                {
+                    var icon = L.icon({
+					'iconUrl': 'images/markers/marker-00aadd.png'
+                    });
+                    
+                    var icon_highlight = L.icon({
+					'iconUrl': 'images/markers/marker-5db026.png'
+                    });
+                    
+                    this.activeMarker.setIcon(icon);
+                    experience.marker.setIcon(icon_highlight);
+                    this.activeMarker = experience.marker;
+                }
+            }
+            this.refreshMap(100);
+        };
+		
+		this.toggleCategory = function(categorie)
+		{
+			if (this.activeCategories == undefined)
+			{
+				this.activeCategories = [];
+			}
+
+			if (this.activeCategories[categorie.label] == undefined)
+			{
+				this.addCategoryToMap(categorie);
+				this.activeCategories[categorie.label] = true;
+			}
+			else
+			{
+				this.removeCategoryToMap(categorie);
+				delete this.activeCategories[categorie.label];
+			}
+		};
+		
+		this.addCategoryToMap = function(categorie)
+		{
+			this.display.idees.forEach(function(idee)
+			{
+				if (idee.experiences)
+				{
+					idee.experiences.forEach(function (experience)
+					{
+						if (this.availableFilters.keywords[experience.category].label == categorie.label)
+						{
+							experience.marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+						}
+					}, this);
+				}
+			}, this);
+		};
+		
+		this.removeCategoryToMap = function(categorie)
+		{
+			this.display.idees.forEach(function(idee)
+			{
+				if (idee.experiences)
+				{
+					idee.experiences.forEach(function (experience)
+					{
+						if (this.availableFilters.keywords[experience.category].label == categorie.label)
+						{
+							experience.marker.remove();
+						}
+					}, this);
+				}
+			}, this);
+        };
+        
+        
 		this.isCategorieActive = function(categorie)
 		{
 			if (! this.activeCategories)
@@ -802,16 +953,5 @@
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'modules/reperto/thesaurus.html'};});
 	odass.directive("repertoireIdees", function(){return{restrict: 'E', templateUrl: 'modules/reperto/repertoire-idees.html'};});
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'modules/reperto/idees.html'};});
-	odass.directive("experiences", function()
-	{
-		return {
-			restrict: 'E',
-			scope: {
-				idee: '=idee',
-				reperto: '=reperto'
-			},
-			templateUrl: 'modules/reperto/experiences.html'
-		};
-	});
 	
 })();

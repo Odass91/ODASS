@@ -43,7 +43,7 @@
 			<div class="idee-content" style="min-height: 50%; padding: 5px;">
                 
                 <p style="" ng-hide="idee.displayLong">
-                    <span ng-bind-html="idee.description">Même les gens très occupés peuvent cuisiner par eux-mêmes : c'est moins cher, plus diététique, plus savoureux, et on peut préparer plusieurs plats d'avance.Même les gens très occupés peuvent cuisiner par eux-mêmes : c'est moins cher, plus diététique, plus savoureux, et on peut préparer plusieurs plats d'avance.Même les gens très occupés peuvent cuisiner par eux-mêmes : c'est moins cher, plus diététique, plus savoureux, et on peut préparer plusieurs plats d'avance.</span>
+                    <span ng-bind-html="idee.description"></span>
                     <a href="" ng-click="reperto.switchDisplay(true, idee)">Voir plus</a>
                 </p>
                 
@@ -141,7 +141,23 @@
                                                 </p>
                                             </div>
                                             <div id="geoloc-{{experience.id}}" class="col-lg-12 info-block geoloc" style="min-height: 60px;height: 100%; text-align: center; padding: 7px; background-color: rgba(244,118,182,0.90);">
-                                                {{experience.geoloc}}
+                                                
+                                                
+                                                <span ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.latitude">
+                                                    <span class="glyphicon glyphicon-map-marker"> </span> 
+                                                </span>
+                                                <span ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.ville">
+                                                    {{experience.geoloc.ville}}
+                                                </span>
+                                                
+                                                <br />
+                                                <span>portée 
+                                                    <strong>
+                                                        <span ng-show="experience.geoloc.national">nationale</span>
+                                                        <span ng-show="experience.geoloc.departemental && ! experience.geoloc.national">départementale</span>
+                                                        <span ng-show="experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">locale</span>
+                                                    </strong>
+                                                </span>
                                             </div>
                                             <div id="references-{{experience.id}}" class="col-lg-12 info-block references" style="height: 100%; padding: 7px; background-color: rgba(255,225,136,0.90);">
                                                 <p ng-show="experience.references && experience.references.length > 0"  style="padding: 7px;  min-height: 60px;">
@@ -161,7 +177,7 @@
                                                 <span class="glyphicon glyphicon-user"></span> Contacts
                                             </div>
                                             <div class="col-lg-4 footer-tab geoloc" ng-click="reperto.toggleDetails(experience.id, 'geoloc')">
-                                                <span class="glyphicon glyphicon-globe"></span> Géoloc
+                                                <span class="geoloc"><span class="glyphicon glyphicon-globe"></span> Géoloc</span><br/>
                                             </div>
                                             <div class="col-lg-4 footer-tab references" ng-click="reperto.toggleDetails(experience.id, 'references')">
                                                 <span class="glyphicon glyphicon-link"></span> liens

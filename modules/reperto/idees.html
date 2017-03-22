@@ -30,6 +30,7 @@
 	 	
 	<div class="panel panel-success {{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}" style="">
 		<div class="panel-heading" style="">
+            <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="{{idee.id}} ellipsis" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}}</span>
 				<span class="pull-right" ng-hide="true">
@@ -48,7 +49,6 @@
                 
                 <p style="" ng-show="idee.displayLong">
                     <span ng-bind-html="idee.descriptionlongue"></span>
-                    <a href="" ng-click="reperto.switchDisplay(false, idee)">Voir moins</a>
                 </p>
                 
                 <p ng-show="idee.references && idee.references.length > 0">
@@ -124,7 +124,7 @@
                                         
                                     <div style="height:60%; position: relative">
                                      	<div class="footer-content row" style="height:60%;">
-                                            <div id="contacts-{{experience.id}}" class="col-lg-12 info-block active contact" style="height: 100%; padding: 7px;background-color: rgba(90,180,243,0.9);">
+                                            <div id="contacts-{{experience.id}}" class="col-lg-12 info-block contact" style="height: 100%; padding: 7px;background-color: rgba(90,180,243,0.9);">
                                                 <p ng-show="experience.contacts && experience.contacts.length > 0"  style="padding: 7px;  min-height: 60px; display: inline-block; min-width: 150px">
                                                     <span ng-repeat="contact in experience.contacts">
                                                         

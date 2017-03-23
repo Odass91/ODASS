@@ -123,24 +123,25 @@
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
+           var that = this;
            
             window.setTimeout(function()
-                {
-                that.reduceIntro();
-                }, 5000);
-            };
-            
-            this.changeNavigationMode = function(mode)
             {
-                    this.navigationmode = mode;
-                    if (mode == 'map')
-                    {
-                        this.refreshMap();
-                    }
-                    if (mode == 'tree')
-                    {
-                        //
-                    }
+                that.reduceIntro();
+            }, 5000);
+        };
+        
+        this.changeNavigationMode = function(mode)
+        {
+                this.navigationmode = mode;
+                if (mode == 'map')
+                {
+                    this.refreshMap();
+                }
+                if (mode == 'tree')
+                {
+                    //
+                }
         }
 		
 		this.loadIntroduction = function()
@@ -167,6 +168,23 @@
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
 		};
+        
+        this.reduceIntro = function()
+        {            
+            this.intro_reduced = true;
+            $("#guide-intro .panel-body").addClass("animate-disappear");
+            $("#guide-intro .panel-body").removeClass("animate-appear");
+        }
+        
+		
+		this.expandIntro = function()
+        {
+            delete this.intro_reduced;
+            $("#guide-intro .panel-body").addClass("animate-appear");
+            $("#guide-intro .panel-body").removeClass("animate-disappear");
+            
+        };
+        
 		
 		this.isExpanded = function(id)
 		{
@@ -218,11 +236,8 @@
                                     
         this.toggleDetails = function(id, item)
         {
-            console.log("toggling details", $("#" + item + "-" + id + ".info-block"));
-            
             if ($("#" + item + "-" + id + ".info-block").hasClass("active"))
             {
-                console.log("has class");
                 $(".info-block.active").removeClass("active");
             }
             else
@@ -632,7 +647,6 @@
 			{
 				this.setupMap();
 			}
-			console.log("setupMarker", experience);
 			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
 			{
 				var latitude_pos = experience.geoloc.latitude;

@@ -19,10 +19,7 @@
 		});
 		
 		
-		$("body").css("background", "url('images/background-ricepaper_v3.png')");
-        
-        this.css_parties = ["PARTIE_A", "PARTIE_B", "PARTIE_C", "PARTIE_D"];
-		
+		$("body").css("background", "url('images/background-ricepaper_v3.png')");		
 		
 		this.reinit= function()
 		{
@@ -85,16 +82,10 @@
 			this.availableFilters = 
 			{
 			    "keywords": [
-			    	{"label": "A", "color": "00aadd"},
-			    	{"label": "B", "color": "5db026"},
-			    	{"label": "C", "color": "6e8126"},
-			    	{"label": "D", "color": "0068a2"},
-			    	{"label": "E", "color": "396a78"},
-			    	{"label": "F", "color": "613b6b"},
-			    	{"label": "G", "color": "af2f38"},
-		    		{"label": "H", "color": "e34cb8"},
-		    		{"label": "I", "color": "ffc932"},
-		    		{"label": "J", "color": "e8352b"}
+			    	{"label": "1", "color": "00aadd"},
+			    	{"label": "2", "color": "5db026"},
+			    	{"label": "3", "color": "6e8126"},
+			    	{"label": "4", "color": "0068a2"}
 		    	]
 			
 			};
@@ -296,12 +287,17 @@
         this.updateCSSClasses = function()
         {
             this.cssClasses = {};
+            this.markerIcons = {};
+            
+            this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
             this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            
             this.thesaurus.nodes.forEach(function(PARTIE)
             {
                 if (! this.cssClasses[PARTIE.id])
                 {
-                        this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                    this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                    this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
                 }
             }, this);
             
@@ -313,6 +309,7 @@
 			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
+                reperto.markerCount = 0;
 		    	reperto.thesaurus = data.thesaurus;
 		    	reperto.idees = data.idees;
 		    	var timestart = new Date();
@@ -578,7 +575,6 @@
 			}
 			
 			var reperto = this;
-			
             $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
             success(function(data, status) 
             {
@@ -594,7 +590,7 @@
                         {
                             experience.display = {};
                             experience.display.format = "court";
-                            experience.category = Math.floor(Math.random() * 10);
+                            experience.category = reperto.cssClasses[reperto.obtainSectionFromChapter(idee.parent)];
                             idee.experiences.push(experience);
                             expindex[experience.id] = "loaded";
                             if (experience.geoloc.latitude)
@@ -651,12 +647,13 @@
 			{
 				var latitude_pos = experience.geoloc.latitude;
 				var longitude_pos = experience.geoloc.longitude;
-                
+                console.log(this.markerIcons, experience.category);
 				var icon = L.icon({
-					'iconUrl': 'images/markers/marker-00aadd.png'
+					'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
 				});
 				var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
                 marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+                this.markerCount++;
 				experience.marker = marker;
                 this.activeMarker = null;
 			}
@@ -679,10 +676,10 @@
 			}
             if (experience.geoloc.latitude && experience.geoloc.longitude)
             {
-                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 6);
+                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
                 if (this.activeMarker)
                 {
-                    var icon = L.icon({
+                   /* var icon = L.icon({
 					'iconUrl': 'images/markers/marker-00aadd.png'
                     });
                     
@@ -692,7 +689,7 @@
                     
                     this.activeMarker.setIcon(icon);
                     experience.marker.setIcon(icon_highlight);
-                    this.activeMarker = experience.marker;
+                    this.activeMarker = experience.marker;*/
                 }
             }
             this.refreshMap(100);

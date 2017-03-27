@@ -160,17 +160,7 @@
 
 
 			 <!--  COLONNE PRINCIPALE  -->
-			 <div class="col-md-9" style="" ng-show="false && reperto.navigationmode == 'map'">
-				
-				
-				<div id="repertomap" style="height:600px;"></div>
-				
-				
-				<div class="row" ng-show="reperto.guide_is_loaded" style="margin-left: 0px;"></div>
-            </div>
-            
-			
-			<div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
+			 <div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
 				<p class="">
 					<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px; padding: 15px; font-weight: bold;">
 					  <li ng-click="reperto.selectThesaurus()">
@@ -213,16 +203,9 @@
 						class="col-lg-3 {{reperto.cssClasses[reperto.display.section.id]}} infozone" 
 						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
 			>
-				<h4>INFO       </h4>
+				<h4>INFO </h4>
 				<p ng-show="reperto.display.section">
 					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
-					
-					<span ng-hide="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.description"></span>
-					<span ng-show="reperto.display.section.displaylong" ng-bind-html="reperto.display.section.descriptionlongue"></span>
-					
-					
-					<a href="" ng-show="reperto.display.section && ! reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = true">voir plus</a>
-					<a href="" ng-show="reperto.display.section && reperto.display.section.displaylong" ng-click="reperto.display.section.displaylong = false">voir moins</a>
 				</p>
 				
 				<p ng-show="reperto.display.chapitre">
@@ -239,22 +222,14 @@
 				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
 			</div>
 			
-			<div ng-hide="true || reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
-				<h4>BOITE A OUTILS</h4>
+			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
+				<h4>BOITE A OUTILS </h4>
 				<div>
+					<div id="repertomap" style="height:300px;"></div>
+					
 					<p>
-						<span ng-click="reperto.changeNavigationMode('map')" class="btn btn-default">
-							<span class="glyphicon glyphicon-map-marker"></span>
-							&nbsp;Localiser les expériences sur une carte
-							<span ng-show="reperto.navigationmode == 'map'" class="glyphicon glyphicon-check"></span>
-						</span>
+					 {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
 					</p>
-					<p>
-						<span ng-click="reperto.changeNavigationMode('tree')" class="btn btn-default">
-							<span class="glyphicon glyphicon-th-list"></span>&nbsp;Naviguer dans l'arborescence des expériences
-							<span ng-show="reperto.navigationmode == 'tree'" class="glyphicon glyphicon-check"></span>
-						</span>
-						</p>
 					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
 						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
 					</span>

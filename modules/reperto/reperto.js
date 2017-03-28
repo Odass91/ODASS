@@ -49,7 +49,11 @@
 			/** INITIALISATION */
 
 			this.display = {};
+            
 			this.sectionByChapterId = {};
+            this.chapterByIdeeId = {};
+            this.ideeByExperienceId = {};
+            
 			this.navigationmode = "tree";  // map | tree | print
 			
 			var guideid = "14";
@@ -79,16 +83,7 @@
 			
 			this.filter = "";
 			
-			this.availableFilters = 
-			{
-			    "keywords": [
-			    	{"label": "1", "color": "00aadd"},
-			    	{"label": "2", "color": "5db026"},
-			    	{"label": "3", "color": "6e8126"},
-			    	{"label": "4", "color": "0068a2"}
-		    	]
-			
-			};
+			this.markerMap = {};
 
 			this.activeFilters = 
 			{
@@ -230,11 +225,13 @@
             if ($("#" + item + "-" + id + ".info-block").hasClass("active"))
             {
                 $(".info-block.active").removeClass("active");
+                $(".footer-tab.active").removeClass("active");
             }
             else
             {
                 $(".info-block.active").removeClass("active");
                 $("#" + item + "-" + id + ".info-block").addClass("active");
+                $("#tab-" + item + "-" + id + ".footer-tab").addClass("active");
             }
         }
                                     
@@ -288,9 +285,12 @@
         {
             this.cssClasses = {};
             this.markerIcons = {};
+            this.cssColors = {};
             
             this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
             this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", " #ffe188", "rgba(154,202,85,0.9)"];
+
             
             this.thesaurus.nodes.forEach(function(PARTIE)
             {
@@ -298,6 +298,7 @@
                 {
                     this.cssClasses[PARTIE.id] = this.availableClasses.pop();
                     this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
+                    this.cssColors[this.cssClasses[PARTIE.id]] = this.availableColors.pop();
                 }
             }, this);
             
@@ -318,6 +319,7 @@
 		    	console.log((timeend.getTime() - timestart.getTime())*1000);
 		    	reperto.experiences = {};
 		    	
+                
 		    	reperto.cache = {};
 		    	reperto.cache.idees = reperto.idees;
 		    	
@@ -383,8 +385,7 @@
 			var section = this.obtainSectionFromId(chapter.parent);
 			return section.id;
 		};
-		
-		
+        
 		this.obtainChapterFromId = function(chapterid)
 		{
 			var chapter_slash_chapitre = null;
@@ -402,7 +403,8 @@
 		this.obtainSectionFromId = function(sectionid)
 		{
 			var section_slash_partie = null;
-			this.thesaurus.nodes.forEach(function(section){
+			this.thesaurus.nodes.forEach(function(section)
+            {
 				if (section.id == sectionid)
 				{
 					section_slash_partie = section;
@@ -410,6 +412,8 @@
 			}, this);
 			return section_slash_partie;
 		};
+        
+        
         
         this.obtainClassNameFromPartieId = function(partieid)
         {
@@ -597,6 +601,7 @@
                             {
                                 reperto.setupMarker(experience);
                             }
+                            reperto.ideeByExperienceId[experience.id] = idee;
                         }
                     });
                 }
@@ -639,24 +644,59 @@
 		
 		this.setupMarker = function(experience)
 		{
-			if (! this.reperto_carte)
+			if (this.markerMap[experience.id])
+            {
+                return;
+            }
+            if (experience.marker)
+            {
+                return;
+            }
+            if (experience.geoloc == {})
+            {
+                return;
+            }
+            
+            if (! this.reperto_carte)
 			{
 				this.setupMap();
 			}
-			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
-			{
-				var latitude_pos = experience.geoloc.latitude;
-				var longitude_pos = experience.geoloc.longitude;
-                console.log(this.markerIcons, experience.category);
-				var icon = L.icon({
-					'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
-				});
-				var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
-                marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
+			
+            if (experience.geoloc.latitude && experience.geoloc.longitude)
+            {
+                var latitude_pos = experience.geoloc.latitude;
+                var longitude_pos = experience.geoloc.longitude;
+                var icon = L.icon({
+                    'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
+                });
+                var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
+                
+                marker.addTo(this.reperto_carte);
+                
+                
                 this.markerCount++;
-				experience.marker = marker;
                 this.activeMarker = null;
-			}
+                
+                experience.marker = marker;
+                marker.experience = experience;
+                var reperto = this;
+                marker.on("click", function(event)
+                {
+                    reperto.centerExperience(experience);
+                    
+                    var idee = reperto.ideeByExperienceId[experience.id];
+                    var chapter = reperto.obtainChapterFromId(idee.parent);
+                    var section = reperto.obtainSectionFromId(chapter.parent);
+                    
+                    experience.marker.bindPopup("<h3>"+ experience.label + "</h3><p>" + experience.description + "</p><p style='font-size:9px !important; color: rgba(0,0,0,0.8) !important;'>" + section.titre + " > " + chapter.titre + " > " + idee.titre + "</p>");
+                    
+                    experience.marker.openPopup();
+                    
+                }, this);
+                
+                this.markerMap[experience.id] = experience;
+            }
+            
 		};
 		
 		this.isCategorieActive = function(categorie)
@@ -677,23 +717,28 @@
             if (experience.geoloc.latitude && experience.geoloc.longitude)
             {
                 this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
-                if (this.activeMarker)
-                {
-                   /* var icon = L.icon({
-					'iconUrl': 'images/markers/marker-00aadd.png'
-                    });
-                    
-                    var icon_highlight = L.icon({
-					'iconUrl': 'images/markers/marker-5db026.png'
-                    });
-                    
-                    this.activeMarker.setIcon(icon);
-                    experience.marker.setIcon(icon_highlight);
-                    this.activeMarker = experience.marker;*/
-                }
+                experience.marker.openPopup();
+                
             }
             this.refreshMap(100);
         };
+        
+        this.centerExperience = function(experience)
+        {
+            var idee = this.ideeByExperienceId[experience.id];
+            var chapter = this.obtainChapterFromId(idee.parent);
+            var section = this.obtainSectionFromId(chapter.parent);
+            
+            $("#thesaurus-tree .panel-collapse").addClass("collapse");
+            
+            
+            $("#thesaurus-tree ." + section.id + " .panel-collapse").removeClass("collapse");
+            
+            
+            $("#tree-chapter-item-" + chapter.id).click();
+            
+            
+        }
 		
 		this.toggleCategory = function(categorie)
 		{
@@ -800,6 +845,10 @@
 		
 		this.selectChapter = function(section, chapitre)
 		{
+            
+            $(".tree-chapter-item").removeClass("active");
+            $("#tree-chapter-item-" + chapitre.id).addClass("active");
+            
 			this.display.idees = [];
 			this.gatherIdeas(chapitre);
 

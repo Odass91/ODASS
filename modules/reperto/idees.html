@@ -142,16 +142,18 @@
                                             </div>
                                             <div id="geoloc-{{experience.id}}" class="col-lg-12 info-block geoloc" style="min-height: 60px;height: 100%; text-align: center; padding: 7px; background-color: rgba(244,118,182,0.90);">
                                                 
-                                                
-                                                <span ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.latitude">
-                                                    <span class="glyphicon glyphicon-map-marker"> </span> 
+                                                <span ng-show="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national && ! experience.geoloc.latitude && ! experience.geoloc.ville ">
+                                                    Nous n'avons pas d'information de géolocalisation au sujet de cette expérience
                                                 </span>
-                                                <span ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.ville">
+                                                <a ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.latitude">
+                                                    <span class="glyphicon glyphicon-screenshot"> </span> Centrer la carte
+                                                </a>
+                                                
+                                                <div ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.ville">
                                                     {{experience.geoloc.ville}}
-                                                </span>
-                                                
-                                                <br />
-                                                <span>portée 
+                                                    <br />
+                                                </div>
+                                                <span ng-hide="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">portée 
                                                     <strong>
                                                         <span ng-show="experience.geoloc.national">nationale</span>
                                                         <span ng-show="experience.geoloc.departemental && ! experience.geoloc.national">départementale</span>
@@ -173,13 +175,13 @@
                                         </div>
                                         
                                         <div class="footer-tabs row" style="height:40%;">
-                                            <div class="col-lg-4 footer-tab contact" ng-click="reperto.toggleDetails(experience.id, 'contacts')">
+                                            <div id="tab-contacts-{{experience.id}}" class="col-lg-4 footer-tab contact" ng-click="reperto.toggleDetails(experience.id, 'contacts')">
                                                 <span class="glyphicon glyphicon-user"></span> Contacts
                                             </div>
-                                            <div class="col-lg-4 footer-tab geoloc" ng-click="reperto.toggleDetails(experience.id, 'geoloc')">
+                                            <div id="tab-geoloc-{{experience.id}}"  class="col-lg-4 footer-tab geoloc" ng-click="reperto.toggleDetails(experience.id, 'geoloc')">
                                                 <span class="geoloc"><span class="glyphicon glyphicon-globe"></span> Géoloc</span><br/>
                                             </div>
-                                            <div class="col-lg-4 footer-tab references" ng-click="reperto.toggleDetails(experience.id, 'references')">
+                                            <div id="tab-references-{{experience.id}}" class="col-lg-4 footer-tab references" ng-click="reperto.toggleDetails(experience.id, 'references')">
                                                 <span class="glyphicon glyphicon-link"></span> liens
                                             </div>
                                         </div>

@@ -330,6 +330,28 @@ p.red
 
 /** CAC */
 
+.tree-chapter-item.active
+{
+    font-weight: 900;
+}
+
+.popup.PARTIE_A
+{
+    background-color: rgba(90,180,243,0.9) !important;
+}
+.popup.PARTIE_B
+{
+    background-color: background-color: #ffe188 !important;
+}
+.popup.PARTIE_C
+{
+    background-color: rgba(154,202,85,0.9) !important;
+}
+.popup.PARTIE_D
+{
+    background-color: rgba(244,118,182,0.9) !important;
+}
+
 .infozone.PARTIE_A
 {
 	background-color: rgba(90,180,243,0.9) !important;
@@ -347,7 +369,7 @@ p.red
 }
 .infozone.PARTIE_D
 {
-	background-color: rgba(244,118,182,0.90) !important;
+	background-color: rgba(244,118,182,0.9) !important;
 	color: rgba(184,58,122,1) !important;
 }
 
@@ -601,31 +623,31 @@ p.red
 
 .footer-tab.contact
 {
-    background-color: rgba(90,180,243,0.9);
+    background-color: rgba(90,180,243,0.3);
 }
 .footer-tab.geoloc
 {
-    background-color: rgba(244,118,182,0.90);
+    background-color: rgba(244,118,182,0.30);
 }
 
 .footer-tab.references
 {
-    background-color: rgba(255,225,136,0.90);
+    background-color: rgba(255,225,136,0.30);
 }
 
-.footer-tab.contact:hover
+.footer-tab.contact:hover, .footer-tab.contact.active
 {
-    background-color: rgba(90,180,243,1);
+    background-color: rgba(90,180,243,0.9);
 }
 
-.footer-tab.geoloc:hover
+.footer-tab.geoloc:hover, .footer-tab.geoloc.active
 {
-    background-color: rgba(244,118,182,1); 
+    background-color: rgba(244,118,182,0.9); 
 }
 
-.footer-tab.references:hover
+.footer-tab.references:hover, .footer-tab.references.active
 {
-    background-color: rgba(255,225,136,1);
+    background-color: rgba(255,225,136,0.9);
 }
  
  

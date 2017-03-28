@@ -115,6 +115,27 @@
             {
                 that.reduceIntro();
             }, 5000);
+            
+            this.mail = 
+            {
+                "contact": 
+                {
+                    "nom": "",
+                    "prenom": "",
+                    "mail": "",
+                    "tel": ""
+                },
+                "experience": 
+                {
+                    "titre": "",
+                    "cp": "",
+                    "ville": "",
+                    "description": "",
+                    "portee": "",
+                    "reference": {"nom": "", "href": ""},
+                    "engagement": ""
+                }
+            };
         };
         
         this.changeNavigationMode = function(mode)
@@ -289,7 +310,7 @@
             
             this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
             this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
-            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", " #ffe188", "rgba(154,202,85,0.9)"];
+            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", "#ffe188", "rgba(154,202,85,0.9)"];
 
             
             this.thesaurus.nodes.forEach(function(PARTIE)
@@ -1005,7 +1026,16 @@
 		                pdfMake.createPdf(docDefinition).download("repertoire.pdf");
 		            }
 		        });
-		}
+		};
+        
+        
+        this.submitExperience = function()
+        {
+            var reperto = this;
+            /*$http.post(odass_app.hostname + "/api/sendrecommendation/", reperto.mail).success(function(data)
+            {
+            });	*/		
+        }
 	
 	}]);
 

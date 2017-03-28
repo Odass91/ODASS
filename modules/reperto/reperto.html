@@ -47,10 +47,11 @@
 	.send-mail
 	{
 		font-size: 20px !important;
-		margin-top: -34px;
 		margin-left: -5px;
 		margin-right: 7px;
-		color: rgba(0,0,0,0.6);
+		margin-top: 0px;
+		color: rgba(90,180,243,0.9) !important;
+		cursor:pointer;
 	}
 	
 	.send-mail:hover
@@ -123,9 +124,7 @@
 									<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
 								</a>
 								
-								<a ng-hide="true" title="Envoyez vos commentaires sur le guide" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
-								
-								<a href="mailto:cac_repertoire@odass.org" title="Envoyez vos commentaires sur le guide" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
+								<a ng-hide="true" href="mailto:cac_repertoire@odass.org" title="Envoyez vos commentaires sur le guide" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
 							</div>
 						</div>
 					  	
@@ -182,6 +181,14 @@
 					<span ng-show="reperto.activeFilters.keywords.length == 0" style="">{{reperto.display.idees.length}}</span>
 					<span ng-show="reperto.activeFilters.keywords.length != 0" style="">{{reperto.ideaDisplayed}}</span>
 					actions possibles&nbsp;&nbsp;
+					
+					
+					<span class="pull right">
+                        <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail">
+                            
+                        </a>
+                    </span>
+					
 				</h3>
 	
 				<div style="" ng-show="reperto.navigationmode == 'tree'">
@@ -198,6 +205,27 @@
 					</nav>
 				</div>
 			</div>
+			
+			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
+				<h4>BOITE A OUTILS </h4>
+				<div>
+					<div id="repertomap" style="height:300px;"></div>
+					
+					<p>
+					 {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
+					</p>
+					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
+						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
+					</span>
+					
+					<span ng-show="reperto.printableGuide.activeInitiatives.length > 0">
+						<p>{{reperto.printableGuide.activeInitiatives.length}} sauvées.</p>
+						<p><span ng-click="reperto.refreshPrintableCatalogue()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
+					</span>
+				</div>
+            </div>
+            
+            
 			
 			<div ng-hide="reperto.navigationmode == 'print'" 
 						class="col-lg-3 {{reperto.cssClasses[reperto.display.section.id]}} infozone" 
@@ -221,25 +249,6 @@
 				<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
 				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
 			</div>
-			
-			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
-				<h4>BOITE A OUTILS </h4>
-				<div>
-					<div id="repertomap" style="height:300px;"></div>
-					
-					<p>
-					 {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
-					</p>
-					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
-						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
-					</span>
-					
-					<span ng-show="reperto.printableGuide.activeInitiatives.length > 0">
-						<p>{{reperto.printableGuide.activeInitiatives.length}} sauvées.</p>
-						<p><span ng-click="reperto.refreshPrintableCatalogue()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
-					</span>
-				</div>
-</div>
 			
 		</section>
 		
@@ -267,76 +276,83 @@
 						<h4>Ajouter une expérience</h4>
 					</div>
 				
-		      		<div class="modal-body">
+		      		<div class="modal-body" style="max-height: 60vh; overflow: auto">
 		       			<p>Vous souhaitez ajouter une expérience? Vous pouvez remplir le formulaire suivant :</p>
 		       			
-                        <h5>Pour vous contacter : </h5>
+                        <h3>Pour vous contacter : </h3>
                         <div class="form-group col-xs-6">    
                             <label for="contact-nom">Nom : </label>
-                            <input type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
+                            <input ng-model="reperto.mail.contact.nom" type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-prenom">Prénom : </label>
-                            <input type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
+                            <input ng-model="reperto.mail.contact.prenom" type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-email">Email : </label>
-                            <input type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
+                            <input ng-model="reperto.mail.contact.mail" type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-telephone">Numéro de téléphone : </label>
-                            <input type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
+                            <input ng-model="reperto.mail.contact.tel" type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
                         </div>
                             
                         
                         
-                        <h5>pour l'expérience :</h5>
+                        <h3>pour l'expérience :</h3>
                         <div>
                             <div class="form-group col-xs-6">    
                                 <label for="experience-titre">Titre : </label>
-                                <input type="text" class="form-control" id="experience-titre" placeholder="Titre (40 caractères max)" maxlength="40"> 
+                                <input ng-model="reperto.mail.experience.titre" type="text" class="form-control" id="experience-titre" placeholder="Titre (40 caractères max)" maxlength="40"> 
                             </div>
                             <div class="form-group col-xs-3">    
                                 <label for="experience-cp">Code Postal : </label>
-                                <input type="number" class="form-control" id="experience-cp" placeholder="91200" maxlength="5"> 
+                                <input ng-model="reperto.mail.experience.cp" type="number" class="form-control" id="experience-cp" placeholder="91200" maxlength="5"> 
                             </div>
                             <div class="form-group col-xs-3">    
                                 <label for="experience-ville">Ville : </label>
-                                <input type="text" class="form-control" id="experience-ville" placeholder="Palaiseau"> 
+                                <input ng-model="reperto.mail.experience.ville" type="text" class="form-control" id="experience-ville" placeholder="Palaiseau"> 
                             </div>
                             
                             <div class="form-group col-xs-12">    
-                                <label for="experience-titre">Description : </label>
-                                <textarea class="form-control" id="experience-titre" placeholder="Titre (40 caractères max)" rows="5"> </textarea>
+                                <label for="experience-description">Description : </label>
+                                <textarea ng-model="reperto.mail.experience.description" class="form-control" id="experience-description" placeholder="Titre (40 caractères max)" rows="5"> </textarea>
                             </div>
                             
                             <div class="form-group col-xs-12">    
                                 <label for="experience-portee">Portée : </label>
-                                <label class="radio-inline"><input type="radio" name="experience-portee">Locale</label>
-                                <label class="radio-inline"><input type="radio" name="experience-portee">Départementale</label>
-                                <label class="radio-inline"><input type="radio" name="experience-portee">Nationale</label> 
+                                <label class="radio-inline"><input type="radio" name="experience-portee" ng-model="reperto.mail.experience.portee" value="local">Locale</label>
+                                <label class="radio-inline"><input type="radio" name="experience-portee" ng-model="reperto.mail.experience.portee" value="departemental">Départementale</label>
+                                <label class="radio-inline"><input type="radio" name="experience-portee" ng-model="reperto.mail.experience.portee" value="national">Nationale</label> 
                             </div>
                             
                             <div class="form-group col-xs-6">    
                                 <label for="experience-reference-nom">Référence (optionnel): </label>
-                                <input type="number" class="form-control" id="experience-reference-nom" placeholder="91200"> 
+                                <input ng-model="reperto.mail.experience.reference.nom" type="number" class="form-control" id="experience-reference-nom" placeholder="wikipedia"> 
                             </div>
                             
                             <div class="form-group col-xs-6">    
                                 <label for="experience-reference-href">Lien (optionnel): </label>
-                                <input type="number" class="form-control" id="experience-reference-href" placeholder="http://www.votresite.org"> 
+                                <input ng-model="reperto.mail.experience.reference.href" type="number" class="form-control" id="experience-reference-href" placeholder="http://www.wikipedia.org"> 
                             </div>
                             
                             <div class="form-group col-xs-12">    
                                 <label for="experience-engagement">Etes vous engagé.e dans cette expérience ? </label>
-                                <label class="radio-inline"><input type="radio" name="experience-engagement">Oui</label>
-                                <label class="radio-inline"><input type="radio" name="experience-engagement">Non</label>
+                                <label class="radio-inline"><input type="radio" name="experience-engagement" ng-model="reperto.mail.experience.engagement" value="oui">Oui</label>
+                                <label class="radio-inline"><input type="radio" name="experience-engagement" ng-model="reperto.mail.experience.engagement" value="non">Non</label>
                                 <p> Si vous n'êtes pas personnellement engagé.e dans cette expérience, nous contacterons la personne que vous aurez indiquée pour obtenir son accord avant de publier cette expérience.</p>
                             </div>
                             
                         </div>
                         <p>Toute l'équipe du CAC vous remercie pour votre participation.</p>
 		    		</div>
+		  		
+		  		
+                    <div class="modal-footer">
+                        <span class="btn btn-primary" ng-click="reperto.submitExperience()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-envelope">Envoyer votre suggestion
+                        </span>
+                    </div>
 		  		</div>
 			</div>
 		</div>

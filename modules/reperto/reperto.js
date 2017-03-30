@@ -88,7 +88,9 @@
 			this.activeFilters = 
 			{
 				    "keywords": [],
-				    "geoloc": []
+				    "geoloc": [],
+                    "section": "",
+                    "chapter": ""
 			};
 
 			this.activeFilterCount = 0;
@@ -109,7 +111,8 @@
 			this.savedInitiativeList = {};
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
-           var that = this;
+            
+            var that = this;
            
             window.setTimeout(function()
             {

@@ -46,11 +46,10 @@
     
 	.send-mail
 	{
-		font-size: 20px !important;
-		margin-left: -5px;
+		font-size: 16px !important;
 		margin-right: 7px;
 		margin-top: 0px;
-		color: rgba(90,180,243,0.9) !important;
+		color: rgba(0,0,0,0.6) !important;
 		cursor:pointer;
 	}
 	
@@ -184,9 +183,8 @@
 					
 					
 					<span class="pull right">
-                        <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail">
-                            
-                        </a>
+                        <a title="Ajouter un commentaire" data-toggle="modal" data-target="#ajouter-commentaire" class="glyphicon glyphicon-comment pull-right send-mail"></a>&nbsp;&nbsp;&nbsp;
+                        <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
                     </span>
 					
 				</h3>
@@ -206,14 +204,24 @@
 				</div>
 			</div>
 			
-			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-top: 15px; color: white">
+			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white">
 				<h4>BOITE A OUTILS </h4>
 				<div>
-					<div id="repertomap" style="height:300px;"></div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="filter-experiences" placeholder="code postal, ville, mot-clef, ..."> 
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                        </input>
+                    </div>
+                    
+                    
+					<div id="repertomap" style="height:300px;">
+					</div>
 					
 					<p>
-					 {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
+                        {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
+                        <a href="">voir la carte </a>
 					</p>
+					
 					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
 						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
 					</span>

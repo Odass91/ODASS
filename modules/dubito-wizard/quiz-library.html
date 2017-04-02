@@ -17,7 +17,7 @@
 	.ghost
 	{
 		background-color: rgba(0,0,0,0.1);
-		opacity: 0.3;
+		opacity: 0.5;
 	}
 	
 	.ghost:hover
@@ -40,7 +40,6 @@
 		bottom: 0px;
 		right: 25px;
 		max-width: 650px;
-		background-color: rgba(90,190,220, 0.4);
 		border: solid 1px rgba(90,190,220, 0.5);
 	}
 	
@@ -78,10 +77,11 @@
 						<h3>Catégories</h3>
 	
 						<div class="btn-group-vertical btn-group-lg" role="group" aria-label="Vertical button group">
-							<button type="button" class="btn btn-default" ng-repeat="categorie in wizard.quizConfig.categories" ng-click="wizard.displayCardsMatchingCategory(categorie)" ng-disabled="wizard.categorieMap[categorie] == 0">
+							<button type="button" class="btn btn-default" ng-repeat="categorie in wizard.config.quiz.categories" ng-click="wizard.displayCardsMatchingCategory(categorie)" ng-disabled="wizard.categorieMap[categorie] == 0">
 								<span class="pull-left">{{categorie}}</span>
 								<span class="pull-right badge">{{wizard.categorieMap[categorie] || 0}}</span>
 							</button>
+                            <a href="#" ng-click="wizard.displayCardsMatchingCategory()">tout afficher</a>
 						</div>
 					
 					</div>
@@ -91,12 +91,12 @@
 						<div class="">
 							<div ng-repeat="carte in wizard.library" 
 									class="column carte ghost" 
-									ng-hide="carte.hidden"
 									ng-mouseleave="wizard.detailedCard = null" 
 									ng-mouseenter="wizard.detailedCard = carte" 
-									ng-class="{'selected': carte.selected, 'ghost': !carte.selected}">
+									ng-class="{'selected': carte.selected, 'ghost': !carte.selected}"
+									ng-hide="carte.hidden">
 							
-								<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule"> 
+								<span ng-show="wizard.interactiveMode != 'select'" class="handle" title="carte.intitule.texte"> 
 									<img src="images/drag-handle.png"></img>
 								</span>
 								
@@ -106,7 +106,7 @@
 									
 									<div class="tooltip-arrow"></div>
 									<div class="tooltip-inner">
-										{{carte.intitule}}
+										{{carte.intitule.texte}}
 									</div>
 								</div>
 								
@@ -127,7 +127,10 @@
 					
 					
 					<div class="question-info" ng-show="wizard.detailedCard != null">
-						<table class="table">
+						
+						<div class="card-cover" style="background:url({{wizard.detailedCard.intitule.image}});"></div>
+						
+						<table class="table" style="z-index: 1;">
 							<thead>
 								<tr >
 									<th>INTITULE</th>
@@ -137,7 +140,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td>{{wizard.detailedCard.intitule}}</td>
+									<td>{{wizard.detailedCard.intitule.texte}}</td>
 									<td>
 										<span ng-repeat="choix in wizard.detailedCard.choix track by $index" ng-class="{'correct-answer': choix.id == wizard.detailedCard.reponse}">
 											{{$index + 1}}. {{choix.intitule | limitTo:30}}&nbsp;&nbsp;

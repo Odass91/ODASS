@@ -24,27 +24,7 @@
 			this._debugTmpId = 1;
 			
 			this.refreshGameList();
-			
-			
-			this.library = [];
-			$http.get("data/librairie.json").
-		    success(function(data, status) 
-		    {
-		    	wizard.library = data.cartes;
-		    	
-		    	wizard.categorieMap = {};
-		    	
-		    	["santé", "écologie", "politique", "société", "international", "droit", "culture"].forEach(function(categorie)
-		    	{
-		    		var cartes = JSON.search(wizard.library, '//*[categorie/text()="' + categorie + '"]');
-		    		wizard.categorieMap[categorie] = cartes.length;
-		    	}, this);
-		    	
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json");
-		    });
+			this.refreshCardLibrary();
 			
 			
 			/** DATA STRUCTURE */
@@ -60,6 +40,7 @@
             
 			this.config = 
 			{
+                "quiz": {"categories": ["santé", "écologie", "politique", "société", "international", "droit", "culture"]},
                 "slider":
                 {
                     "opacity":
@@ -91,13 +72,43 @@
             }, 1000);
 		};
 		
-		
+		this.refreshCardLibrary = function()
+        {
+            this.library = [];
+            var wizard = this;
+			$http.get("data/card-list.json").
+		    success(function(data, status) 
+		    {
+                wizard.library = [];
+                
+                Object.keys(data).forEach(function(cardId)
+                {
+                    if (data[cardId].id)
+                    {
+                        wizard.library.push(data[cardId]);
+                    }
+                });
+		    	
+		    	wizard.categorieMap = {};
+		    	
+		    	["santé", "écologie", "politique", "société", "international", "droit", "culture"].forEach(function(categorie)
+		    	{
+		    		var cartes = JSON.search(wizard.library, '//*[categorie/text()="' + categorie + '"]');
+		    		wizard.categorieMap[categorie] = cartes.length;
+		    	}, this);
+		    	
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json");
+		    });  
+        };
 		
 		/** Methods */
         this.refreshGameList = function()
         {
             var wizard = this;
-            $http.get(odass_app.hostname + "/dubito/quiz/list").
+            $http.get(odass_app.node_hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	wizard.availableQuiz = [];
@@ -203,12 +214,14 @@
 			{
 				"jeu": 
 				{
-					"nom":"Nouveau quiz",
+					"nom":"",
                     "status": "draft",
 					"uuid":"",
-					"presentation":"Présentez votre quiz en quelques mots.",
+					"presentation":"",
+                    "categorie": "",
+                    "mot-clefs": [],
 					"conclusion": {"good": "", "average": "", "poor": ""},
-					"href":"http://www.odass.org",
+					"href":"",
 					"source":"",
 					"encrypt":"",
 					"score":"0",
@@ -286,7 +299,7 @@
 				"intitule": 
 				{
                     "texte": "Intitulé de la question ?",
-                    "image": "",
+                    "image": "data/upload/card-body-default.png",
                     "video": ""
                 },
 				"choix":
@@ -312,6 +325,7 @@
 				"reponseCourte": "Explication courte",
 				"reponseLongue": "Explication longue",
 				"references": [],
+                "categorie": "",
                 "theme":
                 {
                     "header":
@@ -319,7 +333,8 @@
                         "backgroundColor": "rgba(0,56,15,0.4)",
                         "color": "rgba()",
                         "animation":""
-                    }
+                    },
+                    "imagehref":"data/upload/card-body-default.png",
                 }
 			};
 			
@@ -356,6 +371,7 @@
 		{
 			$("#wizard-library").modal();
 			$("#quiz-dashboard").modal("hide");
+			this.refreshCardLibrary();
 		};
 		
 		this.closeLibrary = function()
@@ -386,14 +402,21 @@
 		{
 			this.library.forEach(function(carte)
 			{
-				if (carte.categorie.indexOf(categorie) != -1)
-				{
-					delete carte.hidden;
-				}
-				else
-				{
-					carte.hidden = true;
-				}
+                if (categorie)
+                {
+                    if (carte.categorie == categorie)
+                    {
+                        delete carte.hidden;
+                    }
+                    else
+                    {
+                        carte.hidden = true;
+                    }
+                }
+                else
+                {
+                    delete carte.hidden;
+                }
 			}, this);
 		}
 		
@@ -590,7 +613,7 @@
             var wizard = this;
             Upload.upload(
             {
-                url: 'http://node.odass.org/wizard/quiz/upload',
+                url: odass_app.node_hostname + '/wizard/quiz/upload',
                 data: {file: file, 'uuid': wizard.brouillon.quiz.jeu.uuid}
             }).then(function (resp) 
             {
@@ -601,7 +624,7 @@
                 }
                 else
                 {
-                wizard.brouillon.quiz.jeu.theme[target].imagehref = resp.data;
+                    wizard.brouillon.quiz.jeu.theme[target].imagehref = resp.data;
                 }
                 wizard.updateQuizOnNode();
             }, function (resp) 
@@ -744,7 +767,7 @@
             {
                 var wizard = this;
                 wizard.brouillon.quiz.jeu.nom = name ? name : wizard.brouillon.quiz.jeu.nom;
-                $http.post(odass_app.hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz}).then
+                $http.post(odass_app.node_hostname + "/wizard/quiz/creer", {"quiz": wizard.brouillon.quiz}).then
                 (
                     /**   SERVER ANSWER  */
                     function(res)
@@ -770,7 +793,7 @@
             }
 			this.updateOrder();
 			
-			$http.post(odass_app.hostname + "/wizard/quiz/update", {"quiz": wizard.brouillon.quiz}).then(
+			$http.post(odass_app.node_hostname + "/wizard/quiz/update", {"quiz": wizard.brouillon.quiz}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -787,7 +810,7 @@
         this.deleteQuizOnNode = function(uuid)
 		{
 			var wizard = this;
-			$http.get(odass_app.hostname + "/wizard/quiz/delete/" + uuid).then(
+			$http.get(odass_app.node_hostname + "/wizard/quiz/delete/" + uuid).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -804,7 +827,7 @@
         this.createCardOnNode = function()
 		{
 			var wizard = this;
-			$http.get(odass_app.hostname + "/wizard/card/creer").then
+			$http.get(odass_app.node_hostname + "/wizard/card/creer").then
 			(
 				/**   SERVER ANSWER  */
 				function(response)
@@ -823,7 +846,7 @@
 		{
 			var wizard = this;
 			
-			$http.post(odass_app.hostname + "/wizard/card/update", {"carte": wizard.brouillon.carte}).then(
+			$http.post(odass_app.node_hostname + "/wizard/card/update", {"carte": wizard.brouillon.carte}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{

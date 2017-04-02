@@ -12,8 +12,10 @@
 	  
 	  <!-- BODY -->
 	  
-	  <div class="modal-body row">
-	  
+	  <div class="modal-body row" style="position:relative;">
+            <div class="card-cover" style="background:url({{wizard.brouillon.carte.intitule.image}}) no-repeat center fixed;">
+            </div>
+            
 			<div class="col-sm-12">
 				<div class="alert alert-info" role="alert">
 					<strong>Carte #{{wizard.brouillon.quiz.cardIndex + 1}}.</strong> 
@@ -80,13 +82,13 @@
 				</div>
 				
 				<div class="form-group">
-					<label for="email">Choisissez une catégorie : </label>
-					<select name="quizCategory" id="quizCategory" ng-model="wizard.brouillon.quiz.category">
-      					<option ng-repeat="option in wizard.quizConfig.categories" value="{{option}}">{{option}}</option>
+					<label for="cardCategory">Choisissez un thème : </label>
+					<select name="quizCategory" id="cardCategory" ng-model="wizard.brouillon.carte.categorie">
+      					<option ng-repeat="option in wizard.config.quiz.categories" value="{{option}}">{{option}}</option>
     				</select>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group" ng-hide="true">
 					<label for="email">Ajoutez des mots-clefs : </label> (optionnel)
 					<p>
 						<span ng-repeat="keyword in wizard.brouillon.quiz.keywords">
@@ -118,7 +120,9 @@
 	  <div class="modal-footer">
 	  
 		<p class="col-xs-2 col-lg-2">
-	  		
+	  		<button type="button" class="btn btn-info" ng-click="wizard.previousCard()">
+	  			<span class="glyphicon glyphicon-arrow-left" ></span>
+	  		</button> 
 	  	</p>
 	  	
 	  	<p class="col-xs-8 col-lg-8">
@@ -131,6 +135,9 @@
 		</p>
 		
 	  	<p class="col-xs-2 col-lg-2">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.nextCard()">
+	  			<span class="glyphicon glyphicon-arrow-right" ></span>
+	  		</button> 
 	  	</p>
 	  </div>
 	</div>

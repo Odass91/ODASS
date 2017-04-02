@@ -307,7 +307,17 @@ p.red
 }
 
 /** DUBITO */
-
+.card-cover
+{
+    z-index: 0; position: absolute; top: 2px; bottom: 2px; left: 20px; right: 20px;
+    
+    background: url("data/card-body-default.png") no-repeat left fixed; 
+    -webkit-background-size: cover !important; /* pour anciens Chrome et Safari */
+    background-size: cover !important; /* version standardisée */
+    opacity: 0.3;
+    
+}
+  
 .step-ok
 {
 	 text-transform: lowercase; 

@@ -47,8 +47,8 @@
 		this.init = function()
 		{
 			this.hostname = "http://perso.odass.org";
-			this.hostname = "http://node.odass.org";
-			//this.hostname = "http://127.0.0.1:8080";
+			this.node_hostname = "http://node.odass.org";
+			//this.node_hostname = "http://127.0.0.1:8080";
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -71,10 +71,6 @@
 			}
 			else
             {
-                /* DEBUG */
-                /*this.user.loggedIn = true;
-                this.user.name = "david";
-                this.changeModule("dubito");*/
             }
             
             /* DEMO */
@@ -132,7 +128,22 @@
 		this.login = function()
 		{
 			this.user.name = $("#userNameInput").val();
-			var password = $("#passwordField").val();			
+			var password = $("#passwordField").val();	
+            
+            
+            if (true)
+            {
+                this.user.loggedIn = true;
+                this.user.name = "david";
+                this.user.modules = ["dashboard", "dubito", "wizard"];
+                this.changeModule("dubito");
+                
+                $("#login-popup").modal('hide');
+                
+                return;
+            }
+            
+            
 			var odass = this;
 			$http.post(odass.hostname + "/api/apilogin", 
 			{

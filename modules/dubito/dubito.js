@@ -99,7 +99,7 @@
                 that = contexte;
             }
             that.quizzes = [];
-	        $http.get(odass_app.hostname + "/dubito/quiz/list").
+	        $http.get(odass_app.node_hostname + "/dubito/quiz/list").
 		    success(function(data, status) 
 		    {
 		    	if (data)

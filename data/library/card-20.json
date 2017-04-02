@@ -1,1 +1,1 @@
-{}
+{"id":"20","intitule":{"texte":"Intitulé de la question ?","image":"","video":""},"choix":[{"id":"1","intitule":"Reponse 1."},{"id":"2","intitule":"Reponse 2."},{"id":"3","intitule":"Reponse 3."},{"id":"4","intitule":"Reponse 4."}],"reponse":"1","reponseCourte":"Explication courte","reponseLongue":"Explication longue","references":[],"theme":{"header":{"backgroundColor":"rgba(0,56,15,0.4)","color":"rgba()","animation":""}},"questionSuivante":"21"}

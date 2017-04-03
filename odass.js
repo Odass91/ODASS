@@ -48,7 +48,7 @@
 		{
 			this.hostname = "http://perso.odass.org";
 			this.node_hostname = "http://node.odass.org";
-			//this.node_hostname = "http://127.0.0.1:8080";
+			this.node_hostname = "http://127.0.0.1:8080";
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			

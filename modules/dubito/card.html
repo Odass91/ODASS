@@ -19,7 +19,8 @@
 			
 			<div class="col-lg-6" ng-hide="dubito.displayRecommandation">
 				<div ng-hide="dubito.hasAnswered">
-					<img src="images/attente.gif" class="img-responsive"></img>
+					<img ng-hide="dubito.card.intitule.image" src="images/attente.gif" class="img-responsive"></img>
+					<img ng-show="dubito.card.intitule.image" src="{{ dubito.card.intitule.image }}" class="img-responsive"></img>
 				</div>
 			
 				<div ng-show="dubito.hasAnswered" class="panel" ng-class="{'panel-success':dubito.currentAnswer != 0 , 'panel-danger': dubito.currentAnswer == 0 }">
@@ -36,12 +37,14 @@
 						<p ng-bind-html="card.reponseCourte" ng-show="! dubito.showLongAnswer"></p>
 						
 						<p ng-bind-html="card.reponseLongue" ng-show="dubito.showLongAnswer" style="overflow:auto; max-height: 170px;"></p>
+						<p ng-show="dubito.showLongAnswer">
+                            <a ng-repeat="reference in card.references" href="{{reference}}" target="_blank">{{reference | limitTo: 30}}{{reference.length > 27 ? "..." : ""}}</a>
+                        </p>
 						
 						<a href="#" ng-click="dubito.toggleLongAnswer()">
 							<span class="glyphicon glyphicon-menu-right" ng-show="! dubito.showLongAnswer"> </span> <span ng-show="! dubito.showLongAnswer">En savoir plus</span>
 							<span class="glyphicon glyphicon-menu-left" ng-show="dubito.showLongAnswer"> </span> <span ng-show="dubito.showLongAnswer">Retour</span>
 						</a>
-						<p>{{card.reference}}</p>
 				  	</div>
 				  </div>
 			</div>

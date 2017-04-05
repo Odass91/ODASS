@@ -5,43 +5,83 @@
 			<div class="modal-header panel-heading"><h4>Récapitulatif de la partie</h4></div>
 			<div class="modal-body">
 			
-			
-				<section class="score alert alert-info" ng-hide="dubito.showSummary">
-					<p>
-						<strong ng-show="dubito.quiz.message">{{dubito.quiz.message }}</strong> <br/>
-						Vous avez correctement répondu à {{dubito.quiz.score }} sur {{dubito.quiz.questions}}.
-					</p>
-					<p>Classement: vous êtes en <strong>{{dubito.player.classement.avant}}e</strong> position sur <strong>{{dubito.quiz.players}}</strong> joueurs!</p>
-					
-				</section>
+				<div class="col-lg-12" ng-hide="dubito.displayRecommandation">
+                    <section class="score alert {{dubito.obtainCSSClassFromScore()}}" ng-hide="dubito.showSummary">
+                        <p>
+                            <span ng-show="dubito.quiz.score >= 0" class="glyphicon glyphicon-star"></span>
+                            <span ng-show="dubito.quiz.score > 4" class="glyphicon glyphicon-star"></span>
+                            <span ng-show="dubito.quiz.score > 10" class="glyphicon glyphicon-star"></span>
+                            <strong ng-show="dubito.quiz.message">{{dubito.quiz.message }}</strong> <br/>
+                            <p>Vous avez correctement répondu à {{dubito.quiz.score }} sur {{dubito.quiz.questions}}.</p>
+                        </p>
+                        <p ng-show="dubito.player.classement.avant">Classement: vous êtes en <strong>{{dubito.player.classement.avant}}e</strong> position sur <strong>{{dubito.quiz.players}}</strong> joueurs!</p>
+                    </section>
+                    
+                    <p>
+                        <a href="#" ng-click="dubito.toggleSummary()">
+                            <span ng-show="! dubito.showSummary"><span class="glyphicon glyphicon-menu-right"></span> Voir les détails de la partie</span>
+                            <span ng-show="dubito.showSummary"><span class="glyphicon glyphicon-menu-left"></span> Cacher les détails de la partie</span>
+                        </a>
+                    </p>
+                    
+                    <section style="min-height: 250px; max-height: 250px;overflow-y: scroll;" ng-show="dubito.showSummary">
+                        <div ng-repeat="card in dubito.turns" class="card-answer">
+                            <p>
+                                <strong>{{card.enonce }}</strong>	
+                            </p>
+                            <p>
+                                <span style="color:#d9534f" ng-show="card.reponseUtilisateur != card.reponse" class="glyphicon glyphicon-remove"> </span> 
+                                <span style="color:#5cb85c" ng-show="card.reponseUtilisateur == card.reponse" class="glyphicon glyphicon-ok"> </span>
+                                Vous avez répondu : <span ng-bind-html="dubito.obtainUserAnsweredEnonceFromCard(card)"></span>
+                                <span ng-show="card.reponseUtilisateur != card.reponse">
+                                    La bonne réponse était :<em ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></em>
+                                </span>
+                                <a href="#" ng-click="dubito.toggleLongAnswer(card)">
+                                    <span ng-show="! dubito.showLongAnswer || dubito.currentDisplayedCard != card"><span class="glyphicon glyphicon-plus"></span> En savoir plus</span>
+                                    <span ng-show="dubito.showLongAnswer && dubito.currentDisplayedCard == card"><span class="glyphicon glyphicon-minus"></span> Masquer</span>
+                                </a>
+                                <span ng-bind-html="card.explicationCourte" ng-show="dubito.showLongAnswer && dubito.currentDisplayedCard == card"></span>
+                            </p>
+                        </div>
+                    </section>
+                </div>
 				
-				<p>
-					<a href="#" ng-click="dubito.toggleSummary()">
-						<span ng-show="! dubito.showSummary"><span class="glyphicon glyphicon-menu-right"></span> Voir les détails de la partie</span>
-						<span ng-show="dubito.showSummary"><span class="glyphicon glyphicon-menu-left"></span> Cacher les détails de la partie</span>
-					</a>
-				</p>
 				
-				 <section style="min-height: 250px; max-height: 250px;overflow-y: scroll;" ng-show="dubito.showSummary">
-					<div ng-repeat="card in dubito.turns" class="card-answer">
-						<p>
-							<strong>{{card.enonce }}</strong>	
-						</p>
-						<p>
-							<span style="color:#d9534f" ng-show="card.reponseUtilisateur != card.reponse" class="glyphicon glyphicon-remove"> </span> 
-							<span style="color:#5cb85c" ng-show="card.reponseUtilisateur == card.reponse" class="glyphicon glyphicon-ok"> </span>
-							Vous avez répondu : <span ng-bind-html="dubito.obtainUserAnsweredEnonceFromCard(card)"></span>
-							<span ng-show="card.reponseUtilisateur != card.reponse">
-								La bonne réponse était :<em ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></em>
-							</span>
-							<a href="#" ng-click="dubito.toggleLongAnswer(card)">
-								<span ng-show="! dubito.showLongAnswer || dubito.currentDisplayedCard != card"><span class="glyphicon glyphicon-plus"></span> En savoir plus</span>
-								<span ng-show="dubito.showLongAnswer && dubito.currentDisplayedCard == card"><span class="glyphicon glyphicon-minus"></span> Masquer</span>
-							</a>
-							<span ng-bind-html="card.explicationCourte" ng-show="dubito.showLongAnswer && dubito.currentDisplayedCard == card"></span>
-						</p>
-					</div>
-				</section>
+				<div class="col-lg-12" ng-show="dubito.displayRecommandation">
+                    <form name="contactsForm" novalidate>
+                        <div class="modal-body">
+                                <div class="form-group" ng-form="origineForm">
+                                    <label for="fromInputEmail">From:</label>
+                                    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
+                                </div>
+                                <div class="form-group" ng-form="destinatairesForm">
+                                    <label>To:</label>
+                                    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="dubito.toContact" required></input>
+                                </div>
+                                
+                                <div class="form-group text-center">
+                                    <a class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
+                                        Ajouter un destinataire
+                                    </a>
+                                </div>
+                                
+                                <div class="form-group" ng-form="destinatairesForm">
+                                    <span class="btn btn-default" ng-repeat="contact in dubito.toContacts track by $index" ng-click="dubito.removeContact($index)">{{contact}}<span class="glyphicon glyphicon-minus"></span>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="dubito.displayRecommandation = false">
+                                <span class="glyphicon glyphicon-arrow-left"></span> retour
+                            </button>
+                            <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="dubito.sendRecommendation()" ng-disabled="origineForm.$invalid || destinatairesForm.$invalid">
+                                <span class="glyphicon glyphicon-envelope"></span> Envoyer !
+                            </button>
+                        </div>		
+                    </form>
+                </div>
+				
+				
+				
 			</div>
 			<div class="modal-footer">
 				<p class="">
@@ -49,7 +89,7 @@
 					<button type="button" class="btn btn-primary" ng-click="dubito.quit()" data-dismiss="modal">
 						<span class="glyphicon glyphicon-remove" ></span> Quitter
 					</button>
-		  			<button type="button" class="btn btn-primary" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#send-contact"> 
+		  			<button type="button" class="btn btn-primary" ng-click="dubito.displayRecommandation = true"> 
 		  				<span class="glyphicon glyphicon-envelope" ></span> Recommander
 		  			</button>
 					<!-- a class="twitter-share-button" href="https://twitter.com/intent/tweet?text={{dubito.quiz.title}}"></a-->

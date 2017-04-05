@@ -46,9 +46,15 @@
 		
 		this.init = function()
 		{
-			this.hostname = "http://perso.odass.org";
-			this.node_hostname = "http://node.odass.org";
-			this.node_hostname = "http://127.0.0.1:8080";
+			this.api_hostname = "http://perso.odass.org";
+            if (window.location.hostname.match("odass.org"))
+            {
+                this.node_hostname = "http://node.odass.org";
+            }
+            else
+            {
+                this.node_hostname = "http://127.0.0.1:8080";
+            }
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -145,7 +151,7 @@
             
             
 			var odass = this;
-			$http.post(odass.hostname + "/api/apilogin", 
+			$http.post(odass.api_hostname + "/api/apilogin", 
 			{
 				"login": odass.user.name,
 				"motdepasse": password
@@ -234,10 +240,10 @@
 			if (this.module == "dubito")
 			{
 				this.moduleQueue["wizard"] = true;
-				console.log("ODASS> broadcast message : ", "wizard");
+				//console.log("ODASS> broadcast message : ", "wizard");
 				$scope.$broadcast('initModule', {"message": "wizard", "options": options});
 			}
-			console.log("ODASS> broadcast message : ", this.module);
+			//console.log("ODASS> broadcast message : ", this.module);
 			$scope.$broadcast('initModule', {"message": this.module, "options": options});
 			
 			window.setTimeout(this.waitForModulesInit, 500, this, options);
@@ -245,7 +251,7 @@
 		
 		this.waitForModulesInit = function(contexte, options)
 		{
-			console.log("WINDOW> waiting for tomorrow ", contexte.moduleQueue);
+			//console.log("WINDOW> waiting for tomorrow ", contexte.moduleQueue);
 			if (contexte.moduleQueue && Object.keys(contexte.moduleQueue).length > 0)
 			{
 				for (key in contexte.moduleQueue)

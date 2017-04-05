@@ -4,6 +4,7 @@
 	   <!-- HEADER -->
 	  
 	  <div class="modal-header panel-heading">
+        <button type="button" class="close" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex, true)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<h4 class="modal-title" id="exampleModalLabel" ng-show="wizard.mode == 'create'">Ajoutez une question au quiz</h4>
 		<h4 class="modal-title" id="exampleModalLabel" ng-hide="wizard.mode == 'create'">Editer ou ajouter une question</h4>
 	  </div>
@@ -64,7 +65,7 @@
 					<p>
 						<span ng-repeat="reference in wizard.brouillon.carte.references">
 							<span class="label label-default">
-								<span class="glyphicon glyphicon-link"> </span>  {{reference}}
+								<span class="glyphicon glyphicon-link"> </span>  {{reference | limitTo:15}}{{reference.length >12 ? "..." : ""}}
 								<span style="cursor:pointer" class="glyphicon glyphicon-remove" ng-click="wizard.removeReference(reference)"> </span>
 							</span>
 							&nbsp;

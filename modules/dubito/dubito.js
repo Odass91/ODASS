@@ -104,18 +104,34 @@
 		    {
 		    	if (data)
 		    	{
-					that.quizzes = [];
+					that.quizzes = []; 
+                    that.quizzesIndex = {};
+                    
                     Object.keys(data).forEach(function(quiz_uuid)
                     {
                         var nom = data[quiz_uuid].nom;
-                        var score = data[quiz_uuid].score;
+                        var scoreList = data[quiz_uuid].score;
+                        var averageScore = 0;
+                        
+                        if (scoreList.length > 0)
+                        {
+                            scoreList.forEach(function(score)
+                            {
+                                averageScore += score;
+                            }, this);
+                            averageScore = averageScore / scoreList.length;
+                        }
+                        
+                        
                         var status = data[quiz_uuid].status;
                         var audience = data[quiz_uuid].audience;
                         var uuid = quiz_uuid;
                         if (status == "live")
                         {
-                            that.quizzes.push({"jeu": {"nom": nom, "uuid": quiz_uuid, "score": score, "audience": audience}});
+                            that.quizzes.push({"jeu": {"nom": nom, "uuid": quiz_uuid, "score": 0, "audience": audience, "averageScore": averageScore}});
                         }
+                        that.quizzesIndex[uuid] = {"nom": nom, "uuid": quiz_uuid, "score": 0, "audience": audience, "averageScore": averageScore};
+                        
                     }, that);
 		    	}
 		    }).
@@ -166,19 +182,30 @@
             dubito.quiz.uuid = data.jeu.uuid;
             dubito.quiz.description = data.jeu.presentation;
             dubito.quiz.questions = data.jeu.tours.length;
-            dubito.quiz.players = data.jeu.joueurs;
-            dubito.quiz.averageScore = data.jeu.scoreMoyen;
             dubito.quiz.score = 0;
             dubito.quiz.theme = data.jeu.theme;
+            dubito.quiz.conclusion = data.jeu.conclusion;
+            
+            dubito.quiz.audience = dubito.quizzesIndex[data.jeu.uuid].audience;
+            dubito.quiz.averageScore = dubito.quizzesIndex[data.jeu.uuid].averageScore;
             
             /** Game data initialization */
             dubito.turns = data.jeu.tours;
             dubito.turn = 0;
             dubito.card = dubito.turns[dubito.turn];
-            dubito.showLongAnswer = false;
-
+            
             /** Player initialization */
             dubito.player.classement = 0;
+	        
+	        // Recommendation parameters
+	        dubito.toContacts = [];
+	        dubito.toContact = "";
+	        dubito.fromContact = "";
+            
+            
+            dubito.displayRecommandation = false;
+            dubito.showLongAnswer = false;
+            dubito.hasAnswered = false;
             
             $("#quiz-screen").modal();
         };
@@ -223,7 +250,7 @@
 			this.currentAnswer = -1;
 			this.turn = (this.turn + 1) % this.quiz.questions;
 			this.hasAnswered = false;
-			$http.post(odass_app.hostname + "/api/getresponsetour/", 
+			$http.post(odass_app.api_hostname + "/api/getresponsetour/", 
 			{
                 "uuid": this.quiz.uuid,
                 "tourId":this.card.id,
@@ -231,6 +258,7 @@
 			}).success(function(data)
             {
             });
+            
 
 			this.card = this.turns[this.turn];
 			this.showLongAnswer = false;
@@ -244,7 +272,7 @@
 		this.endQuiz = function()
 		{
 			var dubito = this;
-			$http.post(odass_app.hostname + "/api/getresponsequizz/", dubito.donnees).success(function(data)
+			/*$http.post(odass_app.api_hostname + "/api/getresponsequizz/", dubito.donnees).success(function(data)
 			{
 			       dubito.quiz.message = data.message.commentaire;
 			       dubito.player.classement = {};
@@ -252,7 +280,35 @@
 			       dubito.player.classement.avant = data.message.classement.avant;
 			       dubito.player.classement.apres = data.message.classement.apres;
 			       dubito.quiz.players = (parseInt(data.message.classement.egal) + parseInt(data.message.classement.avant) + parseInt(data.message.classement.apres));
-			});
+			});*/
+            
+            
+            $http.post(odass_app.node_hostname + "/dubito/play/end", {"uuid": dubito.quiz.uuid, "score": dubito.quiz.score}).then(
+				/**   SERVER ANSWER  */
+				function(response)
+				{
+                    dubito.fetchQuizzes();
+				},
+				function (response)
+				{
+					console.log("Error serveur");
+				}
+			);
+            
+            
+            if (dubito.quiz.score > 10)
+            {
+                dubito.quiz.message = dubito.quiz.conclusion.good;
+            }
+            else if (dubito.quiz.score > 4)
+            {
+                dubito.quiz.message = dubito.quiz.conclusion.average;
+            }
+            else
+            {
+                dubito.quiz.message = dubito.quiz.conclusion.poor;
+            }
+            
 			$("#recap-modal").modal();
 		};
 		
@@ -362,9 +418,18 @@
 		
 		this.addContactEmail = function()
 		{
-			this.toContacts.push(this.toContact);
-			this.toContact = ""; 
-		};
+            var dubito = this;
+            
+            var contactList = dubito.toContact.replace(/,/g, " ");
+            contactList = contactList.split(" ");
+            contactList.forEach(function(contact)
+            {
+                if (! contact.match(/ +/) && dubito.toContacts.indexOf(contact) == -1)
+                {
+                    dubito.toContacts.push(contact);
+                }
+            }, dubito);
+        };
 		
 		this.removeContact = function(supprIndex)
 		{
@@ -378,11 +443,35 @@
 				"to": this.toContacts,
 				"body": "Message personnalise"
 			};
-			this.displayRecommandation = false;
-			$http.post(odass_app.hostname + "/api/sendrecommendation/", recoParameters).success(function(data)
+			$http.post(odass_app.api_hostname + "/api/sendrecommendation/", recoParameters).success(function(data)
             {
-            });			
+            });		
+            
+            this.displayRecommandation = false;
 		};
+        
+        
+        /* CSS FUNCTIONS */
+        this.obtainCSSClassFromScore = function()
+        {
+            if (this.quiz)
+            {
+                if (this.quiz.score > 10)
+                {
+                    return "alert-success";
+                }
+                else if (this.quiz.score > 4)
+                {
+                    return "alert-warning";
+                }
+                else
+                {
+                    return "alert-danger";
+                }
+                return "alert-default";
+            }
+            return "alert-default";
+        };
 		
 		this.obtainScreenHeight = function()
         {

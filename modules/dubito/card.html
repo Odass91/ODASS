@@ -25,26 +25,26 @@
 			
 				<div ng-show="dubito.hasAnswered" class="panel" ng-class="{'panel-success':dubito.currentAnswer != 0 , 'panel-danger': dubito.currentAnswer == 0 }">
 					
-					
-					
 					<div class="panel-heading">
 						<h4 class="modal-title" id="exampleModalLabel">{{dubito.currentAnswer == 0 ? "Dommage !" : "Bravo !!"}}</h4>
 				 	</div>
-				  	<div class="panel-body" ng-repeat="card in dubito.turns" ng-show="$index == dubito.turn">
-						
-						<p><strong><span ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></span></strong></p>
-						
-						<p ng-bind-html="card.reponseCourte" ng-show="! dubito.showLongAnswer"></p>
-						
-						<p ng-bind-html="card.reponseLongue" ng-show="dubito.showLongAnswer" style="overflow:auto; max-height: 170px;"></p>
-						<p ng-show="dubito.showLongAnswer">
-                            <a ng-repeat="reference in card.references" href="{{reference}}" target="_blank">{{reference | limitTo: 30}}{{reference.length > 27 ? "..." : ""}}</a>
-                        </p>
-						
-						<a href="#" ng-click="dubito.toggleLongAnswer()">
-							<span class="glyphicon glyphicon-menu-right" ng-show="! dubito.showLongAnswer"> </span> <span ng-show="! dubito.showLongAnswer">En savoir plus</span>
-							<span class="glyphicon glyphicon-menu-left" ng-show="dubito.showLongAnswer"> </span> <span ng-show="dubito.showLongAnswer">Retour</span>
-						</a>
+				  	<div class="panel-body" ng-repeat="card in dubito.turns" ng-show="$index == dubito.turn" style="position:relative">
+						<div class="card-cover" style="background:url({{card.intitule.image}}); left: 0px !important;  right: 0px !important"></div>
+						<div style="z-index: 1; position: relative">
+                            <p><strong><span ng-bind-html="dubito.obtainCorrectEnonceFromCard(card)"></span></strong></p>
+                            
+                            <p ng-bind-html="card.reponseCourte" ng-show="! dubito.showLongAnswer"></p>
+                            
+                            <p ng-bind-html="card.reponseLongue" ng-show="dubito.showLongAnswer" style="overflow:auto; max-height: 170px;"></p>
+                            <p ng-show="dubito.showLongAnswer">
+                                <a ng-repeat="reference in card.references" href="{{reference}}" target="_blank">{{reference | limitTo: 30}}{{reference.length > 27 ? "..." : ""}}</a>
+                            </p>
+                            
+                            <a href="#" ng-click="dubito.toggleLongAnswer()">
+                                <span class="glyphicon glyphicon-menu-right" ng-show="! dubito.showLongAnswer"> </span> <span ng-show="! dubito.showLongAnswer">En savoir plus</span>
+                                <span class="glyphicon glyphicon-menu-left" ng-show="dubito.showLongAnswer"> </span> <span ng-show="dubito.showLongAnswer">Retour</span>
+                            </a>
+						</div>
 				  	</div>
 				  </div>
 			</div>
@@ -53,17 +53,18 @@
 				<form name="contactsForm" novalidate>
 					<div class="modal-body">
 							<div class="form-group" ng-form="origineForm">
-							    <label for="fromInputEmail">From:</label>
-							    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
+							    <label for="card-fromInputEmail">Indiquez votre email :</label>
+							    <input type="email" class="form-control" id="card-fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
 							</div>
 							<div class="form-group" ng-form="destinatairesForm">
-							    <label>To:</label>
-							    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="dubito.toContact" required></input>
+							    <label for="card-toInputEmail">Indiquez le ou les destinataires (séparés par des virgules ou des espaces) : </label>
+							    <input type="text" class="form-control" id="card-toInputEmail" placeholder="contact@email.org" ng-model="dubito.toContact" required></input>
 							</div>
 							
 							<div class="form-group text-center">
-								<a class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
-									Ajouter un destinataire
+								<a ng-disabled="destinatairesForm.$invalid" class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()">
+                                    <span class="glyphicon glyphicon-plus"></span> 
+									Ajouter le ou les destinataires
 								</a>
 							</div>
 							
@@ -75,7 +76,7 @@
 					<button type="button" class="btn btn-default" ng-click="dubito.displayRecommandation = false">
 							<span class="glyphicon glyphicon-arrow-left"></span> retour
 						</button>
-						<button type="button" class="btn btn-success" data-dismiss="modal" ng-click="dubito.sendRecommendation()" ng-disabled="origineForm.$invalid || destinatairesForm.$invalid">
+						<button type="button" class="btn btn-success" ng-click="dubito.sendRecommendation()" ng-disabled="origineForm.$invalid || dubito.toContacts.length == 0">
 							<span class="glyphicon glyphicon-envelope"></span> Envoyer !
 						</button>
 					</div>		

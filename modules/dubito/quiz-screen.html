@@ -12,12 +12,12 @@
 				<h4 class="modal-title" id="exampleModalLabel">{{ dubito.quiz.title }}<p></p></h4>
 		 	</div>
 		  	<div id="quizz-screen-body" class="modal-body" style="{{dubito.obtainCSSforCard(dubito.quiz, 'body')}}">
-		  	
-				<p ng-bind-html="dubito.quiz.description"></p>
-				<p>Ce quiz comporte {{dubito.quiz.questions}} questions.</p>
-				<p>{{dubito.quiz.players}} personnes ont déjà joué à ce quiz.</p>
-				<p>Performance moyenne : {{dubito.quiz.averageScore * 100 | number:2}} %</p>
-				{{wizard.obtainCSSforCard('header')}}
+                <div style="background-color: rgba(0,0,0,0.4); border-radius: 5px; padding: 15px;">
+                    <p ng-bind-html="dubito.quiz.description"></p>
+                    <p>Ce quiz comporte {{dubito.quiz.questions}} questions.</p>
+                    <p>{{dubito.quiz.audience}} personnes ont déjà joué à ce quiz.</p>
+                    <p>Performance moyenne : {{dubito.quiz.averageScore}}</p>
+				</div>
 		  	</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" ng-click="dubito.quit()" data-dismiss="modal">

@@ -127,7 +127,7 @@
 		{
 			var reperto = this;
 			
-			$http.get(odass_app.hostname + "/api/getjsonintroduction/" + reperto.guideIdentifiant).
+			$http.get(odass_app.api_hostname + "/api/getjsonintroduction/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	if (data)
@@ -241,7 +241,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
+			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
 		    success(function(data, status) 
 		    {
 		    	reperto.thesaurus = data.thesaurus;
@@ -490,7 +490,7 @@
 			}
 			
 			var reperto = this;
-			$http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
+			$http.get(odass_app.api_hostname + "/api/getjsonexp/" + idee.id).
 		    success(function(data, status) 
 		    {
 				idee.display = {};

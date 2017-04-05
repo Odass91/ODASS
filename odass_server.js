@@ -199,11 +199,6 @@ app.get('/', function(req, res)
 {
     res.end(req.file.path);
 })
-.use(function(req, res, next)
-{
-    res.setHeader('Content-Type', 'text/plain');
-    res.status(404).send('Page introuvable !');
-})
 .get('/dubito/play/new/:uuid', function (req, res)
 {
     
@@ -212,14 +207,47 @@ app.get('/', function(req, res)
 {
     
 })
-.post('/dubito/play/end/:uuid', function (req, res)
+.post('/dubito/play/end', function (req, res)
 {
-    
+    var jsonString = '';
+
+    req.on('data', function (data) 
+    {
+        jsonString += data;
+    });
+
+    req.on('end', function () 
+    {        
+    	var rparam = JSON.parse(jsonString);
+    	var score = rparam.score;
+        var uuid = rparam.uuid;
+        updateQuiz(uuid, score, function()
+        {
+            res.end("merci d'avoir joué");
+        });
+    });
+})
+.use(function(req, res, next)
+{
+    res.setHeader('Content-Type', 'text/plain');
+    res.status(404).send('Page introuvable !');
 });
 
 /** UTIL FUNCTIONS */
 
-
+function updateQuiz(uuid, score, callback)
+{
+    jsonloader('data/quiz-list.json').then(function(bibliotheque)
+    {
+        bibliotheque[uuid].audience++;
+        bibliotheque[uuid].score.push(score);
+        bibliotheque[uuid].score.sort(function(a, b) 
+        {
+            return a - b;
+        });
+    	fs.writeFile('data/quiz-list.json', JSON.stringify(bibliotheque), callback);
+    });
+};
 
 function saveQuizToLibraryFile(quiz, uuid, callback) 
 {
@@ -227,15 +255,16 @@ function saveQuizToLibraryFile(quiz, uuid, callback)
 	console.log("essai d'écriture dans la librairie");
 	jsonloader('data/quiz-list.json').then(function(librairie) 
     {
-        librairie[uuid] = 
-        {
-            "nom": quiz.jeu.nom, 
-            "status": quiz.jeu.status, 
-            "score": quiz.jeu.score, 
-            "audience": quiz.jeu.audience, 
-            "cartes": quiz.jeu.cartes.length, 
-            "longueur": quiz.jeu.longueur
-        };
+        librairie[uuid] = librairie[uuid] ? librairie[uuid] : {}; 
+        librairie[uuid].nom = quiz.jeu.nom;
+        librairie[uuid].status = quiz.jeu.status;
+        librairie[uuid].cartes = quiz.jeu.cartes.length;
+        librairie[uuid].longueur = quiz.jeu.longueur;
+        
+        /* Persistent data */
+        librairie[uuid].score = librairie[uuid].score ? librairie[uuid].score : (quiz.jeu.score ? quiz.jeu.score : [0]);
+        librairie[uuid].audience = librairie[uuid].audience ? librairie[uuid].audience : (quiz.jeu.audience ? quiz.jeu.audience : 0);
+        
     	fs.writeFile('data/quiz-list.json', JSON.stringify(librairie), callback);
     });
 }

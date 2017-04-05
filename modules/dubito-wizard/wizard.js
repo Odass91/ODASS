@@ -114,7 +114,6 @@
 		    	wizard.availableQuiz = [];
 		    	Object.keys(data).forEach(function(quiz_uuid)
 		    	{
-                    console.log(data);
                     var nom = data[quiz_uuid].nom;
                     var score = data[quiz_uuid].score;
                     var status = data[quiz_uuid].status;
@@ -122,9 +121,10 @@
                     var cartes = data[quiz_uuid].cartes;
                     var longueur = data[quiz_uuid].longueur;
                     var uuid = quiz_uuid;
-                    
 		    		wizard.availableQuiz.push({"nom": nom, "uuid": uuid, "score": score, "audience": audience, "status": status, "cartes": cartes, "longueur":longueur});
 		    	}, this);
+                
+                console.log(wizard.availableQuiz);
 		    }).
 		    error(function(data, status) 
 		    {
@@ -140,10 +140,9 @@
 		
 		this.editQuiz = function(quizuuid)
 		{
-			console.log("Edit quiz : ", quizuuid);
 			this.orderedQuizList = [];
 			this.orderedQuizMap = {};
-			
+			console.log(quizuuid);
 			if (! quizuuid) 
 			{
 				this.brouillon.quiz = this.selectedQuiz;
@@ -153,7 +152,10 @@
 			{
 				this.fetchJSONQuiz(quizuuid);
 			}
-			this.mode = "edit";
+			
+			console.log(this.brouillon.quiz);
+			
+            this.mode = "edit";
 			this.step = 0;
 			$("#quiz-dashboard").modal();
 		};
@@ -165,6 +167,7 @@
 		    success(function(data, status) 
 		    {
 		    	wizard.brouillon.quiz = data;
+                console.log(data);
 		    	wizard.setupOrder();
                 if (wizard.brouillon.quiz.jeu.uuid && wizard.brouillon.quiz.jeu.uuid != "")
                 {
@@ -183,8 +186,6 @@
         
         this.publishQuiz = function(quiz)
         {
-            console.log(quiz);
-            
             this.fetchJSONQuiz(quiz.uuid);
             
             var wizard = this;
@@ -224,8 +225,6 @@
 					"href":"",
 					"source":"",
 					"encrypt":"",
-					"score":"0",
-					"audience":"0",
 					"longueur": 12,
 					"cartesOrdonnees":
 					[
@@ -331,7 +330,7 @@
                     "header":
                     {
                         "backgroundColor": "rgba(0,56,15,0.4)",
-                        "color": "rgba()",
+                        "color": "rgba(0,0,0,1)",
                         "animation":""
                     },
                     "imagehref":"data/upload/card-body-default.png",
@@ -352,14 +351,9 @@
 			
 			this.brouillon.quiz.jeu.cartes.push(this.brouillon.carte);
 			this.brouillon.quiz.cardIndex = this.brouillon.quiz.jeu.cartes.length - 1;
-			this.setupOrder();
 			
+            this.setupOrder();
 			this.updateQuizOnNode();
-			
-			if (this.brouillon.quiz.jeu.cartes.length == this.brouillon.quiz.jeu.longueur)
-			{
-				this.step = 2;
-			}
 			
 		};
 		
@@ -393,7 +387,10 @@
 					}
 				}
 			}, this);
+            
 			this.setupOrder();
+            this.updateQuizOnNode();
+            
 			$("#wizard-library").modal("hide");
 			$("#quiz-dashboard").modal();
 		};
@@ -590,6 +587,11 @@
 				var clonedCard = jQuery.extend(true, {}, carte);
 				wizard.brouillon.quiz.jeu.cartesOrdonnees.push(carte);
 			});
+            
+            if (this.brouillon.quiz.jeu.cartes.length == this.brouillon.quiz.jeu.longueur)
+			{
+				this.step = 2;
+			}
 			
 //			$("#quiz-ending").modal("hide");
 //			$("#quiz-order").modal();
@@ -609,7 +611,6 @@
 		
 		this.upload = function(file, target)
         {
-            console.log(this.brouillon.quiz.jeu.theme);
             var wizard = this;
             Upload.upload(
             {
@@ -653,7 +654,7 @@
 		{
 			var wizard = this;
 			
-			/*$http.post(odass_app.hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
+			/*$http.post(odass_app.api_hostname + "/api/updatequiz/" + wizard.brouillon.quiz.id, wizard.brouillon.quiz).success(function(data)
 			{
 				//
 			});*/
@@ -792,7 +793,6 @@
                 wizard.brouillon.quiz.jeu.presentation = description;
             }
 			this.updateOrder();
-			
 			$http.post(odass_app.node_hostname + "/wizard/quiz/update", {"quiz": wizard.brouillon.quiz}).then(
 				/**   SERVER ANSWER  */
 				function(response)
@@ -867,7 +867,7 @@
 			
 			var wizard = this;
 			var quizname = name ? name : wizard.brouillon.quiz.jeu.name;
-			$http.post(odass_app.hostname + "/api/creerquiz", {"nom": quizname}).then(
+			$http.post(odass_app.api_hostname + "/api/creerquiz", {"nom": quizname}).then(
 				/**   SERVER ANSWER  */
 				function(data)
 				{					
@@ -894,7 +894,7 @@
 
 			console.log(this.brouillon.quiz);
 			
-			$http.post(odass_app.hostname + "/api/modifierquiz", wizard.brouillon.quiz.jeu).then(
+			$http.post(odass_app.api_hostname + "/api/modifierquiz", wizard.brouillon.quiz.jeu).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -917,7 +917,7 @@
 		{
 			var wizard = this;
 			
-			$http.post(odass_app.hostname + "/api/creercarte", {"id": wizard.brouillon.quiz.id}).then(
+			$http.post(odass_app.api_hostname + "/api/creercarte", {"id": wizard.brouillon.quiz.id}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -955,7 +955,7 @@
 			var wizard = this;
 			var cardId = index ? index : wizard.brouillon.carte.id;
 			
-			$http.post(odass_app.hostname + "/api/supprimercarte", {"id": cardId}).then(
+			$http.post(odass_app.api_hostname + "/api/supprimercarte", {"id": cardId}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{
@@ -973,7 +973,7 @@
 			var wizard = this;
 			var quizId = index ? index : wizard.brouillon.quiz.id;
 			
-			$http.post(odass_app.hostname + "/api/supprimerquiz", {"id": quizId}).then(
+			$http.post(odass_app.api_hostname + "/api/supprimerquiz", {"id": quizId}).then(
 				/**   SERVER ANSWER  */
 				function(response)
 				{

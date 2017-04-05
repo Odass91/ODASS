@@ -42,6 +42,7 @@
 	   <!-- HEADER -->
 	  
 	  <div class="modal-header panel-heading">
+        <button type="button" class="close" ng-click="wizard.leave()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<h4 class="modal-title" id="exampleModalLabel">Récapitulatif du Jeu</h4>
 	  </div>
 	  
@@ -183,14 +184,14 @@
 	  <!-- FOOTER -->
 	  
 	  <div class="modal-footer">
-	  	<p class="col-xs-6 col-lg-6 text-left">
+	  	<p class="col-xs-6 col-lg-6 text-right">
 		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
 				<span class="glyphicon glyphicon-remove" ></span> Quitter
 			</button>
         </p>
 	  	<p class="col-xs-6 col-lg-6 text-left" ng-show="wizard.brouillon.quiz.jeu.uuid && wizard.brouillon.quiz.jeu.uuid != ''">
 		  		<button type="button" class="btn btn-default" ng-click="wizard.updateQuizOnNode()">
-				<span class="glyphicon glyphicon-floppy" ></span> Sauver
+				<span class="glyphicon glyphicon-save" ></span> Sauver
 			</button>
         </p>
 	  </div>

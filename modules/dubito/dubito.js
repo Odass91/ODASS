@@ -193,6 +193,7 @@
             dubito.turns = data.jeu.tours;
             dubito.turn = 0;
             dubito.card = dubito.turns[dubito.turn];
+			dubito.card.currentAnswer = -1;
             
             /** Player initialization */
             dubito.player.classement = 0;
@@ -259,7 +260,6 @@
             {
             });
             
-
 			this.card = this.turns[this.turn];
 			this.showLongAnswer = false;
 

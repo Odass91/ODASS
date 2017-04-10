@@ -30,6 +30,8 @@
 			this.savedInitiativeList.length = 0;
 			this.panierInitiatives = [];
 
+            this.userFilter = "";
+            
 			this.display.idees = this.idees;
 			this.cache.idees = this.idees;
 	    	
@@ -49,6 +51,7 @@
 			/** INITIALISATION */
 
 			this.display = {};
+            this.userFilter = "";
             
 			this.sectionByChapterId = {};
             this.chapterByIdeeId = {};
@@ -85,23 +88,9 @@
 			
 			this.markerMap = {};
 
-			this.activeFilters = 
-			{
-				    "keywords": [],
-				    "geoloc": [],
-                    "section": "",
-                    "chapter": ""
-			};
-
-			this.activeFilterCount = 0;
-
-			this.matchedFilters = 
-			{
-				    "keywords": [],
-				    "geoloc": []
-			};
+			this.activeFilters = [];
 			
-			this.cache = {};
+            this.cache = {};
 			
 			this.showSummary = false;
 			
@@ -348,14 +337,19 @@
 		    	reperto.cache.idees = reperto.idees;
 		    	
 		    	reperto.display.idees = reperto.idees;
-		    	reperto.display.experiences = {};
+		    	reperto.display.experiences = [];
 		    	
 		    	reperto.display.section = null;
 		    	reperto.display.chapitre = null;
 		    	
 		    	reperto.display.guide = reperto.thesaurus;
 		    	reperto.display.intro = true;
-		    	
+                
+                reperto.availableFilters = [];
+		    	reperto.matchedFilters = [];
+		    	reperto.activeFilters = [];
+                reperto.matchedExperiences = {};
+                
 		    	reperto.display.breadcrumb = {};
 		    	
 		    	if (!reperto.display.pager)
@@ -395,6 +389,147 @@
 			
 		};
 		
+        
+        /***********************************************************************
+         * FILTER FUNCTIONS
+         */
+        this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
+        {
+            var finder = function(element)
+            {
+                return (element.label.toLowerCase() == filter.label.toLowerCase());
+            };
+            
+            if (reperto.availableFilters.find(finder) == undefined)
+            {
+                reperto.availableFilters.push(filter);
+            }
+        };
+        
+        this.updateMatchedFilters = function()
+        {
+            var str = this.userFilter.toLowerCase();
+            console.log(str);
+            var mapper = function(element)
+            {
+                return element.label.toLowerCase();
+            };
+            var filterer = function(element)
+            {
+                return (element.label.toLowerCase().match(str))
+            };
+            
+            if (str.length > 2)
+            {
+                this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
+            }
+            else
+            {
+                this.matchedFilters = [];
+            }
+            console.log(this.matchedFilters);
+        };
+        
+        
+        this.addFilter = function(filter)
+        {
+            var filterer = function(element)
+            {
+                if (element.geoloc.ville)
+                {
+                    return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
+                }
+                else
+                {
+                    return false;
+                }
+            };
+            var finder = function(element)
+            {
+                return (element.toLowerCase() == filter.toLowerCase());
+            };
+            
+            if (this.activeFilters.length == 0)
+            {
+               this.activeFilters.push(filter);
+            }
+            else
+            {
+                if (this.activeFilters.find(finder) == undefined)
+                {
+                    this.activeFilters.push(filter);
+                }
+            }
+            this.userFilter = "";
+            this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
+            
+            this.refreshDisplayedExperiments();
+            
+        };
+        
+        this.removeFilter = function(filter)
+        {
+            if (this.activeFilters.indexOf(filter) != -1)
+            {
+                var filterIndex = this.activeFilters.indexOf(filter);
+                this.activeFilters.splice(filterIndex, 1);
+                delete this.matchedExperiences[filter];    
+            }
+            
+            this.refreshDisplayedExperiments();
+        }
+        
+        this.refreshDisplayedExperiments = function()
+        {
+            if ( Object.keys(this.matchedExperiences).length == 0 )
+            {
+                this.display.experiences.forEach(function(experience)
+                {
+                    if (experience.marker)
+                    {
+                        experience.marker.addTo(this.reperto_carte);
+                    }
+                }, this);
+                
+                return;
+            }
+            var filteredExperiences = [];
+            this.display.experiences.forEach(function(experience)
+            {
+                if (experience.marker)
+                {
+                    this.reperto_carte.removeLayer(experience.marker);
+                }
+            }, this);
+            
+            Object.keys(this.matchedExperiences).forEach(function(filter)
+            {
+                
+                this.matchedExperiences[filter].forEach(function(experience)
+                {
+                    var finder = function(element)
+                    {
+                        return (element.id == experience.id);
+                    };
+                    
+                    if (filteredExperiences.find(finder) == undefined)
+                    {
+                        filteredExperiences.push(experience);
+                    }
+                }, this);
+            }, this);
+            
+            
+        
+            filteredExperiences.forEach(function(experience)
+            {
+                if (experience.marker)
+                {
+                    experience.marker.addTo(this.reperto_carte);
+                }
+            }, this);
+        }
+        
 		/***********************************************************************
 		 * HELPER FUNCTIONS
 		 */
@@ -566,19 +701,48 @@
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
                 $("#initiative-" + idee.id).addClass("col-lg-12");
                 
-                $("#initiative-" + idee.id).addClass("shrinkExpandAnimation");
                 $("#initiative-" + idee.id).addClass("focus");
             }
             else
             {
                 
-                $("#initiative-" + idee.id).removeClass("shrinkExpandAnimation");
                 $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
             }
+            
+            
+            $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
 
-        }
+        };
+        
+        this.switchMapDisplay = function()
+        {
+            if (this.mapDisplayLong)
+            {
+                delete this.mapDisplayLong;
+                
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("map-tools-zone");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+            }
+            else
+            {
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("fullsize-map-wrapper");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+                this.mapDisplayLong = true;
+            }
+            this.refreshMap(500);
+        };
 		
 		this.obtainExperiencesForIdeas = function()
 		{
@@ -614,6 +778,7 @@
                     var expindex = {};
                     data.experiences.forEach(function(experience)
                     {
+                        
                         if (! expindex[experience.id] && experience.label && experience.contacts)
                         {
                             experience.display = {};
@@ -625,7 +790,13 @@
                             {
                                 reperto.setupMarker(experience);
                             }
+                            if (experience.geoloc.ville)
+                            {
+                                 reperto.addToAvailableFilter({"label": experience.geoloc.ville, "category": "geoloc"});
+                            }
                             reperto.ideeByExperienceId[experience.id] = idee;
+                            
+                            reperto.display.experiences.push(experience);
                         }
                     });
                 }
@@ -930,64 +1101,10 @@
 		/** construit la liste de tous les mots clefs disponible pour le filtrage des thesaurus */
 		this.gatherAvailableFilters = function(thesaurus)
 		{
-			
+			return [];
 		};
 		
 		
-		/** Construit la liste des mots clefs accessibles à l'utilisateur à partir de son entrée clavier */
-		
-		this.searchFilter = function(type, nodeId, keyEvent)
-		{
-		};
-		
-		this.removeFilter = function(type, item, additive)
-		{
-			var indexOfKeyword = this.activeFilters.keywords.indexOf(item);
-			
-			if (indexOfKeyword != -1)
-			{
-				this.activeFilters.keywords.splice(indexOfKeyword, 1);
-				this.display.idees.forEach(function(idee)
-				{
-					
-						if (idee.activeFilters[item])
-						{
-							delete idee.activeFilters[item];
-							this.ideaDisplayed --;
-						}
-					
-				},this);
-			}
-
-		};
-		
-		this.addFilter = function(type, item, additive)
-		{
-			if (item === undefined)
-			{
-				return;
-			}
-			if (! this.ideaDisplayed)
-			{
-				this.ideaDisplayed = 0;
-			}
-			if (this.activeFilters.keywords.indexOf(item) == -1)
-			{
-				this.activeFilters.keywords.push(item);
-				this.display.idees.forEach(function(idee)
-				{
-					if (idee.keywords.indexOf(item) != -1)
-					{
-						if (idee.activeFilters === undefined)
-						{
-							idee.activeFilters = {};
-						}
-						this.ideaDisplayed++;
-						idee.activeFilters[item] = true;
-					}
-				},this);
-			}
-		};
 		
 		
 		this.displaySavedInitiatives = function()

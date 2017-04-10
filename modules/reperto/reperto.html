@@ -57,7 +57,29 @@
 	{
 		color: rgba(0,0,0,0.8);
 	}
+	
+	.filter-matching
+	{
+        margin: 3px;
+        opacity: 0.8;
+        cursor: pointer;
+	}
+	
+	.filter-matching:hover
+	{
+        opacity: 1;
+	}
 
+    .toolbox
+    {
+        float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white
+    }
+
+    
+    #fullsize-map-wrapper #repertomap
+    {
+        height: 550px !important;
+    }
 </style>
 
 <div ng-show="odass.isModule('annuaire')">
@@ -188,39 +210,50 @@
                     </span>
 					
 				</h3>
+				
+				<div ng-show="reperto.mapDisplayLong" class="toolbox" id="fullsize-map-wrapper" style="width: 100%">
+                    
+				</div>
 	
 				<div style="" ng-show="reperto.navigationmode == 'tree'">
 					 <idees></idees>
 				 </div>
-	
-				<div class="clearfix"></div>
-				
-				<div ng-show="reperto.navigationmode == 'tree' && reperto.display.idees.length > 6" class="row">
-					<nav aria-label="Page navigation">
-					  <ul class="pagination pagination-sm">
-					    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
-					  </ul>
-					</nav>
-				</div>
 			</div>
 			
-			<div ng-hide="reperto.navigationmode == 'print'" class="col-lg-3" style="float: right; background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; margin-bottom: 15px; color: white">
+			<div id="toolbox" ng-hide="reperto.navigationmode == 'print'" class="toolbox col-xs-12 col-lg-3" style="">
 				<h4>BOITE A OUTILS </h4>
 				<div>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="filter-experiences" placeholder="code postal, ville, mot-clef, ..."> 
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-                        </input>
-                    </div>
-                    
-                    
-					<div id="repertomap" style="height:300px;">
+                    <div id="map-tools-zone">
+                        <div id="map-tools-wrapper">
+                            <div style="" ng-show="reperto.userFilter.length > 2"> 
+                                <span class="label label-default filter-matching" ng-repeat="matchedFilter in reperto.matchedFilters" ng-click="reperto.addFilter(matchedFilter)">
+                                    {{matchedFilter | limitTo: 8}} {{matchedFilter.length > 6 ? "..." : ""}} 
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </span>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="filter-experiences" placeholder="code postal, ville, mot-clef, ..." ng-model="reperto.userFilter" ng-change="reperto.updateMatchedFilters()"> 
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                                </input>
+                            </div>
+                            
+                            
+                            <div id="repertomap" style="height:300px;margin-top: 12px;">
+                            </div>
+                            
+                            <div>
+                                <span class="label label-success filter-matching" ng-repeat="activeFilter in reperto.activeFilters" ng-click="reperto.removeFilter(activeFilter)" style="display:inline-block">{{activeFilter}} 
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </span>
+                            </div>
+                            
+                            <p>
+                                {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
+                                <a ng-hide="reperto.mapDisplayLong" href="" ng-click="reperto.switchMapDisplay()">agrandir la carte </a>
+                                <a ng-show="reperto.mapDisplayLong" href="" ng-click="reperto.switchMapDisplay()">réduire la carte </a>
+                            </p>
+                        </div>
 					</div>
-					
-					<p>
-                        {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
-                        <a href="">voir la carte </a>
-					</p>
 					
 					<span ng-show="reperto.printableGuide.activeInitiatives.length == 0">
 						<p>Vous n'avez pas encore ajouté d'initiatives à votre panier. Cliquez sur <span class="glyphicon glyphicon-star-empty"></span> d'une initiative pour le rajouter.</p>
@@ -257,6 +290,19 @@
 				<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
 				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
 			</div>
+			
+			
+			
+	
+            <div class="clearfix"></div>
+            
+            <div ng-show="reperto.navigationmode == 'tree' && reperto.display.idees.length > 6" class="row">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm">
+                    <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
+                    </ul>
+                </nav>
+            </div>
 			
 		</section>
 		

@@ -883,9 +883,10 @@
                     var chapter = reperto.obtainChapterFromId(idee.parent);
                     var section = reperto.obtainSectionFromId(chapter.parent);
                     
-                    experience.marker.bindPopup("<h3>"+ experience.label + "</h3><p>" + experience.description + "</p><p style='font-size:9px !important; color: rgba(0,0,0,0.8) !important;'>" + section.titre + " > " + chapter.titre + " > " + idee.titre + "</p>");
+                    experience.marker.bindPopup("<h3>"+ experience.label + "</h3><p>" + experience.description + "</p><p style='font-size:9px !important; color: rgba(0,0,0,0.8) !important;'>" + section.titre + " > " + chapter.titre + " > " + idee.titre + "</p>").addTo(this.reperto_carte);
                     
-                    experience.marker.openPopup();
+                    console.log("click", experience.marker.getPopup());
+                    experience.marker.togglePopup();
                     
                 }, this);
                 
@@ -912,7 +913,7 @@
             if (experience.geoloc.latitude && experience.geoloc.longitude)
             {
                 this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
-                experience.marker.openPopup();
+                this.reperto_carte.openPopup(experience.popup);
                 
             }
             this.refreshMap(100);

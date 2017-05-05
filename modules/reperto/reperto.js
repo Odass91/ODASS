@@ -117,6 +117,13 @@
                     "mail": "",
                     "tel": ""
                 },
+                "soumissionneur": 
+                {
+                    "nom": "",
+                    "prenom": "",
+                    "mail": "",
+                    "tel": ""
+                },
                 "experience": 
                 {
                     "titre": "",
@@ -125,7 +132,7 @@
                     "description": "",
                     "portee": "",
                     "reference": {"nom": "", "href": ""},
-                    "engagement": ""
+                    "engagement": "oui"
                 }
             };
         };

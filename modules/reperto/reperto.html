@@ -337,19 +337,19 @@
                         <h3>Pour vous contacter : </h3>
                         <div class="form-group col-xs-6">    
                             <label for="contact-nom">Nom : </label>
-                            <input ng-model="reperto.mail.contact.nom" type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
+                            <input ng-model="reperto.mail.soumissionneur.nom" type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-prenom">Prénom : </label>
-                            <input ng-model="reperto.mail.contact.prenom" type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
+                            <input ng-model="reperto.mail.soumissionneur.prenom" type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-email">Email : </label>
-                            <input ng-model="reperto.mail.contact.mail" type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
+                            <input ng-model="reperto.mail.soumissionneur.mail" type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
                         </div>
                         <div class="form-group col-xs-6">   
                             <label for="contact-telephone">Numéro de téléphone : </label>
-                            <input ng-model="reperto.mail.contact.tel" type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
+                            <input ng-model="reperto.mail.soumissionneur.tel" type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
                         </div>
                             
                         
@@ -362,7 +362,7 @@
                             </div>
                             <div class="form-group col-xs-3">    
                                 <label for="experience-cp">Code Postal : </label>
-                                <input ng-model="reperto.mail.experience.cp" type="number" class="form-control" id="experience-cp" placeholder="91200" maxlength="5"> 
+                                <input ng-model="reperto.mail.experience.cp" type="text" class="form-control" id="experience-cp" placeholder="91200" maxlength="5"> 
                             </div>
                             <div class="form-group col-xs-3">    
                                 <label for="experience-ville">Ville : </label>
@@ -383,19 +383,39 @@
                             
                             <div class="form-group col-xs-6">    
                                 <label for="experience-reference-nom">Référence (optionnel): </label>
-                                <input ng-model="reperto.mail.experience.reference.nom" type="number" class="form-control" id="experience-reference-nom" placeholder="wikipedia"> 
+                                <input ng-model="reperto.mail.experience.reference.nom" type="url" class="form-control" id="experience-reference-nom" placeholder="wikipedia"> 
                             </div>
                             
                             <div class="form-group col-xs-6">    
                                 <label for="experience-reference-href">Lien (optionnel): </label>
-                                <input ng-model="reperto.mail.experience.reference.href" type="number" class="form-control" id="experience-reference-href" placeholder="http://www.wikipedia.org"> 
+                                <input ng-model="reperto.mail.experience.reference.href" type="url" class="form-control" id="experience-reference-href" placeholder="http://www.wikipedia.org"> 
                             </div>
                             
                             <div class="form-group col-xs-12">    
                                 <label for="experience-engagement">Etes vous engagé.e dans cette expérience ? </label>
                                 <label class="radio-inline"><input type="radio" name="experience-engagement" ng-model="reperto.mail.experience.engagement" value="oui">Oui</label>
                                 <label class="radio-inline"><input type="radio" name="experience-engagement" ng-model="reperto.mail.experience.engagement" value="non">Non</label>
-                                <p> Si vous n'êtes pas personnellement engagé.e dans cette expérience, nous contacterons la personne que vous aurez indiquée pour obtenir son accord avant de publier cette expérience.</p>
+                               
+                                <div ng-hide="reperto.mail.experience.engagement == 'oui'"> 
+                                	<p>Merci d'indiquer les coordonnées de la personne à contacter pour obtenir l'autorisation de publier cette expérience dans nos guides :</p> 
+                                	<div class="form-group col-xs-6">    
+			                            <label for="contact-nom-2">Nom : </label>
+			                            <input ng-model="reperto.mail.contact.nom" type="text" class="form-control" id="contact-nom-2" placeholder="Nom"> 
+			                        </div>
+			                        <div class="form-group col-xs-6">   
+			                            <label for="contact-prenom-2">Prénom : </label>
+			                            <input ng-model="reperto.mail.contact.prenom" type="text" class="form-control" id="contact-prenom-2" placeholder="Prénom">
+			                        </div>
+			                        <div class="form-group col-xs-6">   
+			                            <label for="contact-email-2">Email : </label>
+			                            <input ng-model="reperto.mail.contact.mail" type="email" class="form-control" id="contact-email-2" placeholder="email@contact.org">
+			                        </div>
+			                        <div class="form-group col-xs-6">   
+			                            <label for="contact-telephone-2">Numéro de téléphone : </label>
+			                            <input ng-model="reperto.mail.contact.tel" type="tel" class="form-control" id="contact-telephone-2" placeholder="01 03 03 04 05">
+			                        </div>
+                                
+                                </div>
                             </div>
                             
                         </div>
@@ -405,7 +425,7 @@
 		  		
                     <div class="modal-footer">
                         <span class="btn btn-primary" ng-click="reperto.submitExperience()" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-envelope">Envoyer votre suggestion
+                            <span class="glyphicon glyphicon-envelope" style="font-size: 14px !important;"> </span> Envoyer votre suggestion
                         </span>
                     </div>
 		  		</div>

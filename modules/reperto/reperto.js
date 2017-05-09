@@ -60,6 +60,7 @@
 			this.navigationmode = "tree";  // map | tree | print
 			
 			var guideid = "14";
+			var gdcid = "";
 			
 			if (window.location.search.indexOf("guideid") != -1)
 			{
@@ -67,7 +68,12 @@
 				guideidvalue = guideidvalue.split("&")[0];
 				guideid = guideidvalue;
 			}
-			
+			if (window.location.search.indexOf("gdcid") != -1)
+			{
+				var guideidvalue = window.location.search.split("gdcid=")[1];
+				guideidvalue = guideidvalue.split("&")[0];
+				gdcid = guideidvalue;
+			}
 			var modetest = false;
 			if (window.location.search.indexOf("modetest") != -1)
 			{
@@ -110,6 +116,9 @@
             
             this.mail = 
             {
+	            "guideid": "",
+	            "gdcid": "",
+            
                 "contact": 
                 {
                     "nom": "",
@@ -135,6 +144,20 @@
                     "engagement": "oui"
                 }
             };
+            
+            this.comment = 
+            {
+        		"guideid": "",
+	            "gdcid": "",
+        		"titreexperience": "",
+        		"contact": 
+                {
+                    "nom": "",
+                    "prenom": "",
+                    "mail": "",
+                    "tel": ""
+                }
+            }
         };
         
         this.changeNavigationMode = function(mode)
@@ -327,7 +350,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant).
+			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant + (reperto.gdcid != "" ? "/"+reperto.gdcid : "")).
 		    success(function(data, status) 
 		    {
                 reperto.markerCount = 0;
@@ -1160,7 +1183,17 @@
         this.submitExperience = function()
         {
             var reperto = this;
-            /*$http.post(odass_app.hostname + "/api/sendrecommendation/", reperto.mail).success(function(data)
+            /*$http.post(odass_app.hostname + "/api/sendrepertorecommendation/", reperto.mail).success(function(data)
+            {
+            });	*/		
+        }
+        
+        
+        this.submitCommentaire = function()
+        {
+            var reperto = this;
+            
+            /*$http.post(odass_app.hostname + "/api/sendrepertorecomment/", reperto.comment).success(function(data)
             {
             });	*/		
         }

@@ -32,7 +32,7 @@
 		<div class="panel-heading" style="">
             <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="{{idee.id}} ellipsis" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}}</span>
+				<span class="{{idee.id}}" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}}</span>
 				<span class="pull-right" ng-hide="true">
 					<span ng-hide="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star-empty" ng-click="reperto.saveInitiative(idee)">&nbsp;</span>	
 					<span ng-show="idee.favorite" class="cac-fav icon-action glyphicon glyphicon-star" ng-click="reperto.removeSavedInitiative(idee)">&nbsp;</span>

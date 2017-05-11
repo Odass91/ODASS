@@ -83,6 +83,8 @@
 			}
 			
 			this.guideIdentifiant = guideid;
+			this.gdcid = gdcid;
+			
 			this.modeTest = modetest;
 			this.emailContact = "contact@odass.org";
 			
@@ -156,7 +158,8 @@
                     "prenom": "",
                     "mail": "",
                     "tel": ""
-                }
+                },
+                "commentaire":""
             }
         };
         
@@ -350,6 +353,7 @@
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
+			console.log("gdcid", reperto.gdcid);
 			$http.get(odass_app.hostname + "/api/getjsonthesaurus/" + reperto.guideIdentifiant + (reperto.gdcid != "" ? "/"+reperto.gdcid : "")).
 		    success(function(data, status) 
 		    {
@@ -797,7 +801,7 @@
 			}
 			
 			var reperto = this;
-            $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id).
+            $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id + (reperto.gcdid != "" ? "/" + reperto.gcdid : "")).
             success(function(data, status) 
             {
                 idee.display = {};
@@ -1182,20 +1186,27 @@
         
         this.submitExperience = function()
         {
+            this.mail.guideid = this.guideIdentifiant;
+            this.mail.gdcid = this.gdcid;
             var reperto = this;
-            /*$http.post(odass_app.hostname + "/api/sendrepertorecommendation/", reperto.mail).success(function(data)
+			
+            $http.post(odass_app.hostname + "/api/sendrepertorecommendation/", reperto.mail).success(function(data)
             {
-            });	*/		
+            	console.log("suggestion envoyée");
+            });	
         }
         
         
         this.submitCommentaire = function()
         {
+            this.comment.guideid = this.guideIdentifiant;
+            this.comment.gdcid = this.gdcid;
             var reperto = this;
             
-            /*$http.post(odass_app.hostname + "/api/sendrepertorecomment/", reperto.comment).success(function(data)
+            $http.post(odass_app.hostname + "/api/sendrepertorecomment/", reperto.comment).success(function(data)
             {
-            });	*/		
+            	console.log("commentaire envoyé");
+            });	
         }
 	
 	}]);

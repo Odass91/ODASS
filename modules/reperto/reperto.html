@@ -315,7 +315,59 @@
 		
 		
 		
-		
+		<div class="modal fade" id="ajouter-commentaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		  	<div class="modal-dialog modal-lg" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4>Ajouter un commentaire sur le guide</h4>
+					</div>
+				
+		      		<div class="modal-body" style="max-height: 60vh; overflow: auto">
+		       			<p>Vous souhaitez faire un commentaire sur le guide ou une expérience ?</p>
+		       			
+                        <h3>Merci de remplir les informations suivantes : </h3>
+                        <div class="form-group col-xs-6">    
+                            <label for="contact-nom">Nom : </label>
+                            <input ng-model="reperto.comment.contact.nom" type="text" class="form-control" id="contact-nom" placeholder="Nom"> 
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-prenom">Prénom : </label>
+                            <input ng-model="reperto.comment.contact.prenom" type="text" class="form-control" id="contact-prenom" placeholder="Prénom">
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-email">Email : </label>
+                            <input ng-model="reperto.comment.contact.mail" type="email" class="form-control" id="contact-email" placeholder="email@contact.org">
+                        </div>
+                        <div class="form-group col-xs-6">   
+                            <label for="contact-telephone">Numéro de téléphone : </label>
+                            <input ng-model="reperto.comment.contact.tel" type="tel" class="form-control" id="contact-telephone" placeholder="01 03 03 04 05">
+                        </div>
+                        <div class="form-group col-xs-12">   
+                            <label for="titre-experience">Titre de l'expérience (optionnel) : </label>
+                            <input ng-model="reperto.comment.titreexperience" type="tel" class="form-control" id="titre-experience" placeholder="">
+                        </div>    
+                        
+                        <div class="form-group col-xs-12">   
+                            <label for="commentaire">Votre commentaire : </label>
+                            <textarea id="commentaire" ng-model="reperto.comment.commentaire" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        
+                        <p>Toute l'équipe du CAC vous remercie pour votre participation.</p>
+		    		</div>
+		  		
+		  		
+                    <div class="modal-footer">
+                        <span class="btn btn-primary" ng-click="reperto.submitExperience()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-envelope" style="font-size: 14px !important;"> </span> Envoyer votre commentaire
+                        </span>
+                    </div>
+		  		</div>
+			</div>
+		</div>
 		
 		
 		

@@ -801,7 +801,7 @@
 			}
 			
 			var reperto = this;
-            $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id + (reperto.gcdid != "" ? "/" + reperto.gcdid : "")).
+            $http.get(odass_app.hostname + "/api/getjsonexp/" + idee.id + (reperto.gdcid != "" ? ("/" + reperto.gdcid) : "")).
             success(function(data, status) 
             {
                 idee.display = {};
@@ -1170,17 +1170,17 @@
 
 		/* AUTOMATIC VERSION */
 		   html2canvas(document.getElementById('printzone'), {
-		            onrendered: function (canvas) {
-		                var data = canvas.toDataURL();
-		                var docDefinition = {
-		                    content: [{
-		                        image: data,
-		                        width: 500,
-		                    }]
-		                };
-		                pdfMake.createPdf(docDefinition).download("repertoire.pdf");
-		            }
-		        });
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500,
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("repertoire.pdf");
+                }
+            });
 		};
         
         

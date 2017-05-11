@@ -75,7 +75,7 @@
                     <img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
                 </div>
                 
-                <div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0" style="margin: -15px; height: 150px; background-image: url('images/placeholder.png')">
+                <div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
                 </div>
                 
                 <div style="">

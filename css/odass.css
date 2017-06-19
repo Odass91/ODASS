@@ -340,6 +340,28 @@ p.red
 
 /** CAC */
 
+.tree-chapter-item.active
+{
+    font-weight: 900;
+}
+
+.popup.PARTIE_A
+{
+    background-color: rgba(90,180,243,0.9) !important;
+}
+.popup.PARTIE_B
+{
+    background-color: background-color: #ffe188 !important;
+}
+.popup.PARTIE_C
+{
+    background-color: rgba(154,202,85,0.9) !important;
+}
+.popup.PARTIE_D
+{
+    background-color: rgba(244,118,182,0.9) !important;
+}
+
 .infozone.PARTIE_A
 {
 	background-color: rgba(90,180,243,0.9) !important;
@@ -357,7 +379,7 @@ p.red
 }
 .infozone.PARTIE_D
 {
-	background-color: rgba(244,118,182,0.90) !important;
+	background-color: rgba(244,118,182,0.9) !important;
 	color: rgba(184,58,122,1) !important;
 }
 
@@ -514,6 +536,133 @@ p.red
  
  /** CAC REPERTOIRE */
  
+ .focus
+ {
+    position: fixed;
+    top: 10%;
+    left: 25%;
+    z-index: 100;
+    width: 66vw;
+ }
+ 
+
+.initiative-title
+{
+    text-align: center;
+}
+.experience-item
+{
+    border: 1px solid rgba(0,0,0,0.3);
+    padding: 5px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 5px 5px 0px 0px;
+}
+
+.info-block
+{
+    display: none;
+    padding: 7px;
+}
+
+.info-block.active
+{
+    display: block;
+}
+
+.footer-tabs a
+{
+    display: block;
+    width: 50px;
+    margin: auto;
+}
+
+.tag .label
+{
+    font-size:10px !important;
+}
+
+.experience-nav
+{
+    color: rgba(0,0,0,0.4);
+    cursor: pointer;
+    position: absolute;
+    top: 10%;
+}
+.experience-nav.left
+{
+    left: -15px;
+}
+.experience-nav.right
+{
+    right: -15px;
+}
+
+.experience-nav:hover
+{
+    color: rgba(0,0,0,0.8);
+    cursor: pointer;
+}
+
+.footer-content.row, .footer-tabs.row
+{
+    margin: 0px -5px -5px -5px !important;
+    padding: 0px !important;
+    
+    
+}
+
+.footer-tab
+{
+    cursor: pointer;
+    height: 50px; 
+    padding: 7px
+}
+
+.contact *
+{
+    color: rgb(51, 51, 51) !important;
+}
+.geoloc *
+{
+    color: rgb(184, 58, 122) !important;
+}
+.references *
+{
+    color: rgb(126, 80, 39) !important;
+}
+
+.footer-tab.contact
+{
+    background-color: rgba(90,180,243,0.3);
+}
+.footer-tab.geoloc
+{
+    background-color: rgba(244,118,182,0.30);
+}
+
+.footer-tab.references
+{
+    background-color: rgba(255,225,136,0.30);
+}
+
+.footer-tab.contact:hover, .footer-tab.contact.active
+{
+    background-color: rgba(90,180,243,0.9);
+}
+
+.footer-tab.geoloc:hover, .footer-tab.geoloc.active
+{
+    background-color: rgba(244,118,182,0.9); 
+}
+
+.footer-tab.references:hover, .footer-tab.references.active
+{
+    background-color: rgba(255,225,136,0.9);
+}
+ 
+ 
+ 
+ 
  .prettyprint .sheet
  {
  	background-color: white;
@@ -547,17 +696,17 @@ p.red
 
 .idee-item>.panel
 {
-	height: 400px !important;
-	max-height:  400px !important;
+	/*height: 400px !important;
+	max-height:  400px !important;*/
 }
 
 
 .idee-item .placeholder
 {
-	height: 150px !important;
+	/*height: 150px !important;
 	width: 240px !important;
 	display: block;
-	margin: auto;
+	margin: auto;*/
 }
 
 .initiative-item .panel-heading h4, .idee-item .panel-heading h4

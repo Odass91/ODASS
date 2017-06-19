@@ -137,7 +137,7 @@
 			var password = $("#passwordField").val();	
             
             
-            if (true)
+            if (this.debug)
             {
                 this.user.loggedIn = true;
                 this.user.name = "david";

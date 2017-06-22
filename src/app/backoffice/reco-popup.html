@@ -1,0 +1,35 @@
+<div class="modal fade" id="send-contact" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content panel-success">
+			<div class="modal-header panel-heading">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4>Envoyer à mes contacts</h4>
+			</div>
+			<form name="contactsForm" novalidate>
+				<div class="modal-body">
+						<div class="form-group" ng-form="origineForm">
+						    <label for="fromInputEmail">From:</label>
+						    <input type="email" class="form-control" id="fromInputEmail" placeholder="player@email.org" ng-model="dubito.fromContact" required></input> 
+						</div>
+						<div class="form-group" ng-form="destinatairesForm">
+						    <label>To:</label>
+						    <input type="email" class="form-control" placeholder="contact@email.org" ng-model="dubito.toContacts[0]" required></input>
+						    <input type="email" class="form-control" placeholder="contact@email.org" ng-repeat="contact in dubito.toContacts track by $index" ng-show="$index > 0"  ng-model="game.toContacts[$index]"></input>
+						</div>
+						<div class="form-group text-center">
+							<a class="btn btn-primary" href="#" ng-click="dubito.addContactEmail()"><span class="glyphicon glyphicon-plus"></span> 
+								Ajouter un destinataire
+							</a>
+						</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success" data-dismiss="modal" ng-click="game.sendRecommendation()" ng-disabled="origineForm.$invalid || destinatairesForm.$invalid">
+						<span class="glyphicon glyphicon-envelope"></span> Envoyer !
+					</button>
+				</div>		
+			</form> 
+		</div>
+	</div>
+</div>

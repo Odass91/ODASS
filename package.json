@@ -2,7 +2,7 @@
   "name": "odass",
   "version": "1.0.0",
   "description": "serveur de fichiers pour odass",
-  "main": "odass_server.js",
+  "main": "src/odass_server.js",
   "dependencies": {
     "cors": "^2.8.1",
     "express": "^4.14.1",
@@ -12,7 +12,18 @@
     "mysql": "^2.13.0",
     "write-json-file": "^2.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cache": "^0.4.6",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^3.3.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-livereload": "^3.8.1",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,58 @@
+<div class="modal fade" id="quiz-type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content panel-default">
+	  
+	  <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Configuration du quiz</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+		  <form>
+				<div class="form-group">
+					<label for="email">Nom du quiz : </label>
+					<input ng-model="wizard.brouillon.quiz.name" type="text" class="form-control"></input>
+				</div>
+				
+				<div class="form-group">
+					<label for="email">Description du quiz : </label>
+					<input ng-model="wizard.brouillon.quiz.description" type="text" class="form-control"></input>
+				</div>
+				
+				
+				<div class="form-group">
+					<label for="email">Quel type de jeu voulez vous créer ? </label>
+					<rzslider rz-slider-model="wizard.brouillon.quiz.length" rz-slider-options="wizard.quizConfig.length"></rzslider>
+					<label>{{wizard.brouillon.quiz.length}}</label>
+
+				</div>
+				
+				
+			</form>
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.editCard({index:0})" data-dismiss="modal">
+		  			suivant
+		  			<span class="glyphicon glyphicon-arrow-right" ></span>
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

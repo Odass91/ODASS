@@ -1,0 +1,40 @@
+<div class="modal fade" id="edit-quiz-choice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content panel-default">
+	  
+	  <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+		<h4 class="modal-title" id="exampleModalLabel">Modifier un quiz</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body">
+		  <h4>Sélectionnez le quiz à modifier :</h4>
+		  <ul class="list-group">
+		  	<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item" ng-click="wizard.selectedQuiz = quiz">{{quiz.name}}</li>
+		  </ul>
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  	<p class="col-xs-6 col-lg-6 text-left">
+		  		<button type="button" class="btn btn-primary" ng-click="wizard.leave()" data-dismiss="modal">
+				<span class="glyphicon glyphicon-remove" ></span> Quitter
+			</button>
+		  	</p>
+		  	<p class="col-xs-6 col-lg-6 text-right">
+		  		<button type="button" class="btn btn-success" ng-click="wizard.editQuiz()" data-dismiss="modal">
+		  			<span class="glyphicon glyphicon-arrow-right" ></span> Suivant : modifier les cartes
+		  		</button>
+			</p>
+	  </div>
+	</div>
+  </div>
+</div>

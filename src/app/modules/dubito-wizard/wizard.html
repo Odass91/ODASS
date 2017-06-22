@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<section  ng-controller="WizardController as wizard">
+	<div class="panel panel-danger">
+	  <div class="panel-heading"><h3 class="panel-title">Créer un nouveau quiz</h3></div>
+	  <div class="panel-body">
+		<p>Vous avez la possibilité de créer votre propre quiz ou votre propre jeu. N'hésitez pas à <a href="#">prendre contact</a> avec l'équipe éditoriale d'ODASS qui vous accompagnera lors du processus de création du quiz.</p> 
+		<p class="text-center" ><button class="btn btn-danger" ng-click="wizard.createQuiz()">Commencez la création !</button></p>
+	  </div>
+	</div>
+	
+	<div class="panel panel-warning">
+	  <div class="panel-heading"><h3 class="panel-title">Modifier un quiz</h3></div>
+	  <div class="panel-body">
+	  	<p>
+	  		Sélectionnez le quiz à modifier. Une fois toutes les cartes créées, vous pourrez le publier. Une fois publié, vous ne pourrez plus modifier le quiz !
+	  	</p>
+	  	<ul class="list-group">
+ 				
+ 			<li ng-repeat="quiz in wizard.availableQuiz" class="list-group-item">
+                <img src="images/dubito/quiz-draft.png" width="20" height="20" ng-show="{{quiz.status == 'draft'}}" title="le quiz n'est pas terminé"></img>
+                <img src="images/dubito/quiz-published.png" width="20" height="20" ng-show="{{quiz.status == 'live'}}" title="le quiz est accessible !"></img>
+ 			
+ 				<span data-toggle="popover" data-content="Vous avez créé {{quiz.cartes}}/{{quiz.longueur}} cartes" data-placement="top" ng-show="{{quiz.cartes < quiz.longueur}}" class="glyphicon glyphicon-exclamation-sign text-warning pull-right"  style="font-size: 0.9em;"></span>
+ 				
+ 				<button type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" ng-click="wizard.editQuiz(quiz.uuid)">
+	 				<span class="glyphicon glyphicon-pencil" alt="Modifier le quiz"></span>
+ 				</button>
+ 				
+ 				<button ng-show="quiz.cartes == quiz.longueur && quiz.status == 'draft'" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;"  ng-click="wizard.publishQuiz(quiz)">
+ 					<span class="glyphicon glyphicon-play" alt="Publier le quiz"></span>
+ 				</button>
+ 				
+ 				<button ng-show="quiz.cartes == quiz.longueur" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;" data-toggle="popover" title="lien de partage" data-content="{{wizard.obtainShareLink(quiz)}}" data-placement="top">
+ 					<span class="glyphicon glyphicon-share" alt="Partager le quiz"></span>
+ 				</button>
+ 				
+ 				<button ng-click="wizard.deleteQuizOnNode(quiz.uuid)" type="button" class="btn btn-default btn-xs pull-right" style="font-size: 0.9em;">
+	 				<span class="glyphicon glyphicon-trash" alt="Supprimer le quiz"></span>
+ 				</button>
+ 				
+ 				<strong>{{quiz.nom}}</strong>&nbsp;
+ 			</li>
+ 		</ul>
+		<p class="text-center" ng-hide="true">
+			<button class="btn btn-warning" ng-click="wizard.editQuiz()" ng-disabled="wizard.selectedQuiz == undefined">Choisissez le quiz à éditer !</button>
+		</p>
+	  </div>
+	</div>
+	
+	
+
+	<!-- DUBITO WIZARD POPUPS  -->
+	<edit-quiz></edit-quiz>
+	<quiz-type></quiz-type>
+	<quiz-library></quiz-library>
+	<quiz-dashboard></quiz-dashboard>
+	<quiz-card></quiz-card>
+</section>
+		
+

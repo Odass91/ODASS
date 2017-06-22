@@ -1,0 +1,45 @@
+
+<!-- DEBUG -->
+
+<section class="row" ng-show="odass.debug">
+	<section class="col-md-10 col-md-offset-1">
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				<h3 class="panel-title">DEBUG TOOLS</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label for="exampleInputEmail1">URL</label> <input type="url"
+							class="form-control" id="form-action"
+							placeholder="http://server:port/action"
+							value="http://api.odass.org/"></input>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">DATA</label>
+						<textarea class="form-control" id="form-data" placeholder="{}">{}</textarea>
+					</div>
+					<button type="submit" class="btn btn-default"
+						ng-click="odass.debugAPIcall()">Submit</button>
+					<p>
+					<h3>Callback data : success</h3>
+					<figure class="highlight">
+						<pre>
+							<code class="language-html" data-lang="json"
+								id="success-callback">//Success<br />{{odass.callbackSuccessData}}</code>
+						</pre>
+					</figure>
+					</p>
+					<p>
+					<h3>Callback data : failure</h3>
+					<figure class="highlight">
+						<pre>
+							<code class="language-html" data-lang="json" id="fail-callback">//Failure<br />{{odass.callbackFailureData}}</code>
+						</pre>
+					</figure>
+					</p>
+				</form>
+			</div>
+		</div>
+	</section>
+</section>

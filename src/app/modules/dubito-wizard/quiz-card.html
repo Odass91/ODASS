@@ -1,0 +1,146 @@
+<div class="modal fade" id="wizard-quiz-card" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content panel-default">
+	   <!-- HEADER -->
+	  
+	  <div class="modal-header panel-heading">
+        <button type="button" class="close" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex, true)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="exampleModalLabel" ng-show="wizard.mode == 'create'">Ajoutez une question au quiz</h4>
+		<h4 class="modal-title" id="exampleModalLabel" ng-hide="wizard.mode == 'create'">Editer ou ajouter une question</h4>
+	  </div>
+	  
+	  
+	  
+	  <!-- BODY -->
+	  
+	  <div class="modal-body row" style="position:relative;">
+            <div class="card-cover" style="background:url({{wizard.brouillon.carte.intitule.image}}) no-repeat center fixed;">
+            </div>
+            
+			<div class="col-sm-12">
+				<div class="alert alert-info" role="alert">
+					<strong>Carte #{{wizard.brouillon.quiz.cardIndex + 1}}.</strong> 
+					Vous avez créé <strong>{{wizard.brouillon.quiz.jeu.cartes.length}}</strong> cartes sur {{wizard.brouillon.quiz.jeu.longueur}}.
+					
+				</div>
+			</div>
+			
+	  		<div class="col-sm-6">
+				<div class="form-group">
+					<label for="intituleQuestion">Intitulé de la question : </label>
+					<input id="intituleQuestion" ng-model="wizard.brouillon.carte.intitule.texte" type="text" class="form-control"></input>
+					  <div class="form-group">
+                        <div class="btn btn-default" ngf-select="wizard.upload($file, 'card')">
+                            <span class="glyphicon glyphicon-picture"> </span>
+                        </div> Changer l'image de la question
+                        <img src="{{wizard.brouillon.carte.intitule.image}}" height="20" ng-show="wizard.brouillon.carte.intitule.image"></img>
+                    </div>
+            
+				</div>
+				<h4>Indiquez les différentes réponses possibles : </h4>
+				<p><em>(cochez la réponse correcte)</em></p>
+				<div class="form-group" ng-repeat="choix in wizard.brouillon.carte.choix">
+					<div class="input-group">
+						<span class="input-group-addon">
+					        <input type="radio" aria-label="" name="bonneReponse" ng-value="choix.id" ng-model="wizard.brouillon.carte.reponse"></input>
+					      </span>
+						<input ng-model="choix.intitule" type="text" class="form-control"></input>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="reponseCourte">Explication courte (140 caractères) : </label>
+					<input id="reponseCourte" ng-model="wizard.brouillon.carte.reponseCourte" type="text" class="form-control"></input>
+				</div>
+				
+				<div class="form-group">
+					<label for="reponseLongue">Explication longue (280 caractères) : </label>
+					<textarea id="reponseLongue" ng-model="wizard.brouillon.carte.reponseLongue" type="text" class="form-control"></textarea>
+				</div>
+				
+				<div class="form-group">
+					<label for="reponseLongue">Ajoutez des références : </label>
+					<p>
+						<span ng-repeat="reference in wizard.brouillon.carte.references">
+							<span class="label label-default">
+								<span class="glyphicon glyphicon-link"> </span>  {{reference | limitTo:15}}{{reference.length >12 ? "..." : ""}}
+								<span style="cursor:pointer" class="glyphicon glyphicon-remove" ng-click="wizard.removeReference(reference)"> </span>
+							</span>
+							&nbsp;
+						</span>
+					</p>
+					
+					<div class="input-group">
+				      	<input type="text" class="form-control" id="add-reference" placeholder="ex: http://fr.wikipedia.org/..."></input>
+			      		<span class="input-group-btn">
+				        	<button class="btn btn-success" type="button" ng-click="wizard.addReference()">
+				        		<span class="glyphicon glyphicon-plus"> </span>
+				        	</button>
+				      	</span>
+				    </div>
+				</div>
+				
+				<div class="form-group">
+					<label for="cardCategory">Choisissez un thème : </label>
+					<select name="quizCategory" id="cardCategory" ng-model="wizard.brouillon.carte.categorie">
+      					<option ng-repeat="option in wizard.config.quiz.categories" value="{{option}}">{{option}}</option>
+    				</select>
+				</div>
+				
+				<div class="form-group" ng-hide="true">
+					<label for="email">Ajoutez des mots-clefs : </label> (optionnel)
+					<p>
+						<span ng-repeat="keyword in wizard.brouillon.quiz.keywords">
+							<span class="label label-default">
+								<span class="glyphicon glyphicon-tag"> </span>  {{keyword}}
+								<span style="cursor:pointer" class="glyphicon glyphicon-remove" ng-click="wizard.removeKeyword(keyword)"> </span>
+							</span>
+							&nbsp;
+						</span>
+					</p>
+					
+					<div class="input-group">
+				      	<input type="text" class="form-control" id="add-keyword" placeholder="ex: loi travail"></input>
+			      		<span class="input-group-btn">
+				        	<button class="btn btn-success" type="button" ng-click="wizard.addKeyword()">
+				        		<span class="glyphicon glyphicon-plus"> </span>
+				        	</button>
+				      	</span>
+				    </div><!-- /input-group -->
+					
+				</div>
+			</div>
+	  </div>
+	 
+	  
+	  
+	  <!-- FOOTER -->
+	  
+	  <div class="modal-footer">
+	  
+		<p class="col-xs-2 col-lg-2">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.previousCard()">
+	  			<span class="glyphicon glyphicon-arrow-left" ></span>
+	  		</button> 
+	  	</p>
+	  	
+	  	<p class="col-xs-8 col-lg-8">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex)">
+	  			<span class="glyphicon glyphicon-floppy-save" ></span> Sauver
+	  		</button>
+	  		<button type="button" class="btn btn-info" ng-click="wizard.saveCard(wizard.brouillon.quiz.cardIndex, true)">
+	  			<span class="glyphicon glyphicon-save" ></span> Sauver et revenir à la liste de cartes
+	  		</button> 
+		</p>
+		
+	  	<p class="col-xs-2 col-lg-2">
+	  		<button type="button" class="btn btn-info" ng-click="wizard.nextCard()">
+	  			<span class="glyphicon glyphicon-arrow-right" ></span>
+	  		</button> 
+	  	</p>
+	  </div>
+	</div>
+  </div>
+</div>

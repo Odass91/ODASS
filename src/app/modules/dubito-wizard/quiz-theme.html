@@ -1,0 +1,53 @@
+
+    <div class="row">
+        <ul class="nav nav-tabs" id="theme-navigation">
+			<li role="presentation" class="active"><a href="#card-header">Titre</a></li>
+			<li role="presentation"><a href="#card-body">Titre des cartes / du quiz</a></li>
+		</ul>
+		
+		<div class="tab-content">
+		    <div role="tabpanel" class="tab-pane active" id="card-header">
+		    	<div class="col-lg-2"></div>
+		        <div class="col-lg-8" style="padding: 7px; border: 2px dashed rgba(0,0,0,0.6)">
+		            <div class="btn btn-default" ngf-select="wizard.upload($file, 'header')"><span class="glyphicon glyphicon-picture"> </span> Changer l'image du header
+		            </div>
+		            <img src="{{wizard.brouillon.quiz.jeu.theme.header.imagehref}}" height="40" ng-show="wizard.brouillon.quiz.jeu.theme.header.imagehref"></img>
+		           
+		           
+		           <div class="form-group">
+		                <span class="editable-content">
+		                    <label>Couleurs : </label>
+		                    Texte : <a class="btn btn-default" style="background-color: {{wizard.brouillon.jeu.theme.header.color}}" href="#" editable-text="wizard.brouillon.quiz.jeu.theme.header.color" >{{ wizard.brouillon.quiz.jeu.theme.header.color }}</a>
+		                    Fond : <a class="btn btn-default" style="background-color: {{wizard.brouillon.quiz.jeu.theme.header.backgroundColor}}" href="#" editable-text="wizard.brouillon.quiz.jeu.theme.header.backgroundColor" >{{ wizard.brouillon.quiz.jeu.theme.header.backgroundColor }}</a>
+		                </span>
+		           </div>
+		        </div>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="card-body">
+			    <div class="col-lg-2"></div>
+		        <div class="col-lg-8" style="padding: 7px; border: 2px dashed rgba(0,0,0,0.6)">
+		            
+		            <div class="form-group">
+		                <div class="btn btn-default" ngf-select="wizard.upload($file, 'body')">
+		                    <span class="glyphicon glyphicon-picture"> </span>
+		                </div> Changer l'image de fond du quiz (par défaut sur les cartes du quiz)
+		                <img src="{{wizard.brouillon.quiz.jeu.theme.body.imagehref}}" height="200" ng-show="wizard.brouillon.quiz.jeu.theme.body.imagehref"></img>
+		            </div>
+		            <div class="form-group">
+		                <span class="editable-content">
+		                    <label>Couleurs : </label>
+		                    Texte : <a class="btn btn-default" style="background-color: {{wizard.brouillon.jeu.theme.body.color}}" href="#" editable-text="wizard.brouillon.quiz.jeu.theme.body.color" >{{ wizard.brouillon.quiz.jeu.theme.body.color }}</a>
+		                    Fond : <a class="btn btn-default" style="background-color: {{wizard.brouillon.quiz.jeu.theme.body.backgroundColor}}" href="#" editable-text="wizard.brouillon.quiz.jeu.theme.body.backgroundColor" >{{ wizard.brouillon.quiz.jeu.theme.body.backgroundColor }}</a>
+		                </span>
+		            </div>
+		            
+		            <div class="form-group" ng-hide=true>
+		                <span class="">Ajuster l'opacité du fond</span>
+		                <rzslider rz-slider-model="wizard.brouillon.quiz.jeu.theme.body.opacity" rz-slider-options="wizard.config.slider.opacity"></rzslider>
+		            </div>
+		        </div>
+		    
+		    </div>
+		</div>
+		
+	</div>

@@ -21,99 +21,23 @@
 		
 		$("body").css("background", "url('images/background-ricepaper_v3.png')");		
 		
-		this.reinit= function()
-		{
-			this.navigationmode = "tree";  // map | tree | print
-			
-			this.filteredInitiativeList = [];
-			this.savedInitiativeList = {};
-			this.savedInitiativeList.length = 0;
-			this.panierInitiatives = [];
-
-            this.userFilter = "";
-            
-			this.display.idees = this.idees;
-			this.cache.idees = this.idees;
-	    	
-	    	this.display.section = null;
-	    	this.display.chapitre = null;
-	    	
-	    	this.display.breadcrumb = {};
-	    	
-	    	this.display.pager = {"index": 0, "offset": 6};
-	    	this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
-	    	
-		};
-		
-		
 		this.init = function()
 		{
-			/** INITIALISATION */
-
-			this.display = {};
-            this.userFilter = "";
-            
-            
 			this.navigationmode = "tree";  // map | tree | print
-			
-			var guideid = "14";
-			var gdcid = "";
-			
-			if (window.location.search.indexOf("guideid") != -1)
-			{
-				var guideidvalue = window.location.search.split("guideid=")[1];
-				guideidvalue = guideidvalue.split("&")[0];
-				guideid = guideidvalue;
-			}
-			if (window.location.search.indexOf("gdcid") != -1)
-			{
-				var guideidvalue = window.location.search.split("gdcid=")[1];
-				guideidvalue = guideidvalue.split("&")[0];
-				gdcid = guideidvalue;
-			}
-			var modetest = false;
-			if (window.location.search.indexOf("modetest") != -1)
-			{
-				var modetestvalue = window.location.search.split("modetest=")[1];
-				modetestvalue = modetestvalue.split("&")[0];
-				modetest = modetestvalue;
-			}
-			
-			this.guide = new Guide(guideid, gdcid);
-			
-			
-			this.modeTest = modetest;
 			this.emailContact = "contact@odass.org";
+			this.initJSONData();
+			
+			this.guide = new Guide();
+			this.guide.setupGuideFromURL();
+			this.panier = new Panier();
 			
 			this.loadIntroduction();
-			
-			this.filteredActions = [];
-			
-			this.filter = "";
-			
-			this.markerMap = {};
-
-			this.activeFilters = [];
-			
-            this.cache = {};
-			
-			this.showSummary = false;
-			
 			this.loadThesaurus();
-			
-			this.filteredInitiativeList = [];
-			this.savedInitiativeList = {};
-			this.savedInitiativeList.length = 0;
-			this.panierInitiatives = [];
-            
-            var that = this;
-           
-            window.setTimeout(function()
-            {
-                that.reduceIntro();
-            }, 5000);
-            
-            this.mail = 
+        };
+        
+        this.initJSONData = function()
+        {
+        	this.mail = 
             {
 	            "guideid": "",
 	            "gdcid": "",
@@ -197,14 +121,51 @@
 		    	console.log("Erreur lors de la recuperation du fichier json");
 		    });
 		};
-        
-        this.reduceIntro = function()
+		
+		this.loadThesaurus = function()
+		{
+			var reperto = this;
+
+			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/14").
+		    success(function(data, status) 
+		    {
+                reperto.markerCount = 0;
+                reperto.guide.setup(data);
+                console.log(reperto.guide);
+                
+		    	reperto.display.breadcrumb = {};
+		    	reperto.guide_is_loaded = true;
+                
+                
+                reperto.updateCSSClasses();
+                
+                window.setTimeout(function()
+                {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }, 500);
+		    	
+		    }).
+		    error(function(data, status) 
+		    {
+		    	console.log("Erreur lors de la recuperation du fichier json")
+		    });
+			
+		};
+		
+		
+		
+		
+		
+		
+		
+		/** FONCTIONS QUI IMPACTENT LA VUE */
+		
+		this.reduceIntro = function()
         {            
             this.intro_reduced = true;
             $("#guide-intro .panel-body").addClass("animate-disappear");
             $("#guide-intro .panel-body").removeClass("animate-appear");
-        }
-        
+        };
 		
 		this.expandIntro = function()
         {
@@ -214,14 +175,7 @@
             
         };
         
-		
-		this.isExpanded = function(id)
-		{
-			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
-		};
-		
-		
-		this.toggleExpandedZone = function(id)
+        this.toggleExpandedZone = function(id)
 		{
 			var target=$("#" + id).parents(".panel").find(".panel-collapse");
 			
@@ -235,6 +189,109 @@
 			}
 		};
         
+        this.updateCSSClasses = function()
+        {
+            this.cssClasses = {};
+            this.markerIcons = {};
+            this.cssColors = {};
+            
+            this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
+            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", "#ffe188", "rgba(154,202,85,0.9)"];
+            
+            this.guide.thesaurus.parties.forEach(function(PARTIE)
+            {
+                if (! this.cssClasses[PARTIE.id])
+                {
+                    this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                    this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
+                    this.cssColors[this.cssClasses[PARTIE.id]] = this.availableColors.pop();
+                }
+            }, this);
+            
+        };
+        
+        this.switchDisplay = function(displaylong, idee)
+        {
+            idee.displayLong = displaylong;
+            if (displaylong == true)
+            {
+                $(".idee-item").removeClass("focus");
+                $("#initiative-" + idee.id).removeClass("col-lg-6");
+                $("#initiative-" + idee.id).addClass("col-lg-12");
+                
+                $("#initiative-" + idee.id).addClass("focus");
+            }
+            else
+            {
+                
+                $(".idee-item").removeClass("focus");
+                $("#initiative-" + idee.id).removeClass("col-lg-12");
+                $("#initiative-" + idee.id).addClass("col-lg-6");  
+            }
+            
+            
+            $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
+
+        };
+        
+        this.switchMapDisplay = function()
+        {
+            if (this.mapDisplayLong)
+            {
+                delete this.mapDisplayLong;
+                
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("map-tools-zone");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+            }
+            else
+            {
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("fullsize-map-wrapper");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+                this.mapDisplayLong = true;
+            }
+            this.refreshMap(500);
+        };
+		
+        
+        
+		
+		
+		/** DIVERS  */
+		this.isExpanded = function(id)
+		{
+			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
+		};
+                                    
+		
+		this.isPaginationVisible = function(index)
+		{
+			if (! this.display)
+			{
+				this.display = {};
+			}
+			if (! this.display.pager)
+			{
+				this.display.pager = {"index": 0, "offset": 6};
+			}
+			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
+			
+			return isVisible;
+		};
+		
+		
+		
+        /** GESTION DU SLIDESHOW */
         this.previousExperience = function(id, n)
         {
             var left =  parseInt($("#" + id).css("left"));
@@ -276,23 +333,7 @@
                 $("#" + item + "-" + id + ".info-block").addClass("active");
                 $("#tab-" + item + "-" + id + ".footer-tab").addClass("active");
             }
-        }
-                                    
-		
-		this.isPaginationVisible = function(index)
-		{
-			if (! this.display)
-			{
-				this.display = {};
-			}
-			if (! this.display.pager)
-			{
-				this.display.pager = {"index": 0, "offset": 6};
-			}
-			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
-			
-			return isVisible;
-		};
+        };
 		
 		this.setPagerIndex = function(index)
 		{
@@ -309,99 +350,6 @@
 			{
 				this.obtainExperiencesForIdea(this.display.idees[index]);
 			}
-			
-		};
-		
-		this.associateIdeasAndSections = function()
-		{
-			this.sectionByChapterId = {};
-			reperto.thesaurus.nodes.forEach(function(section)
-			{
-				section.nodes.forEach(function(chapter)
-				{
-					this.sectionByChapterId[chapter.id] = section;
-				}, this);
-			}, this);
-		};
-        
-        this.updateCSSClasses = function()
-        {
-            this.cssClasses = {};
-            this.markerIcons = {};
-            this.cssColors = {};
-            
-            this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
-            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
-            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", "#ffe188", "rgba(154,202,85,0.9)"];
-
-            
-            this.thesaurus.nodes.forEach(function(PARTIE)
-            {
-                if (! this.cssClasses[PARTIE.id])
-                {
-                    this.cssClasses[PARTIE.id] = this.availableClasses.pop();
-                    this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
-                    this.cssColors[this.cssClasses[PARTIE.id]] = this.availableColors.pop();
-                }
-            }, this);
-            
-        };
-		
-		this.loadThesaurus = function()
-		{
-			var reperto = this;
-
-			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/14").
-		    success(function(data, status) 
-		    {
-                reperto.markerCount = 0;
-		    	
-                reperto.thesaurus = data.thesaurus;
-		    	reperto.idees = data.idees;
-		    	
-                reperto.availableFilters = [];
-		    	reperto.matchedFilters = [];
-		    	reperto.activeFilters = [];
-                reperto.matchedExperiences = {};
-                
-		    	reperto.display.breadcrumb = {};
-		    	
-		    	if (!reperto.display.pager)
-		    	{
-		    		reperto.display.pager = {"index": 0, "offset": 6};
-		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
-		    	}
-
-		    	reperto.guide_is_loaded = true;
-		    	reperto.setPagerIndex(0);
-                
-                
-                /****
-                console.log(reperto.display.idees[0].experiences);
-                //reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
-                console.log(reperto.display.idees[0].experiences);
-                ****/
-                
-                if (reperto.navigationmode == 'map')
-                {
-                    reperto.setupMap();
-                    reperto.refreshMap(100);
-                }
-                
-                reperto.setupPrint();
-                
-                
-                reperto.updateCSSClasses();
-                window.setTimeout(function()
-                {
-                    $('[data-toggle="tooltip"]').tooltip();
-                }, 500);
-		    	
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json")
-		    });
 			
 		};
 		
@@ -547,60 +495,6 @@
         }
         
 		/***********************************************************************
-		 * HELPER FUNCTIONS
-		 */
-		
-		
-		
-		/**********************************************************************/
-		
-		this.obtainSectionFromChapter = function(chapterid)
-		{
-			var chapter = this.obtainChapterFromId(chapterid);
-			var section = this.obtainSectionFromId(chapter.parent);
-			return section.id;
-		};
-        
-		this.obtainChapterFromId = function(chapterid)
-		{
-			var chapter_slash_chapitre = null;
-			this.thesaurus.nodes.forEach(function(section){
-				section.nodes.forEach(function(chapter){
-					if (chapter.id == chapterid)
-					{
-						chapter_slash_chapitre = chapter;
-					}
-				}, this)
-			}, this);
-			return chapter_slash_chapitre;
-		};
-
-		this.obtainSectionFromId = function(sectionid)
-		{
-			var section_slash_partie = null;
-			this.thesaurus.nodes.forEach(function(section)
-            {
-				if (section.id == sectionid)
-				{
-					section_slash_partie = section;
-				}
-			}, this);
-			return section_slash_partie;
-		};
-        
-        
-        
-        this.obtainClassNameFromPartieId = function(partieid)
-        {
-            return this.classNames[partieid];
-        }
-		
-		
-		
-		
-		
-		
-		/***********************************************************************
 		 * PRINT
 		 */
 		
@@ -708,57 +602,6 @@
 		
 		/************************************************************************/
 		
-		this.switchDisplay = function(displaylong, idee)
-        {
-            idee.displayLong = displaylong;
-            if (displaylong == true)
-            {
-                $(".idee-item").removeClass("focus");
-                $("#initiative-" + idee.id).removeClass("col-lg-6");
-                $("#initiative-" + idee.id).addClass("col-lg-12");
-                
-                $("#initiative-" + idee.id).addClass("focus");
-            }
-            else
-            {
-                
-                $(".idee-item").removeClass("focus");
-                $("#initiative-" + idee.id).removeClass("col-lg-12");
-                $("#initiative-" + idee.id).addClass("col-lg-6");  
-            }
-            
-            
-            $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
-
-        };
-        
-        this.switchMapDisplay = function()
-        {
-            if (this.mapDisplayLong)
-            {
-                delete this.mapDisplayLong;
-                
-                var map_html_content_node = document.getElementById("map-tools-wrapper");
-                var map_html_content_node_parent = map_html_content_node.parentNode;
-                var map_html_content_target_node = document.getElementById("map-tools-zone");
-                
-                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
-                map_html_content_target_node.appendChild(map_html_content_node);
-                
-            }
-            else
-            {
-                var map_html_content_node = document.getElementById("map-tools-wrapper");
-                var map_html_content_node_parent = map_html_content_node.parentNode;
-                var map_html_content_target_node = document.getElementById("fullsize-map-wrapper");
-                
-                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
-                map_html_content_target_node.appendChild(map_html_content_node);
-                
-                this.mapDisplayLong = true;
-            }
-            this.refreshMap(500);
-        };
 		
 		this.obtainExperiencesForIdeas = function()
 		{
@@ -1146,14 +989,6 @@
 
 		};
 		
-		/*** GESTION DES FILTRES ****/
-		
-		/** construit la liste de tous les mots clefs disponible pour le filtrage des thesaurus */
-		this.gatherAvailableFilters = function(thesaurus)
-		{
-			return [];
-		};
-		
 		
 		
 		
@@ -1209,7 +1044,7 @@
             {
             	console.log("suggestion envoyée");
             });	
-        }
+        };
         
         
         this.submitCommentaire = function()
@@ -1222,7 +1057,23 @@
             {
             	console.log("commentaire envoyé");
             });	
-        }
+        };
+        
+        this.submitPanier= function()
+        {
+            var panier = 
+            {
+            	"login": odass_app.user.name,
+            	"experiences": this.panier.experiences
+            }
+            
+            var that = this;
+            $http.post(odass_app.api_hostname + "/api/savepanier/", panier).success(function(data)
+            {
+            	console.log("panier sauvé");
+            	
+            });	
+        };
 	
 	}]);
 

@@ -9,25 +9,32 @@ var gulp = require('gulp'),
 	del = require('del');
 
 
+gulp.task('scripts_node', function() {
+	  return gulp.src('src/node/*.js')
+	    .pipe(concat('00_odass_server.js'))
+	    .pipe(gulp.dest('build/js'))
+	    .pipe(notify({ message: 'scripts_node task complete' }));
+	});
+
+gulp.task('scripts_services', function() {
+	  return gulp.src('src/services/**/*.js')
+	    .pipe(concat('01_odass_services.js'))
+	    .pipe(gulp.dest('build/js'))
+	    .pipe(notify({ message: 'scripts_services task complete' }));
+	});
+
 gulp.task('scripts_domain', function() {
 	  return gulp.src('src/domain/**/*.js')
-	    .pipe(concat('01_odass_domain.js'))
+	    .pipe(concat('02_odass_domain.js'))
 	    .pipe(gulp.dest('build/js'))
 	    .pipe(notify({ message: 'scripts_domain task complete' }));
 	});
 
 gulp.task('scripts_angular', function() {
 	  return gulp.src('src/app/**/*.js')
-	    .pipe(concat('02_odass_angular.js'))
+	    .pipe(concat('03_odass_angular.js'))
 	    .pipe(gulp.dest('build/js'))
 	    .pipe(notify({ message: 'scripts_angular task complete' }));
-	});
-
-gulp.task('scripts_node', function() {
-	  return gulp.src('src/node/*.js')
-	    .pipe(concat('03_odass_server.js'))
-	    .pipe(gulp.dest('build/js'))
-	    .pipe(notify({ message: 'scripts_node task complete' }));
 	});
 
 
@@ -42,7 +49,7 @@ gulp.task('clean', function() {
 	  return del(['build', 'dist/styles', 'dist/scripts', 'dist/images']);
 	});
 
-gulp.task('default', ['scripts_domain', 'scripts_angular'], function() {
+gulp.task('default', ['scripts_services', 'scripts_domain', 'scripts_angular'], function() {
 	gulp.start('scripts');
 });
 

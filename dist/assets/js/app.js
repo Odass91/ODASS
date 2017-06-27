@@ -1,58 +1,385 @@
-var Chapitre = function(data)
+var OdassHTTPService = function(scope)
+{
+	this.httpService = scope;
+};
+
+OdassHTTPService.prototype.httpService = null;
+
+OdassHTTPService.prototype.fetchJSONObject = function(url, success_callback, args)
+{
+	this.httpService.get(url).
+	success(function(data)
+	{
+		success_callback(data, args);
+	}).
+	error(function(data, status) 
+	{
+		console.log("Erreur lors de la recuperation du fichier json");
+	});
+};
+var OdassMapService = function()
+{
+	this.markerList = new Array();
+	this.carte = null;
+	
+};
+
+OdassMapService.prototype.setup = function(domElementId)
+{
+	// reperto map
+	var mymap = L.map(domElementId).setView([48.712, 2.24], 6);
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
+	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+	    maxZoom: 18,
+	    id: 'davidleray.2f171f1g',
+	    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
+	}).addTo(mymap);
+	
+	this.carte = mymap;
+};
+
+OdassMapService.prototype.addMarker = function(object)
+{
+	var latitude_pos = experience.geoloc.latitude;
+    var longitude_pos = experience.geoloc.longitude;
+    var icon = L.icon({
+        'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
+    });
+    var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
+    
+    marker.addTo(this.reperto_carte);
+    
+    
+    this.markerCount++;
+    this.activeMarker = null;
+    
+    experience.marker = marker;
+    marker.experience = experience;
+    var reperto = this;
+    marker.on("click", function(event)
+    {
+    	event.preventDefault();
+    }, this);
+    
+    this.markerMap[experience.id] = experience;
+};
+
+OdassMapService.prototype.removeMarker = function(object)
 {
 	
 };
-var Experience = function(data)
-{
-	this.displayed = true;
-}
 
-var Guide = function(id, groupement_id)
+OdassMapService.prototype.toggleMarker = function(object)
 {
-	this.id = id;
-	this.gcid = groupement_id;
+	
 };
 
-Guide.prototype.nom = "";
+OdassMapService.prototype.refreshMap = function(object)
+{
+	var map = this.carte;
+    window.setTimeout(function(){
+        map.invalidateSize();
+    },timeout);
+};
+var Chapitre = function(parent)
+{
+	this.parent = parent;
+};
+
+Chapitre.prototype.id = "";
+Chapitre.prototype.titre = "";
+Chapitre.prototype.description = "";
+Chapitre.prototype.descriptionlongue = "";
+
+Chapitre.prototype.setup = function (data)
+{
+	//console.log("SETUP CHAPITRE DATA", data);
+	this.id = data.id;
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+};
+var Experience = function(parent, httpService, mapService)
+{
+	this.displayed = true;
+	this.parent = parent;
+	this.httpService = httpService;
+	this.mapService = mapService;
+	this.display = {"format": "court"};
+};
+
+Experience.prototype.id = "";
+Experience.prototype.chapter_id = "";
+Experience.prototype.titre = "";
+Experience.prototype.description = "";
+Experience.prototype.descriptionLongue = "";
+Experience.prototype.geolocation = {};
+Experience.prototype.contacts = {};
+Experience.prototype.category = "";
+
+Experience.prototype.setup = function(data)
+{
+	this.id = data.id;
+	
+	this.titre = data.label;
+	this.description = data.description;
+	this.descriptionLongue = data.descriptionLongue;
+	
+	this.geoloc = data.geoloc ? data.geoloc : null;
+	this.contacts = data.contacts ? data.contacts : null;
+};
+
+Experience.prototype.fetchExperimentData = function()
+{
+	
+};
+
+/*
+if (! expindex[experience.id] && experience.label && experience.contacts)
+{
+   
+    experience.category = reperto.cssClasses[reperto.obtainSectionFromChapter(idee.parent)];
+    idee.experiences.push(experience);
+    expindex[experience.id] = "loaded";
+    if (experience.geoloc.latitude)
+    {
+        reperto.setupMarker(experience);
+    }
+    if (experience.geoloc.ville)
+    {
+         reperto.addToAvailableFilter({"label": experience.geoloc.ville, "category": "geoloc"});
+    }
+    
+}
+*/
+var Guide = function(httpService, mapService){
+	this.thesaurus = new Thesaurus(this, httpService);
+	this.idees = new Array();
+	this.httpService = httpService;
+	this.mapService = mapService;
+};
+
+Guide.prototype.id = "14";
+Guide.prototype.gdcid = "";
+Guide.prototype.titre = "";
 Guide.prototype.description = "";
+Guide.prototype.modetest = false;
+Guide.prototype.owner = {"nom": "CAC", "href": "http://www.associations-citoyennes.net/", "logo": "images/logo-CAC.jpg", "email": "cac_repertoire@odass.org"};
+Guide.prototype.idees = new Array();
+
+Guide.prototype.setupGuideFromURL = function()
+{
+	if (window.location.search.indexOf("guideid") != -1)
+	{
+		var guideidvalue = window.location.search.split("guideid=")[1];
+		guideidvalue = guideidvalue.split("&")[0];
+		this.id = guideidvalue;
+	}
+	
+	if (window.location.search.indexOf("gdcid") != -1)
+	{
+		var guideidvalue = window.location.search.split("gdcid=")[1];
+		guideidvalue = guideidvalue.split("&")[0];
+		this.gdcid = guideidvalue;
+	}
+	
+	if (window.location.search.indexOf("modetest") != -1)
+	{
+		var modetestvalue = window.location.search.split("modetest=")[1];
+		modetestvalue = modetestvalue.split("&")[0];
+		this.modetest = modetestvalue;
+	}
+};
 
 Guide.prototype.setup = function(data)
 {
-	this.thesaurus = new Thesaurus().setup(data.thesaurus);
+	console.log("GUIDE DATA : ", data);
+	this.thesaurus.setup(data.thesaurus);
+	
 	this.idees = new Array();
-	data.idees.forEach(function(idee)
+	var idee = null;
+	data.idees.forEach(function(idee_data)
 	{
-		var idee = new Idee().setup(idee);
+		idee = new Idee(this, this.httpService, this.mapService);
+		idee.setup(idee_data);
+		this.idees.push(idee);
 	}, this);
+	
+	this.titre = data.thesaurus.titre;
+	this.description = data.thesaurus.description;
+	this.descriptionlongue = data.thesaurus.descriptionlongue;
+	this.email = data.thesaurus.email;
 };
 
+Guide.prototype.setupIntroduction = function(data)
+{
+	this.introduction = {"titre": data.titre, "contenu": data.introduction};
+};
 
-var Idee = function(data)
+Guide.prototype.obtainGuideGdcid = function()
+{
+	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
+}
+
+Guide.prototype.findExperiencesByIdee = function(idee)
+{
+	var result = new Array();
+	
+	return result;
+};
+
+Guide.prototype.findIdeesByPartie = function(partie)
+{
+	
+};
+
+Guide.prototype.findIdeesByChapitre = function(chapitre)
+{
+	
+};
+
+Guide.prototype.findChapitreById = function(id)
+{
+	
+};
+
+Guide.prototype.findPartieById = function(id)
+{
+	
+};
+var Idee = function(guide, httpService, mapService)
 {
 	this.displayed = true;
-	this.experiences = [];
+	this.experiences_loaded = false;
+	this.experiences = new Array();
+	this.httpService = httpService;
+	this.mapService = mapService;
+	this.guide = guide;
+	
 };
 
+Idee.prototype.id = "";
+Idee.prototype.chapter_id = "";
+Idee.prototype.titre = "";
+Idee.prototype.description = "";
+Idee.prototype.descriptionLongue = "";
+
 Idee.prototype.setup = function(data)
-{
+{	
 	this.id = data.id;
+	
 	this.chapter_id = data.parent;
 	this.titre = data.titre;
 	this.description = data.description;
 	this.descriptionLongue = data.descriptionLongue;
+	
 	this.experiences = new Array();
-	data.experiences.forEach(function(experience)
+	if (data.experiences)
 	{
-		
+		data.experiences.forEach(function(exp_data)
+		{
+			var experience = new Experience(this);
+			experience.setup(exp_data);
+			this.experiences.push(experience);
+		}, this);
+	}
+};
+
+Idee.prototype.fetchExperimentData = function(hostname)
+{
+	var url = hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
+	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
+};
+
+Idee.prototype.obtainExperimentFromId = function(id)
+{
+	var finder = function(element)
+    {
+        return (element.id == id);
+    };
+    return (this.experiences.find(finder));
+};
+
+var fetchExperimentDataCallback = function(data, context)
+{
+	if (data.experiences)
+    {
+		data.experiences.forEach(function(experimentData)
+		{
+			var experience = context.obtainExperimentFromId(experimentData.id);
+			// give data
+			if (experience != undefined)
+			{
+				experience.setup(experimentData);
+			}
+		}, this);
+		context.experiences_loaded = true;
+    }
+};
+var Panier = function(httpService)
+{
+	this.experiences = [];
+};
+
+Panier.prototype.addExperience = function(experience)
+{
+	
+}
+
+Panier.prototype.removeExperience = function(experience)
+{
+	var experienceIndex = this.experiences.indexOf(experience);
+	if (experienceIndex != -1)
+	{
+		this.experiences.splice(experienceIndex, 1); 
+	}
+}
+var Partie = function (guide, httpService)
+{
+	this.chapitres = new Array();
+	this.parent = guide;
+	this.httpService = httpService;
+};
+
+
+Partie.prototype.id = "";
+Partie.prototype.titre = "";
+Partie.prototype.description = "";
+Partie.prototype.descriptionlongue = "";
+
+Partie.prototype.setup = function (data)
+{
+	//console.log("SETUP PARTIE DATA", data);
+
+	this.id = data.id;
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+	
+	data.nodes.forEach(function(node)
+	{
+		var chapitre = new Chapitre(this);
+		chapitre.setup(node);
+		this.chapitres.push(chapitre);
 	}, this);
 };
-var Partie = function (data)
+var Thesaurus = function(guide, httpService)
 {
-	this.chapitres = [];
+	this.parties = new Array();
+	this.parent = guide;
+	this.httpService = httpService;
 };
-var Thesaurus = function(data)
+
+Thesaurus.prototype.setup = function(data)
 {
-	this.parties = [];
+//	console.log("THESAURUS SETUP DATA", data);
+	this.parties = new Array();
+	data.nodes.forEach(function(node)
+	{
+		var partie = new Partie(this.parent);
+		partie.setup(node);
+		this.parties.push(partie);
+	}, this);
 };
 (function()
 {
@@ -72,20 +399,7 @@ var Thesaurus = function(data)
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)
 	{
-		this.backgrounds = 
-		[
-		 	"vitrine-background.jpg", 
-			"vitrine-background-1.jpg",
-			"vitrine-background-2.jpg",
-			"vitrine-background-3.jpg",
-			"vitrine-background-4.jpg",
-			"vitrine-background-5.jpg",
-			"vitrine-background-6.jpg",
-			"vitrine-background-7.jpg",
-			"vitrine-background-8.jpg",
-			"vitrine-background-9.jpg"
-		];
-		
+		this.backgrounds = [];
 		this.backgroundindex = 0;
 		
 		this.changeBackground = function()
@@ -102,6 +416,7 @@ var Thesaurus = function(data)
 		
 		this.init = function()
 		{
+			this.httpService = new OdassHTTPService($http);
 			this.api_hostname = "http://perso.odass.org";
             if (window.location.hostname.match("odass.org"))
             {
@@ -193,7 +508,7 @@ var Thesaurus = function(data)
 			var password = $("#passwordField").val();	
             
             
-            if (this.debug)
+            if (true)
             {
                 this.user.loggedIn = true;
                 this.user.name = "david";
@@ -2192,6 +2507,9 @@ $(document).ready(function (){
 		var reperto = this;
 		
 		var odass_app = $scope.$parent.odass;
+		this.odass_app = odass_app;
+		this.httpService = odass_app.httpService;
+		this.mapService = odass_app.mapService;
 		
 		$scope.$on('initModule', function(event, args)
 		{
@@ -2205,99 +2523,23 @@ $(document).ready(function (){
 		
 		$("body").css("background", "url('images/background-ricepaper_v3.png')");		
 		
-		this.reinit= function()
-		{
-			this.navigationmode = "tree";  // map | tree | print
-			
-			this.filteredInitiativeList = [];
-			this.savedInitiativeList = {};
-			this.savedInitiativeList.length = 0;
-			this.panierInitiatives = [];
-
-            this.userFilter = "";
-            
-			this.display.idees = this.idees;
-			this.cache.idees = this.idees;
-	    	
-	    	this.display.section = null;
-	    	this.display.chapitre = null;
-	    	
-	    	this.display.breadcrumb = {};
-	    	
-	    	this.display.pager = {"index": 0, "offset": 6};
-	    	this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
-	    	
-		};
-		
-		
 		this.init = function()
 		{
-			/** INITIALISATION */
-
-			this.display = {};
-            this.userFilter = "";
-            
-            
 			this.navigationmode = "tree";  // map | tree | print
-			
-			var guideid = "14";
-			var gdcid = "";
-			
-			if (window.location.search.indexOf("guideid") != -1)
-			{
-				var guideidvalue = window.location.search.split("guideid=")[1];
-				guideidvalue = guideidvalue.split("&")[0];
-				guideid = guideidvalue;
-			}
-			if (window.location.search.indexOf("gdcid") != -1)
-			{
-				var guideidvalue = window.location.search.split("gdcid=")[1];
-				guideidvalue = guideidvalue.split("&")[0];
-				gdcid = guideidvalue;
-			}
-			var modetest = false;
-			if (window.location.search.indexOf("modetest") != -1)
-			{
-				var modetestvalue = window.location.search.split("modetest=")[1];
-				modetestvalue = modetestvalue.split("&")[0];
-				modetest = modetestvalue;
-			}
-			
-			this.guide = new Guide(guideid, gdcid);
-			
-			
-			this.modeTest = modetest;
 			this.emailContact = "contact@odass.org";
+			this.initJSONData();
+			
+			this.guide = new Guide(this.httpService, this.mapService);
+			this.guide.setupGuideFromURL();
+			this.panier = new Panier();
 			
 			this.loadIntroduction();
-			
-			this.filteredActions = [];
-			
-			this.filter = "";
-			
-			this.markerMap = {};
-
-			this.activeFilters = [];
-			
-            this.cache = {};
-			
-			this.showSummary = false;
-			
 			this.loadThesaurus();
-			
-			this.filteredInitiativeList = [];
-			this.savedInitiativeList = {};
-			this.savedInitiativeList.length = 0;
-			this.panierInitiatives = [];
-            
-            var that = this;
-           
-            window.setTimeout(function()
-            {
-                that.reduceIntro();
-            }, 5000);
-            
-            this.mail = 
+        };
+        
+        this.initJSONData = function()
+        {
+        	this.mail = 
             {
 	            "guideid": "",
 	            "gdcid": "",
@@ -2361,34 +2603,60 @@ $(document).ready(function (){
 		{
 			var reperto = this;
 			
-			$http.get(odass_app.api_hostname + "/api/getjsonintroduction/14").
-		    success(function(data, status) 
+			var successCallbackFunction = function(data, status) 
 		    {
 		    	if (data)
 		    	{
-					reperto.display = {};
-		    		reperto.display.introduction = {};
-		    		reperto.display.introduction.titre = data.titre;
-			    	reperto.display.introduction.contenu = data.introduction;
-			    	
-                    $("#introduction-titre").html(data.titre);
+					$("#introduction-titre").html(data.titre);
                     $("#introduction-contenu").html(data.introduction);
 						
 		    	}
+		    };
+			
+			this.httpService.fetchJSONObject(odass_app.api_hostname + "/api/getjsonintroduction/14", successCallbackFunction);
+		};
+		
+		this.loadThesaurus = function()
+		{
+			var reperto = this;
+			
+			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/14").
+		    success(function(data, status) 
+		    {
+                reperto.markerCount = 0;
+                reperto.guide.setup(data);
+                
+		    	reperto.guide_is_loaded = true;
+                
+                reperto.updateCSSClasses();
+                
+                window.setTimeout(function()
+                {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }, 500);
+		    	
 		    }).
 		    error(function(data, status) 
 		    {
-		    	console.log("Erreur lors de la recuperation du fichier json");
+		    	console.log("Erreur lors de la recuperation du fichier json")
 		    });
+			
 		};
-        
-        this.reduceIntro = function()
+		
+		this.fetchExperimentDataForIdee = function(idee)
+		{
+			idee.fetchExperimentData(odass_app.api_hostname);
+		};
+		
+		
+		/** FONCTIONS QUI IMPACTENT LA VUE */
+		
+		this.reduceIntro = function()
         {            
             this.intro_reduced = true;
             $("#guide-intro .panel-body").addClass("animate-disappear");
             $("#guide-intro .panel-body").removeClass("animate-appear");
-        }
-        
+        };
 		
 		this.expandIntro = function()
         {
@@ -2398,14 +2666,7 @@ $(document).ready(function (){
             
         };
         
-		
-		this.isExpanded = function(id)
-		{
-			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
-		};
-		
-		
-		this.toggleExpandedZone = function(id)
+        this.toggleExpandedZone = function(id)
 		{
 			var target=$("#" + id).parents(".panel").find(".panel-collapse");
 			
@@ -2419,6 +2680,109 @@ $(document).ready(function (){
 			}
 		};
         
+        this.updateCSSClasses = function()
+        {
+            this.cssClasses = {};
+            this.markerIcons = {};
+            this.cssColors = {};
+            
+            this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
+            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
+            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", "#ffe188", "rgba(154,202,85,0.9)"];
+            
+            this.guide.thesaurus.parties.forEach(function(PARTIE)
+            {
+                if (! this.cssClasses[PARTIE.id])
+                {
+                    this.cssClasses[PARTIE.id] = this.availableClasses.pop();
+                    this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
+                    this.cssColors[this.cssClasses[PARTIE.id]] = this.availableColors.pop();
+                }
+            }, this);
+            
+        };
+        
+        this.switchDisplay = function(displaylong, idee)
+        {
+            idee.displayLong = displaylong;
+            if (displaylong == true)
+            {
+                $(".idee-item").removeClass("focus");
+                $("#initiative-" + idee.id).removeClass("col-lg-6");
+                $("#initiative-" + idee.id).addClass("col-lg-12");
+                
+                $("#initiative-" + idee.id).addClass("focus");
+            }
+            else
+            {
+                
+                $(".idee-item").removeClass("focus");
+                $("#initiative-" + idee.id).removeClass("col-lg-12");
+                $("#initiative-" + idee.id).addClass("col-lg-6");  
+            }
+            
+            
+            $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
+
+        };
+        
+        this.switchMapDisplay = function()
+        {
+            if (this.mapDisplayLong)
+            {
+                delete this.mapDisplayLong;
+                
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("map-tools-zone");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+            }
+            else
+            {
+                var map_html_content_node = document.getElementById("map-tools-wrapper");
+                var map_html_content_node_parent = map_html_content_node.parentNode;
+                var map_html_content_target_node = document.getElementById("fullsize-map-wrapper");
+                
+                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
+                map_html_content_target_node.appendChild(map_html_content_node);
+                
+                this.mapDisplayLong = true;
+            }
+            this.refreshMap(500);
+        };
+		
+        
+        
+		
+		
+		/** DIVERS  */
+		this.isExpanded = function(id)
+		{
+			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
+		};
+                                    
+		
+		this.isPaginationVisible = function(index)
+		{
+			if (! this.display)
+			{
+				this.display = {};
+			}
+			if (! this.display.pager)
+			{
+				this.display.pager = {"index": 0, "offset": 6};
+			}
+			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
+			
+			return isVisible;
+		};
+		
+		
+		
+        /** GESTION DU SLIDESHOW */
         this.previousExperience = function(id, n)
         {
             var left =  parseInt($("#" + id).css("left"));
@@ -2460,23 +2824,7 @@ $(document).ready(function (){
                 $("#" + item + "-" + id + ".info-block").addClass("active");
                 $("#tab-" + item + "-" + id + ".footer-tab").addClass("active");
             }
-        }
-                                    
-		
-		this.isPaginationVisible = function(index)
-		{
-			if (! this.display)
-			{
-				this.display = {};
-			}
-			if (! this.display.pager)
-			{
-				this.display.pager = {"index": 0, "offset": 6};
-			}
-			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
-			
-			return isVisible;
-		};
+        };
 		
 		this.setPagerIndex = function(index)
 		{
@@ -2493,99 +2841,6 @@ $(document).ready(function (){
 			{
 				this.obtainExperiencesForIdea(this.display.idees[index]);
 			}
-			
-		};
-		
-		this.associateIdeasAndSections = function()
-		{
-			this.sectionByChapterId = {};
-			reperto.thesaurus.nodes.forEach(function(section)
-			{
-				section.nodes.forEach(function(chapter)
-				{
-					this.sectionByChapterId[chapter.id] = section;
-				}, this);
-			}, this);
-		};
-        
-        this.updateCSSClasses = function()
-        {
-            this.cssClasses = {};
-            this.markerIcons = {};
-            this.cssColors = {};
-            
-            this.availableMarkerIcons = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
-            this.availableClasses = ["PARTIE_D", "PARTIE_A", "PARTIE_B", "PARTIE_C"];
-            this.availableColors = ["rgba(244,118,182,0.9)", "rgba(90,180,243,0.9)", "#ffe188", "rgba(154,202,85,0.9)"];
-
-            
-            this.thesaurus.nodes.forEach(function(PARTIE)
-            {
-                if (! this.cssClasses[PARTIE.id])
-                {
-                    this.cssClasses[PARTIE.id] = this.availableClasses.pop();
-                    this.markerIcons[this.cssClasses[PARTIE.id]] = this.availableMarkerIcons.pop();
-                    this.cssColors[this.cssClasses[PARTIE.id]] = this.availableColors.pop();
-                }
-            }, this);
-            
-        };
-		
-		this.loadThesaurus = function()
-		{
-			var reperto = this;
-
-			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/14").
-		    success(function(data, status) 
-		    {
-                reperto.markerCount = 0;
-		    	
-                reperto.thesaurus = data.thesaurus;
-		    	reperto.idees = data.idees;
-		    	
-                reperto.availableFilters = [];
-		    	reperto.matchedFilters = [];
-		    	reperto.activeFilters = [];
-                reperto.matchedExperiences = {};
-                
-		    	reperto.display.breadcrumb = {};
-		    	
-		    	if (!reperto.display.pager)
-		    	{
-		    		reperto.display.pager = {"index": 0, "offset": 6};
-		    		reperto.display.pager.pagerItems = new Array(Math.ceil(reperto.display.idees.length / 6));
-		    	}
-
-		    	reperto.guide_is_loaded = true;
-		    	reperto.setPagerIndex(0);
-                
-                
-                /****
-                console.log(reperto.display.idees[0].experiences);
-                //reperto.obtainExperiencesForIdea(reperto.display.idees[0]);
-                console.log(reperto.display.idees[0].experiences);
-                ****/
-                
-                if (reperto.navigationmode == 'map')
-                {
-                    reperto.setupMap();
-                    reperto.refreshMap(100);
-                }
-                
-                reperto.setupPrint();
-                
-                
-                reperto.updateCSSClasses();
-                window.setTimeout(function()
-                {
-                    $('[data-toggle="tooltip"]').tooltip();
-                }, 500);
-		    	
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json")
-		    });
 			
 		};
 		
@@ -2731,60 +2986,6 @@ $(document).ready(function (){
         }
         
 		/***********************************************************************
-		 * HELPER FUNCTIONS
-		 */
-		
-		
-		
-		/**********************************************************************/
-		
-		this.obtainSectionFromChapter = function(chapterid)
-		{
-			var chapter = this.obtainChapterFromId(chapterid);
-			var section = this.obtainSectionFromId(chapter.parent);
-			return section.id;
-		};
-        
-		this.obtainChapterFromId = function(chapterid)
-		{
-			var chapter_slash_chapitre = null;
-			this.thesaurus.nodes.forEach(function(section){
-				section.nodes.forEach(function(chapter){
-					if (chapter.id == chapterid)
-					{
-						chapter_slash_chapitre = chapter;
-					}
-				}, this)
-			}, this);
-			return chapter_slash_chapitre;
-		};
-
-		this.obtainSectionFromId = function(sectionid)
-		{
-			var section_slash_partie = null;
-			this.thesaurus.nodes.forEach(function(section)
-            {
-				if (section.id == sectionid)
-				{
-					section_slash_partie = section;
-				}
-			}, this);
-			return section_slash_partie;
-		};
-        
-        
-        
-        this.obtainClassNameFromPartieId = function(partieid)
-        {
-            return this.classNames[partieid];
-        }
-		
-		
-		
-		
-		
-		
-		/***********************************************************************
 		 * PRINT
 		 */
 		
@@ -2891,200 +3092,6 @@ $(document).ready(function (){
 		
 		
 		/************************************************************************/
-		
-		this.switchDisplay = function(displaylong, idee)
-        {
-            idee.displayLong = displaylong;
-            if (displaylong == true)
-            {
-                $(".idee-item").removeClass("focus");
-                $("#initiative-" + idee.id).removeClass("col-lg-6");
-                $("#initiative-" + idee.id).addClass("col-lg-12");
-                
-                $("#initiative-" + idee.id).addClass("focus");
-            }
-            else
-            {
-                
-                $(".idee-item").removeClass("focus");
-                $("#initiative-" + idee.id).removeClass("col-lg-12");
-                $("#initiative-" + idee.id).addClass("col-lg-6");  
-            }
-            
-            
-            $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
-
-        };
-        
-        this.switchMapDisplay = function()
-        {
-            if (this.mapDisplayLong)
-            {
-                delete this.mapDisplayLong;
-                
-                var map_html_content_node = document.getElementById("map-tools-wrapper");
-                var map_html_content_node_parent = map_html_content_node.parentNode;
-                var map_html_content_target_node = document.getElementById("map-tools-zone");
-                
-                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
-                map_html_content_target_node.appendChild(map_html_content_node);
-                
-            }
-            else
-            {
-                var map_html_content_node = document.getElementById("map-tools-wrapper");
-                var map_html_content_node_parent = map_html_content_node.parentNode;
-                var map_html_content_target_node = document.getElementById("fullsize-map-wrapper");
-                
-                map_html_content_node = map_html_content_node_parent.removeChild(map_html_content_node);
-                map_html_content_target_node.appendChild(map_html_content_node);
-                
-                this.mapDisplayLong = true;
-            }
-            this.refreshMap(500);
-        };
-		
-		this.obtainExperiencesForIdeas = function()
-		{
-			
-			var experiences = [];
-			var reperto = this;
-			
-			this.display.idees.forEach(function(idee)
-			{
-				idee.experiences = 'loading';
-				this.obtainExperiencesForIdea(idee);
-			}, this);
-			
-			this.guide_is_loaded = true;
-		};
-		
-		this.obtainExperiencesForIdea = function(idee)
-		{
-			if (! idee)
-			{
-				return;
-			}
-			
-			var reperto = this;
-            $http.get(odass_app.api_hostname + "/api/getjsonexp/" + idee.id + (reperto.gdcid != "" ? ("/" + reperto.gdcid) : "")).
-            success(function(data, status) 
-            {
-                idee.display = {};
-                idee.experiences = [];
-                reperto.cache[idee.id] = true;
-                if (data.experiences)
-                {
-                    var expindex = {};
-                    data.experiences.forEach(function(experience)
-                    {
-                        
-                        if (! expindex[experience.id] && experience.label && experience.contacts)
-                        {
-                            experience.display = {};
-                            experience.display.format = "court";
-                            experience.category = reperto.cssClasses[reperto.obtainSectionFromChapter(idee.parent)];
-                            idee.experiences.push(experience);
-                            expindex[experience.id] = "loaded";
-                            if (experience.geoloc.latitude)
-                            {
-                                reperto.setupMarker(experience);
-                            }
-                            if (experience.geoloc.ville)
-                            {
-                                 reperto.addToAvailableFilter({"label": experience.geoloc.ville, "category": "geoloc"});
-                            }
-                            reperto.ideeByExperienceId[experience.id] = idee;
-                            
-                            reperto.display.experiences.push(experience);
-                        }
-                    });
-                }
-                else
-                {
-                    idee.experiences  = [];
-                }
-            }).
-            error(function(data, status) 
-            {
-                idee.display = {};
-                idee.experiences  = [];
-                console.log("Erreur lors de la recuperation du fichier json - experiences");
-            });
-		};
-		
-        /** MAP */
-        
-        this.refreshMap = function(timeout)
-        {
-            var map = this.reperto_carte;
-            window.setTimeout(function(){
-                map.invalidateSize();
-            },timeout);
-        };
-		
-		this.setupMap = function()
-		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
-			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'davidleray.2f171f1g',
-			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
-			}).addTo(mymap);
-			
-			this.reperto_carte = mymap;
-		};
-		
-		
-		this.setupMarker = function(experience)
-		{
-			if (this.markerMap[experience.id])
-            {
-                return;
-            }
-            if (experience.marker)
-            {
-                return;
-            }
-            if (experience.geoloc == {})
-            {
-                return;
-            }
-            
-            if (! this.reperto_carte)
-			{
-				this.setupMap();
-			}
-			
-            if (experience.geoloc.latitude && experience.geoloc.longitude)
-            {
-                var latitude_pos = experience.geoloc.latitude;
-                var longitude_pos = experience.geoloc.longitude;
-                var icon = L.icon({
-                    'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
-                });
-                var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
-                
-                marker.addTo(this.reperto_carte);
-                
-                
-                this.markerCount++;
-                this.activeMarker = null;
-                
-                experience.marker = marker;
-                marker.experience = experience;
-                var reperto = this;
-                marker.on("click", function(event)
-                {
-                	event.preventDefault();
-                }, this);
-                
-                this.markerMap[experience.id] = experience;
-            }
-            
-		};
-		
 		this.isCategorieActive = function(categorie)
 		{
 			if (! this.activeCategories)
@@ -3096,15 +3103,7 @@ $(document).ready(function (){
 		
 		this.updateMap = function()
 		{
-			console.log(this.idees);
-
-			console.log(this.display.idees);
-			
 			var idee = this.display.idees[0];
-			
-			console.log(idee);
-			console.log(this.display.idees.indexOf(idee));
-			console.log(this.idees.indexOf(idee));
 			
 			function ideesAvecMarkers(idee)
 			{
@@ -3330,14 +3329,6 @@ $(document).ready(function (){
 
 		};
 		
-		/*** GESTION DES FILTRES ****/
-		
-		/** construit la liste de tous les mots clefs disponible pour le filtrage des thesaurus */
-		this.gatherAvailableFilters = function(thesaurus)
-		{
-			return [];
-		};
-		
 		
 		
 		
@@ -3393,7 +3384,7 @@ $(document).ready(function (){
             {
             	console.log("suggestion envoyée");
             });	
-        }
+        };
         
         
         this.submitCommentaire = function()
@@ -3406,13 +3397,27 @@ $(document).ready(function (){
             {
             	console.log("commentaire envoyé");
             });	
-        }
+        };
+        
+        this.submitPanier= function()
+        {
+            var panier = 
+            {
+            	"login": odass_app.user.name,
+            	"experiences": this.panier.experiences
+            }
+            
+            var that = this;
+            $http.post(odass_app.api_hostname + "/api/savepanier/", panier).success(function(data)
+            {
+            	console.log("panier sauvé");
+            	
+            });	
+        };
 	
 	}]);
 
-	odass.directive("filtersBox", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/filters-box.html'};});
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/thesaurus.html'};});
-	odass.directive("repertoireIdees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/repertoire-idees.html'};});
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
 	
 })();

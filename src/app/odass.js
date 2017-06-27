@@ -16,20 +16,7 @@
 	
 	angular.module("odass").controller('OdassController', ['$http', '$location', '$scope','Upload', function($http, $location, $scope, Upload)
 	{
-		this.backgrounds = 
-		[
-		 	"vitrine-background.jpg", 
-			"vitrine-background-1.jpg",
-			"vitrine-background-2.jpg",
-			"vitrine-background-3.jpg",
-			"vitrine-background-4.jpg",
-			"vitrine-background-5.jpg",
-			"vitrine-background-6.jpg",
-			"vitrine-background-7.jpg",
-			"vitrine-background-8.jpg",
-			"vitrine-background-9.jpg"
-		];
-		
+		this.backgrounds = [];
 		this.backgroundindex = 0;
 		
 		this.changeBackground = function()
@@ -46,6 +33,7 @@
 		
 		this.init = function()
 		{
+			this.httpService = new OdassHTTPService($http);
 			this.api_hostname = "http://perso.odass.org";
             if (window.location.hostname.match("odass.org"))
             {

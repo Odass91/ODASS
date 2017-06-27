@@ -1,7 +1,8 @@
-var Partie = function (guide)
+var Partie = function (guide, httpService)
 {
 	this.chapitres = new Array();
 	this.parent = guide;
+	this.httpService = httpService;
 };
 
 

@@ -21,13 +21,12 @@
     
 </style>
 
-<section ng-repeat="idee in reperto.display.idees" class="idee-item item" id="initiative-{{idee.id}}" 
+<section ng-repeat="idee in reperto.guide.idees" class="idee-item item" id="initiative-{{idee.id}}" 
 			ng-click="reperto.toggleDisplayInitiative(idee)"
 			ng-show="reperto.isPaginationVisible($index)"
 			style="display: inline-block; margin: 1%; float:left"
 >
-	 	
-	 	
+	
 	<div class="panel panel-success {{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}" style="">
 		<div class="panel-heading" style="">
             <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -39,12 +38,12 @@
 				</span>
 			</h4>
 		</div>
-		<div class="panel-body" ng-class="{'experiences-visibles': idee.display.experiences && idee.display.experiences.length > 0}">
+		<div class="panel-body">
 			<div class="idee-content" style="min-height: 50%; padding: 5px;">
                 
                 <p style="" ng-hide="idee.displayLong">
                     <span ng-bind-html="idee.description"></span>
-                    <a href="" ng-click="reperto.switchDisplay(true, idee)">Voir plus</a>
+                    <a href="" ng-click="reperto.fetchExperimentDataForIdee(idee)">Voir plus</a>
                 </p>
                 
                 <p style="" ng-show="idee.displayLong">
@@ -71,24 +70,24 @@
 			
 			<div class="experiences-content" style="min-height: 48%; position: relative;">
                 
-                <div ng-show="idee.experiences == 'loading'" style="color: rgba(0,0,0,0.6)" class="text-center">
+                <div ng-hide="idee.experiences_loaded" style="color: rgba(0,0,0,0.6)" class="text-center">
                     <img src="images/chargement.gif" width="18" height="18"/>&nbsp;Chargement des expériences en cours.
                 </div>
                 
-                <div ng-show="idee.experiences != 'loading' && idee.experiences.length == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
+                <div ng-show="idee.experiences_loaded && idee.experiences.length == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
                 </div>
                 
                 <div style="">
 				
 				
-                    <div ng-show="idee.experiences != 'loading' && idee.experiences.length > 1" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
-                    <div ng-show="idee.experiences != 'loading' && idee.experiences.length > 1"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </div>
                 
-                    <div class="experiences-list" style="position:relative; width:100%; overflow: hidden">
+                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1" class="experiences-list" style="position:relative; width:100%; overflow: hidden">
                         <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.experiences.length * 100}}%; margin:0; padding:0; font-size:0;">
                             
                             

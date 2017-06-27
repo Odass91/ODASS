@@ -1,7 +1,8 @@
-var Thesaurus = function(guide)
+var Thesaurus = function(guide, httpService)
 {
 	this.parties = new Array();
 	this.parent = guide;
+	this.httpService = httpService;
 };
 
 Thesaurus.prototype.setup = function(data)

@@ -1,13 +1,17 @@
-var Guide = function(){
-	this.thesaurus = new Thesaurus(this);
+var Guide = function(httpService, mapService){
+	this.thesaurus = new Thesaurus(this, httpService);
 	this.idees = new Array();
+	this.httpService = httpService;
+	this.mapService = mapService;
 };
 
 Guide.prototype.id = "14";
-Guide.prototype.gcid = "";
+Guide.prototype.gdcid = "";
 Guide.prototype.titre = "";
 Guide.prototype.description = "";
 Guide.prototype.modetest = false;
+Guide.prototype.owner = {"nom": "CAC", "href": "http://www.associations-citoyennes.net/", "logo": "images/logo-CAC.jpg", "email": "cac_repertoire@odass.org"};
+Guide.prototype.idees = new Array();
 
 Guide.prototype.setupGuideFromURL = function()
 {
@@ -22,7 +26,7 @@ Guide.prototype.setupGuideFromURL = function()
 	{
 		var guideidvalue = window.location.search.split("gdcid=")[1];
 		guideidvalue = guideidvalue.split("&")[0];
-		this.gcid = guideidvalue;
+		this.gdcid = guideidvalue;
 	}
 	
 	if (window.location.search.indexOf("modetest") != -1)
@@ -38,18 +42,30 @@ Guide.prototype.setup = function(data)
 	console.log("GUIDE DATA : ", data);
 	this.thesaurus.setup(data.thesaurus);
 	
-	/*this.idees = new Array();
+	this.idees = new Array();
+	var idee = null;
 	data.idees.forEach(function(idee_data)
 	{
-		var idee = new Idee().setup(idee_data);
+		idee = new Idee(this, this.httpService, this.mapService);
+		idee.setup(idee_data);
 		this.idees.push(idee);
 	}, this);
 	
 	this.titre = data.thesaurus.titre;
 	this.description = data.thesaurus.description;
 	this.descriptionlongue = data.thesaurus.descriptionlongue;
-	this.email = data.thesaurus.email;*/
+	this.email = data.thesaurus.email;
 };
+
+Guide.prototype.setupIntroduction = function(data)
+{
+	this.introduction = {"titre": data.titre, "contenu": data.introduction};
+};
+
+Guide.prototype.obtainGuideGdcid = function()
+{
+	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
+}
 
 Guide.prototype.findExperiencesByIdee = function(idee)
 {

@@ -1,4 +1,4 @@
-var Panier = function()
+var Panier = function(httpService)
 {
 	this.experiences = [];
 };
@@ -15,5 +15,4 @@ Panier.prototype.removeExperience = function(experience)
 	{
 		this.experiences.splice(experienceIndex, 1); 
 	}
-	
 }

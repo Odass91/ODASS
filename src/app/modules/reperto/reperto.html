@@ -171,44 +171,7 @@
 				
 				
 			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree'">
-				<section>
-				
-					<div class="panel-group" id="thesaurus-tree" role="tablist" aria-multiselectable="true">
-					  	<div class="panel panel-default">
-					  		<div class="panel-body" style="padding: 2px 20px 2px 2px">
-							  	<a href="http://www.associations-citoyennes.net/" target="_blank"> 
-									<img src="images/logo-CAC.jpg" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
-								</a>
-								
-								<a ng-hide="true" href="mailto:cac_repertoire@odass.org" title="Envoyez vos commentaires sur le guide" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
-							</div>
-						</div>
-					  	
-					  	<div ng-repeat="item in reperto.thesaurus.nodes" class="panel panel-default {{reperto.cssClasses[item.id]}} {{item.id}}">
-							<div class="panel-heading" role="tab" id="headingOne">
-						      	
-					        	<a class="pull-right" role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">replier</a>
-					        	<a class="pull-right" role="button" ng-show="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">déplier</a>
-						      	<h4 class="panel-title" href="#{{item.id}}" id="h4-{{item.id}}">
-						      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
-						      	</h4>
-						      	
-						    </div>
-						    
-						    <div id="{{item.id}}" class="thesaurus-section panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-						      	<div class="panel-body">
-						        	<ol>
-							        	<li ng-repeat="subItem in item.nodes">
-							          		<div>
-							            		<a class="tree-chapter-item" id="tree-chapter-item-{{subItem.id}}" href="" ng-click="reperto.selectChapter(item, subItem)">{{subItem.titre}}</a>
-							          		</div>
-							        	</li>
-							      	</ol>
-						      	</div>
-							</div>
-						</div>
-					</div>
-				</section>
+				<thesaurus></thesaurus>
 				<div class="clearfix"></div>
 			</div>
 

@@ -8,6 +8,9 @@
 		var reperto = this;
 		
 		var odass_app = $scope.$parent.odass;
+		this.odass_app = odass_app;
+		this.httpService = odass_app.httpService;
+		this.mapService = odass_app.mapService;
 		
 		$scope.$on('initModule', function(event, args)
 		{
@@ -27,7 +30,7 @@
 			this.emailContact = "contact@odass.org";
 			this.initJSONData();
 			
-			this.guide = new Guide();
+			this.guide = new Guide(this.httpService, this.mapService);
 			this.guide.setupGuideFromURL();
 			this.panier = new Panier();
 			
@@ -101,41 +104,30 @@
 		{
 			var reperto = this;
 			
-			$http.get(odass_app.api_hostname + "/api/getjsonintroduction/14").
-		    success(function(data, status) 
+			var successCallbackFunction = function(data, status) 
 		    {
 		    	if (data)
 		    	{
-					reperto.display = {};
-		    		reperto.display.introduction = {};
-		    		reperto.display.introduction.titre = data.titre;
-			    	reperto.display.introduction.contenu = data.introduction;
-			    	
-                    $("#introduction-titre").html(data.titre);
+					$("#introduction-titre").html(data.titre);
                     $("#introduction-contenu").html(data.introduction);
 						
 		    	}
-		    }).
-		    error(function(data, status) 
-		    {
-		    	console.log("Erreur lors de la recuperation du fichier json");
-		    });
+		    };
+			
+			this.httpService.fetchJSONObject(odass_app.api_hostname + "/api/getjsonintroduction/14", successCallbackFunction);
 		};
 		
 		this.loadThesaurus = function()
 		{
 			var reperto = this;
-
+			
 			$http.get(odass_app.api_hostname + "/api/getjsonthesaurus/14").
 		    success(function(data, status) 
 		    {
                 reperto.markerCount = 0;
                 reperto.guide.setup(data);
-                console.log(reperto.guide);
                 
-		    	reperto.display.breadcrumb = {};
 		    	reperto.guide_is_loaded = true;
-                
                 
                 reperto.updateCSSClasses();
                 
@@ -152,10 +144,10 @@
 			
 		};
 		
-		
-		
-		
-		
+		this.fetchExperimentDataForIdee = function(idee)
+		{
+			idee.fetchExperimentData(odass_app.api_hostname);
+		};
 		
 		
 		/** FONCTIONS QUI IMPACTENT LA VUE */
@@ -601,149 +593,6 @@
 		
 		
 		/************************************************************************/
-		
-		
-		this.obtainExperiencesForIdeas = function()
-		{
-			
-			var experiences = [];
-			var reperto = this;
-			
-			this.display.idees.forEach(function(idee)
-			{
-				idee.experiences = 'loading';
-				this.obtainExperiencesForIdea(idee);
-			}, this);
-			
-			this.guide_is_loaded = true;
-		};
-		
-		this.obtainExperiencesForIdea = function(idee)
-		{
-			if (! idee)
-			{
-				return;
-			}
-			
-			var reperto = this;
-            $http.get(odass_app.api_hostname + "/api/getjsonexp/" + idee.id + (reperto.gdcid != "" ? ("/" + reperto.gdcid) : "")).
-            success(function(data, status) 
-            {
-                idee.display = {};
-                idee.experiences = [];
-                reperto.cache[idee.id] = true;
-                if (data.experiences)
-                {
-                    var expindex = {};
-                    data.experiences.forEach(function(experience)
-                    {
-                        
-                        if (! expindex[experience.id] && experience.label && experience.contacts)
-                        {
-                            experience.display = {};
-                            experience.display.format = "court";
-                            experience.category = reperto.cssClasses[reperto.obtainSectionFromChapter(idee.parent)];
-                            idee.experiences.push(experience);
-                            expindex[experience.id] = "loaded";
-                            if (experience.geoloc.latitude)
-                            {
-                                reperto.setupMarker(experience);
-                            }
-                            if (experience.geoloc.ville)
-                            {
-                                 reperto.addToAvailableFilter({"label": experience.geoloc.ville, "category": "geoloc"});
-                            }
-                            reperto.ideeByExperienceId[experience.id] = idee;
-                            
-                            reperto.display.experiences.push(experience);
-                        }
-                    });
-                }
-                else
-                {
-                    idee.experiences  = [];
-                }
-            }).
-            error(function(data, status) 
-            {
-                idee.display = {};
-                idee.experiences  = [];
-                console.log("Erreur lors de la recuperation du fichier json - experiences");
-            });
-		};
-		
-        /** MAP */
-        
-        this.refreshMap = function(timeout)
-        {
-            var map = this.reperto_carte;
-            window.setTimeout(function(){
-                map.invalidateSize();
-            },timeout);
-        };
-		
-		this.setupMap = function()
-		{
-			var mymap = L.map('repertomap').setView([48.712, 2.24], 6);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
-			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'davidleray.2f171f1g',
-			    accessToken: 'pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw'
-			}).addTo(mymap);
-			
-			this.reperto_carte = mymap;
-		};
-		
-		
-		this.setupMarker = function(experience)
-		{
-			if (this.markerMap[experience.id])
-            {
-                return;
-            }
-            if (experience.marker)
-            {
-                return;
-            }
-            if (experience.geoloc == {})
-            {
-                return;
-            }
-            
-            if (! this.reperto_carte)
-			{
-				this.setupMap();
-			}
-			
-            if (experience.geoloc.latitude && experience.geoloc.longitude)
-            {
-                var latitude_pos = experience.geoloc.latitude;
-                var longitude_pos = experience.geoloc.longitude;
-                var icon = L.icon({
-                    'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
-                });
-                var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
-                
-                marker.addTo(this.reperto_carte);
-                
-                
-                this.markerCount++;
-                this.activeMarker = null;
-                
-                experience.marker = marker;
-                marker.experience = experience;
-                var reperto = this;
-                marker.on("click", function(event)
-                {
-                	event.preventDefault();
-                }, this);
-                
-                this.markerMap[experience.id] = experience;
-            }
-            
-		};
-		
 		this.isCategorieActive = function(categorie)
 		{
 			if (! this.activeCategories)
@@ -755,15 +604,7 @@
 		
 		this.updateMap = function()
 		{
-			console.log(this.idees);
-
-			console.log(this.display.idees);
-			
 			var idee = this.display.idees[0];
-			
-			console.log(idee);
-			console.log(this.display.idees.indexOf(idee));
-			console.log(this.idees.indexOf(idee));
 			
 			function ideesAvecMarkers(idee)
 			{
@@ -1077,9 +918,7 @@
 	
 	}]);
 
-	odass.directive("filtersBox", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/filters-box.html'};});
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/thesaurus.html'};});
-	odass.directive("repertoireIdees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/repertoire-idees.html'};});
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
 	
 })();

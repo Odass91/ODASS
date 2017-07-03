@@ -7,7 +7,6 @@ var Thesaurus = function(guide, httpService)
 
 Thesaurus.prototype.setup = function(data)
 {
-//	console.log("THESAURUS SETUP DATA", data);
 	this.parties = new Array();
 	data.nodes.forEach(function(node)
 	{
@@ -15,4 +14,33 @@ Thesaurus.prototype.setup = function(data)
 		partie.setup(node);
 		this.parties.push(partie);
 	}, this);
+};
+
+Thesaurus.prototype.findIdeesByPartie = function(partie)
+{
+	var partie_trouvee = (this.parties.filter(function(element){return (element.id == partie.id);}))[0];
+	
+	if (partie_trouvee)
+	{
+		return (partie_trouvee.obtainIdees());
+	}
+	else
+	{
+		return new Array();
+	}
+};
+
+Thesaurus.prototype.findIdeesByChapitre = function(chapitre)
+{
+	var idees = new Array();
+	this.parties.forEach(function(partie)
+	{
+		idees = idees.concat(partie.findIdeesByChapitre(chapitre));
+	}, this);
+	return idees;
+};
+
+Thesaurus.prototype.addIdee = function(idee)
+{
+	this.parties.forEach(function(partie){partie.addIdee(idee);}, this);
 };

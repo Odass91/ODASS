@@ -13,7 +13,7 @@ Idee.prototype.id = "";
 Idee.prototype.chapter_id = "";
 Idee.prototype.titre = "";
 Idee.prototype.description = "";
-Idee.prototype.descriptionLongue = "";
+Idee.prototype.descriptionlongue = "";
 
 Idee.prototype.setup = function(data)
 {	
@@ -22,7 +22,7 @@ Idee.prototype.setup = function(data)
 	this.chapter_id = data.parent;
 	this.titre = data.titre;
 	this.description = data.description;
-	this.descriptionLongue = data.descriptionLongue;
+	this.descriptionlongue = data.descriptionlongue;
 	
 	this.experiences = new Array();
 	if (data.experiences)
@@ -34,11 +34,14 @@ Idee.prototype.setup = function(data)
 			this.experiences.push(experience);
 		}, this);
 	}
+	
+	this.guide.addIdeeToThesaurus(this);
 };
 
 Idee.prototype.fetchExperimentData = function(hostname)
 {
 	var url = hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
+	console.log("url", url);
 	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
 };
 

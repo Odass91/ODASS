@@ -13,8 +13,6 @@ Partie.prototype.descriptionlongue = "";
 
 Partie.prototype.setup = function (data)
 {
-	//console.log("SETUP PARTIE DATA", data);
-
 	this.id = data.id;
 	this.titre = data.titre;
 	this.description = data.description;
@@ -26,4 +24,50 @@ Partie.prototype.setup = function (data)
 		chapitre.setup(node);
 		this.chapitres.push(chapitre);
 	}, this);
+};
+
+Partie.prototype.obtainIdees = function()
+{
+	var idees = new Array();
+	
+	this.chapitres.forEach(function(chapitre){
+		idees = idees.concat(chapitre.obtainIdees());
+	}, this);
+	
+	return idees;
+};
+
+Partie.prototype.addIdee = function(idee)
+{
+	var chapitre = this.findChapitreById(idee.chapter_id);
+	if (chapitre)
+	{
+		chapitre.addIdee(idee);
+	}
+};
+
+Partie.prototype.findIdeesByChapitre = function(chapitre)
+{
+	var chapitre = this.chapitres.find(function(element){return (element.id == chapitre.id);});
+	if (chapitre)
+	{
+		return chapitre.obtainIdees();
+	}
+	else
+	{
+		return (new Array());
+	}
+};
+
+Partie.prototype.findChapitreById = function(id)
+{
+	var chapitre = this.chapitres.find(function(element){return (element.id == id);});
+	if (chapitre)
+	{
+		return chapitre;
+	}
+	else
+	{
+		return null;
+	}
 };

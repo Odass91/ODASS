@@ -81,9 +81,77 @@ OdassMapService.prototype.refreshMap = function(object)
         map.invalidateSize();
     },timeout);
 };
+
+/*
+ * 
+ * 
+        
+        this.centerMap = function(experience)
+        {
+            if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+            if (experience.geoloc.latitude && experience.geoloc.longitude)
+            {
+                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
+                this.reperto_carte.openPopup(experience.popup);
+                
+            }
+            this.refreshMap(100);
+        };
+        
+        this.centerExperience = function(experience)
+        {
+            var idee = this.ideeByExperienceId[experience.id];
+            var chapter = this.obtainChapterFromId(idee.parent);
+            var section = this.obtainSectionFromId(chapter.parent);
+            
+            $("#thesaurus-tree .panel-collapse").addClass("collapse");
+            
+            
+            $("#thesaurus-tree ." + section.id + " .panel-collapse").removeClass("collapse");
+            
+            
+            $("#tree-chapter-item-" + chapter.id).click();
+            
+            
+        }
+ * 
+ * 
+ * 
+ */
+var OdassPdfService = function()
+{
+	
+};
+
+OdassPdfService.prototype.setup = function()
+{
+	
+};
+
+OdassPdfService.prototype.printPdf = function(pdfFilename)
+{
+	 html2canvas(document.getElementById('printzone'), {
+         onrendered: function (canvas) {
+             var data = canvas.toDataURL();
+             var docDefinition = {
+                 content: [{
+                     image: data,
+                     width: 500,
+                 }]
+             };
+             pdfMake.createPdf(docDefinition).download(pdfFilename);
+         }
+     });
+};
+
+
 var Chapitre = function(parent)
 {
 	this.parent = parent;
+	this.idees = new Array();
 };
 
 Chapitre.prototype.id = "";
@@ -93,11 +161,36 @@ Chapitre.prototype.descriptionlongue = "";
 
 Chapitre.prototype.setup = function (data)
 {
-	//console.log("SETUP CHAPITRE DATA", data);
 	this.id = data.id;
 	this.titre = data.titre;
 	this.description = data.description;
 	this.descriptionlongue = data.descriptionlongue;
+	
+	data.nodes.forEach(function(node)
+	{
+		this.idees.push(node);
+	}, this);
+};
+
+Chapitre.prototype.obtainIdees = function()
+{
+	return this.idees;
+};
+
+Chapitre.prototype.addIdee = function(idee)
+{
+	if (this.idees.length == 0)
+	{
+		this.idees.push(idee);
+	}
+	else
+	{
+		var old_idee = this.idees.find(function(element){return (element.id == idee.id);});
+		if (! old_idee)
+		{
+			this.idees.push(idee);
+		}
+	}
 };
 var Experience = function(parent, httpService, mapService)
 {
@@ -112,7 +205,7 @@ Experience.prototype.id = "";
 Experience.prototype.chapter_id = "";
 Experience.prototype.titre = "";
 Experience.prototype.description = "";
-Experience.prototype.descriptionLongue = "";
+Experience.prototype.descriptionlongue = "";
 Experience.prototype.geolocation = {};
 Experience.prototype.contacts = {};
 Experience.prototype.category = "";
@@ -123,7 +216,7 @@ Experience.prototype.setup = function(data)
 	
 	this.titre = data.label;
 	this.description = data.description;
-	this.descriptionLongue = data.descriptionLongue;
+	this.descriptionlongue = data.descriptionlongue;
 	
 	this.geoloc = data.geoloc ? data.geoloc : null;
 	this.contacts = data.contacts ? data.contacts : null;
@@ -155,6 +248,7 @@ if (! expindex[experience.id] && experience.label && experience.contacts)
 var Guide = function(httpService, mapService){
 	this.thesaurus = new Thesaurus(this, httpService);
 	this.idees = new Array();
+	this.filtres = new Array();
 	this.httpService = httpService;
 	this.mapService = mapService;
 };
@@ -211,6 +305,11 @@ Guide.prototype.setup = function(data)
 	this.email = data.thesaurus.email;
 };
 
+Guide.prototype.addIdeeToThesaurus = function(idee)
+{
+	this.thesaurus.addIdee(idee);
+};
+
 Guide.prototype.setupIntroduction = function(data)
 {
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
@@ -230,12 +329,17 @@ Guide.prototype.findExperiencesByIdee = function(idee)
 
 Guide.prototype.findIdeesByPartie = function(partie)
 {
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByPartie(partie);
+	return idees;
 	
 };
 
 Guide.prototype.findIdeesByChapitre = function(chapitre)
 {
-	
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByChapitre(chapitre);
+	return idees;
 };
 
 Guide.prototype.findChapitreById = function(id)
@@ -244,6 +348,17 @@ Guide.prototype.findChapitreById = function(id)
 };
 
 Guide.prototype.findPartieById = function(id)
+{
+};
+
+Guide.prototype.addFilter = function(filter)
+{
+	
+};
+
+
+
+Guide.prototype.removeFilter = function(filter)
 {
 	
 };
@@ -262,7 +377,7 @@ Idee.prototype.id = "";
 Idee.prototype.chapter_id = "";
 Idee.prototype.titre = "";
 Idee.prototype.description = "";
-Idee.prototype.descriptionLongue = "";
+Idee.prototype.descriptionlongue = "";
 
 Idee.prototype.setup = function(data)
 {	
@@ -271,7 +386,7 @@ Idee.prototype.setup = function(data)
 	this.chapter_id = data.parent;
 	this.titre = data.titre;
 	this.description = data.description;
-	this.descriptionLongue = data.descriptionLongue;
+	this.descriptionlongue = data.descriptionlongue;
 	
 	this.experiences = new Array();
 	if (data.experiences)
@@ -283,11 +398,14 @@ Idee.prototype.setup = function(data)
 			this.experiences.push(experience);
 		}, this);
 	}
+	
+	this.guide.addIdeeToThesaurus(this);
 };
 
 Idee.prototype.fetchExperimentData = function(hostname)
 {
 	var url = hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
+	console.log("url", url);
 	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
 };
 
@@ -316,14 +434,42 @@ var fetchExperimentDataCallback = function(data, context)
 		context.experiences_loaded = true;
     }
 };
-var Panier = function(httpService)
+var Panier = function(guide, httpService)
 {
 	this.experiences = [];
+	this.idees = {};
+	this.guide = guide;
+};
+
+Panier.prototype.addIdee = function(idee)
+{
+	idee.experiences.forEach(function(experience)
+	{
+		this.addExperience(experience);
+	}, this);
+	this.idees[idee.id] = true;
+};
+
+Panier.prototype.removeIdee = function(idee)
+{
+	idee.experiences.forEach(function(experience)
+	{
+		this.removeExperience(experience);
+	}, this);
+	delete this.idees[idee.id];
 };
 
 Panier.prototype.addExperience = function(experience)
 {
-	
+	var finder = function(element)
+	{
+		return (element.id.toLowerCase() == experience.id.toLowerCase());
+	}
+	if (this.experiences.find(finder) == undefined)
+	{
+		this.experiences.push(experience);
+	}
+		
 }
 
 Panier.prototype.removeExperience = function(experience)
@@ -334,6 +480,24 @@ Panier.prototype.removeExperience = function(experience)
 		this.experiences.splice(experienceIndex, 1); 
 	}
 }
+
+Panier.prototype.hasExperience = function(experience)
+{
+	var finder = function(element)
+	{
+		return (element.id.toLowerCase() == experience.id.toLowerCase());
+	}
+	return (this.experiences.find(finder) != undefined);
+};
+
+Panier.prototype.exportPanierAsPdf = function()
+{
+};
+
+
+Panier.prototype.sharePanier = function()
+{
+};
 var Partie = function (guide, httpService)
 {
 	this.chapitres = new Array();
@@ -349,8 +513,6 @@ Partie.prototype.descriptionlongue = "";
 
 Partie.prototype.setup = function (data)
 {
-	//console.log("SETUP PARTIE DATA", data);
-
 	this.id = data.id;
 	this.titre = data.titre;
 	this.description = data.description;
@@ -363,6 +525,52 @@ Partie.prototype.setup = function (data)
 		this.chapitres.push(chapitre);
 	}, this);
 };
+
+Partie.prototype.obtainIdees = function()
+{
+	var idees = new Array();
+	
+	this.chapitres.forEach(function(chapitre){
+		idees = idees.concat(chapitre.obtainIdees());
+	}, this);
+	
+	return idees;
+};
+
+Partie.prototype.addIdee = function(idee)
+{
+	var chapitre = this.findChapitreById(idee.chapter_id);
+	if (chapitre)
+	{
+		chapitre.addIdee(idee);
+	}
+};
+
+Partie.prototype.findIdeesByChapitre = function(chapitre)
+{
+	var chapitre = this.chapitres.find(function(element){return (element.id == chapitre.id);});
+	if (chapitre)
+	{
+		return chapitre.obtainIdees();
+	}
+	else
+	{
+		return (new Array());
+	}
+};
+
+Partie.prototype.findChapitreById = function(id)
+{
+	var chapitre = this.chapitres.find(function(element){return (element.id == id);});
+	if (chapitre)
+	{
+		return chapitre;
+	}
+	else
+	{
+		return null;
+	}
+};
 var Thesaurus = function(guide, httpService)
 {
 	this.parties = new Array();
@@ -372,7 +580,6 @@ var Thesaurus = function(guide, httpService)
 
 Thesaurus.prototype.setup = function(data)
 {
-//	console.log("THESAURUS SETUP DATA", data);
 	this.parties = new Array();
 	data.nodes.forEach(function(node)
 	{
@@ -380,6 +587,35 @@ Thesaurus.prototype.setup = function(data)
 		partie.setup(node);
 		this.parties.push(partie);
 	}, this);
+};
+
+Thesaurus.prototype.findIdeesByPartie = function(partie)
+{
+	var partie_trouvee = (this.parties.filter(function(element){return (element.id == partie.id);}))[0];
+	
+	if (partie_trouvee)
+	{
+		return (partie_trouvee.obtainIdees());
+	}
+	else
+	{
+		return new Array();
+	}
+};
+
+Thesaurus.prototype.findIdeesByChapitre = function(chapitre)
+{
+	var idees = new Array();
+	this.parties.forEach(function(partie)
+	{
+		idees = idees.concat(partie.findIdeesByChapitre(chapitre));
+	}, this);
+	return idees;
+};
+
+Thesaurus.prototype.addIdee = function(idee)
+{
+	this.parties.forEach(function(partie){partie.addIdee(idee);}, this);
 };
 (function()
 {
@@ -447,7 +683,9 @@ Thesaurus.prototype.setup = function(data)
 				this.changeModule("annuaire");
 			}
 			else
-            {
+            {this.user.loggedIn = true;
+			this.user.name = "cac";
+			this.changeModule("annuaire");
             }
             
             /* DEMO */
@@ -2531,7 +2769,8 @@ $(document).ready(function (){
 			
 			this.guide = new Guide(this.httpService, this.mapService);
 			this.guide.setupGuideFromURL();
-			this.panier = new Panier();
+			
+			this.panier = new Panier(this.guide, this.httpService);
 			
 			this.loadIntroduction();
 			this.loadThesaurus();
@@ -2627,6 +2866,9 @@ $(document).ready(function (){
                 reperto.guide.setup(data);
                 
 		    	reperto.guide_is_loaded = true;
+		    	
+
+		    	reperto.displayedIdeesLength = reperto.guide.idees.length;
                 
                 reperto.updateCSSClasses();
                 
@@ -2705,13 +2947,15 @@ $(document).ready(function (){
         this.switchDisplay = function(displaylong, idee)
         {
             idee.displayLong = displaylong;
+            idee.fetchExperimentData(odass_app.api_hostname);
+            
             if (displaylong == true)
             {
                 $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
                 $("#initiative-" + idee.id).addClass("col-lg-12");
-                
                 $("#initiative-" + idee.id).addClass("focus");
+                $(".odass-overlay").addClass("focus");
             }
             else
             {
@@ -2719,6 +2963,7 @@ $(document).ready(function (){
                 $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
+                $(".odass-overlay").removeClass("focus");
             }
             
             
@@ -2825,24 +3070,6 @@ $(document).ready(function (){
                 $("#tab-" + item + "-" + id + ".footer-tab").addClass("active");
             }
         };
-		
-		this.setPagerIndex = function(index)
-		{
-			if (!this.display.pager)
-			{
-				this.display.pager = {"index": 0, "offset": 6};
-			}
-			this.display.pager.index = index * this.display.pager.offset;
-			
-			var startindex = this.display.pager.index;
-			var endindex = Math.max(this.display.pager.index + this.display.pager.offset, this.display.idees.length - 1);
-			
-			for (var index = startindex; index < endindex; index++)
-			{
-				this.obtainExperiencesForIdea(this.display.idees[index]);
-			}
-			
-		};
 		
         
         /***********************************************************************
@@ -3127,209 +3354,57 @@ $(document).ready(function (){
 			}, this);
 			
 		};
-        
-        this.centerMap = function(experience)
-        {
-            if (! this.reperto_carte)
-			{
-				this.setupMap();
-			}
-            if (experience.geoloc.latitude && experience.geoloc.longitude)
-            {
-                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
-                this.reperto_carte.openPopup(experience.popup);
-                
-            }
-            this.refreshMap(100);
-        };
-        
-        this.centerExperience = function(experience)
-        {
-            var idee = this.ideeByExperienceId[experience.id];
-            var chapter = this.obtainChapterFromId(idee.parent);
-            var section = this.obtainSectionFromId(chapter.parent);
-            
-            $("#thesaurus-tree .panel-collapse").addClass("collapse");
-            
-            
-            $("#thesaurus-tree ." + section.id + " .panel-collapse").removeClass("collapse");
-            
-            
-            $("#tree-chapter-item-" + chapter.id).click();
-            
-            
-        }
-		
-		this.toggleCategory = function(categorie)
-		{
-			if (this.activeCategories == undefined)
-			{
-				this.activeCategories = [];
-			}
-
-			if (this.activeCategories[categorie.label] == undefined)
-			{
-				this.addCategoryToMap(categorie);
-				this.activeCategories[categorie.label] = true;
-			}
-			else
-			{
-				this.removeCategoryToMap(categorie);
-				delete this.activeCategories[categorie.label];
-			}
-		};
-		
-		this.addCategoryToMap = function(categorie)
-		{
-			this.display.idees.forEach(function(idee)
-			{
-				if (idee.experiences)
-				{
-					idee.experiences.forEach(function (experience)
-					{
-						if (this.availableFilters.keywords[experience.category].label == categorie.label)
-						{
-							experience.marker.addTo(this.reperto_carte).bindPopup("<h3>" + experience.label + "</h3>" + experience.description);
-						}
-					}, this);
-				}
-			}, this);
-		};
-		
-		this.removeCategoryToMap = function(categorie)
-		{
-			this.display.idees.forEach(function(idee)
-			{
-				if (idee.experiences)
-				{
-					idee.experiences.forEach(function (experience)
-					{
-						if (this.availableFilters.keywords[experience.category].label == categorie.label)
-						{
-							experience.marker.remove();
-						}
-					}, this);
-				}
-			}, this);
-        };
-        
-        
-		this.isCategorieActive = function(categorie)
-		{
-			if (! this.activeCategories)
-			{
-				this.activeCategories = {};
-			}
-			return (this.activeCategories[categorie.label] != undefined);
-		};
-
-		this.tagThesaurus = function(thesaurus)
-		{		
-			return;
-		};
 		
 		
 		
 		/** Utilisé lors de la sélection d'un item dans un thésaurus */
+		
 		this.selectThesaurus = function()
 		{
-
-			this.display.idees = this.idees;
-
-    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
-			
-			this.display.section = null;
-			this.display.chapitre = null;
-			this.display.intro = true;
-			
-			delete this.display.breadcrumb.section;
-			delete this.display.breadcrumb.chapitre;
-			
-			this.setPagerIndex(0);
-			
-			this.updateMap();
+			this.displayedIdeesLength = this.guide.idees.length;
+			this.guide.idees.forEach(function(idee)
+			{
+				idee.displayed = true;
+			}, this);
 		};
 		
 		
 		this.selectSection = function(section)
 		{
-			this.display.idees = [];
-			this.gatherIdeas(section);
-			
-			this.display.section = section;
-			this.display.chapitre = null;
-			this.display.intro = null;
-			
-			this.display.breadcrumb.section = section.titre;
-			delete this.display.breadcrumb.chapitre;
-			this.setPagerIndex(0);
-			
-			this.updateMap();
+			var selected_idees = this.guide.findIdeesByPartie(section);
+			this.guide.idees.forEach(function(idee)
+			{
+				var is_selected = selected_idees.find(function(element){return (element == idee);});
+				if (is_selected)
+				{
+					idee.displayed = true;
+				}
+				else
+				{
+					delete idee.displayed;
+				}
+			}, this);
+			this.displayedIdeesLength = selected_idees.length;
 		};
 		
 		this.selectChapter = function(section, chapitre)
 		{
-            
-            $(".tree-chapter-item").removeClass("active");
-            $("#tree-chapter-item-" + chapitre.id).addClass("active");
-            
-			this.display.idees = [];
-			this.gatherIdeas(chapitre);
-			this.refreshMap();
-
-			this.display.intro = null;
-			this.display.section = section;
-			this.display.chapitre = chapitre;
-
-			this.display.breadcrumb.section = section.titre;
-			this.display.breadcrumb.chapitre = chapitre.titre;
-			this.setPagerIndex(0);
-
-			
-			this.updateMap();
-			
-		};
-		
-		this.gatherIdeas = function(section)
-		{
-			
-			var idees = [];
-			
-			for (var idee of this.idees)
+			var selected_idees = this.guide.findIdeesByChapitre(chapitre);
+			this.guide.idees.forEach(function(idee)
 			{
-				if (idee.parent == section.id)
+				var is_selected = selected_idees.find(function(element){return (element == idee);});
+				if (is_selected)
 				{
-					idees.push(idee);
+					idee.displayed = true;
 				}
-			}
-			idees.forEach(function(idee)
-			{
-				this.display.idees.push(idee);
-			}, this);
-
-			if (section.nodes && section.nodes.length > 0)
-			{
-				section.nodes.forEach(function(node)
+				else
 				{
-					this.gatherIdeas(node);
-				}, this);
-			}
-
-    		this.display.pager.pagerItems = new Array(Math.ceil(this.display.idees.length / 6));
-		};
-
-		this.toggleDisplayInitiative = function(idee)
-		{
-			
-		};
-		
-		this.updateInitiatives = function(idee)
-		{
-			
-
-		};
-		
-		
+					delete idee.displayed;
+				}
+			}, this);
+			console.log(selected_idees);
+			this.displayedIdeesLength = selected_idees.length;
+		};	
 		
 		
 		this.displaySavedInitiatives = function()
@@ -3340,39 +3415,6 @@ $(document).ready(function (){
 				$("#initiative-" + this.savedInitiativeList[key].id).show();
 			}
 		};
-		
-		this.exportToPdf = function()
-		{
-			/* MANUAL VERSION */
-//			var doc = new jsPDF();
-//			this.panierInitiatives.forEach(function(initiative)
-//			{
-//				console.log(initiative);
-//				doc.addPage();
-//				doc.setFontSize(24);
-//				doc.text(20,20,initiative.titre, {width: 500});
-//				doc.setFontSize(12);
-//				doc.text(20,60,initiative.descriptionlongue, {width: 500});
-//			}, this);
-//			doc.save("repertoire.pdf");
-//			
-			//
-
-		/* AUTOMATIC VERSION */
-		   html2canvas(document.getElementById('printzone'), {
-                onrendered: function (canvas) {
-                    var data = canvas.toDataURL();
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500,
-                        }]
-                    };
-                    pdfMake.createPdf(docDefinition).download("repertoire.pdf");
-                }
-            });
-		};
-        
         
         this.submitExperience = function()
         {
@@ -3405,7 +3447,7 @@ $(document).ready(function (){
             {
             	"login": odass_app.user.name,
             	"experiences": this.panier.experiences
-            }
+            };
             
             var that = this;
             $http.post(odass_app.api_hostname + "/api/savepanier/", panier).success(function(data)

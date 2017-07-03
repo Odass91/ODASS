@@ -1,6 +1,7 @@
 var Guide = function(httpService, mapService){
 	this.thesaurus = new Thesaurus(this, httpService);
 	this.idees = new Array();
+	this.filtres = new Array();
 	this.httpService = httpService;
 	this.mapService = mapService;
 };
@@ -57,6 +58,11 @@ Guide.prototype.setup = function(data)
 	this.email = data.thesaurus.email;
 };
 
+Guide.prototype.addIdeeToThesaurus = function(idee)
+{
+	this.thesaurus.addIdee(idee);
+};
+
 Guide.prototype.setupIntroduction = function(data)
 {
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
@@ -76,12 +82,17 @@ Guide.prototype.findExperiencesByIdee = function(idee)
 
 Guide.prototype.findIdeesByPartie = function(partie)
 {
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByPartie(partie);
+	return idees;
 	
 };
 
 Guide.prototype.findIdeesByChapitre = function(chapitre)
 {
-	
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByChapitre(chapitre);
+	return idees;
 };
 
 Guide.prototype.findChapitreById = function(id)
@@ -90,6 +101,17 @@ Guide.prototype.findChapitreById = function(id)
 };
 
 Guide.prototype.findPartieById = function(id)
+{
+};
+
+Guide.prototype.addFilter = function(filter)
+{
+	
+};
+
+
+
+Guide.prototype.removeFilter = function(filter)
 {
 	
 };

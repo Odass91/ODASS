@@ -11,7 +11,7 @@ Experience.prototype.id = "";
 Experience.prototype.chapter_id = "";
 Experience.prototype.titre = "";
 Experience.prototype.description = "";
-Experience.prototype.descriptionLongue = "";
+Experience.prototype.descriptionlongue = "";
 Experience.prototype.geolocation = {};
 Experience.prototype.contacts = {};
 Experience.prototype.category = "";
@@ -22,7 +22,7 @@ Experience.prototype.setup = function(data)
 	
 	this.titre = data.label;
 	this.description = data.description;
-	this.descriptionLongue = data.descriptionLongue;
+	this.descriptionlongue = data.descriptionlongue;
 	
 	this.geoloc = data.geoloc ? data.geoloc : null;
 	this.contacts = data.contacts ? data.contacts : null;

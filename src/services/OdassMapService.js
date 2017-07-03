@@ -62,3 +62,43 @@ OdassMapService.prototype.refreshMap = function(object)
         map.invalidateSize();
     },timeout);
 };
+
+/*
+ * 
+ * 
+        
+        this.centerMap = function(experience)
+        {
+            if (! this.reperto_carte)
+			{
+				this.setupMap();
+			}
+            if (experience.geoloc.latitude && experience.geoloc.longitude)
+            {
+                this.reperto_carte.setView([experience.geoloc.latitude, experience.geoloc.longitude], 13);
+                this.reperto_carte.openPopup(experience.popup);
+                
+            }
+            this.refreshMap(100);
+        };
+        
+        this.centerExperience = function(experience)
+        {
+            var idee = this.ideeByExperienceId[experience.id];
+            var chapter = this.obtainChapterFromId(idee.parent);
+            var section = this.obtainSectionFromId(chapter.parent);
+            
+            $("#thesaurus-tree .panel-collapse").addClass("collapse");
+            
+            
+            $("#thesaurus-tree ." + section.id + " .panel-collapse").removeClass("collapse");
+            
+            
+            $("#tree-chapter-item-" + chapter.id).click();
+            
+            
+        }
+ * 
+ * 
+ * 
+ */

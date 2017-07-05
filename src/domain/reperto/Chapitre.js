@@ -1,6 +1,6 @@
 var Chapitre = function(parent)
 {
-	this.parent = parent;
+	this.partie_id = parent.id;
 	this.idees = new Array();
 };
 
@@ -20,6 +20,15 @@ Chapitre.prototype.setup = function (data)
 	{
 		this.idees.push(node);
 	}, this);
+};
+
+Chapitre.prototype.build = function (data)
+{
+	this.id = data.id;
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+	this.idees = new Array();
 };
 
 Chapitre.prototype.obtainIdees = function()

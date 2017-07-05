@@ -1,7 +1,7 @@
 var Experience = function(parent, httpService, mapService)
 {
 	this.displayed = true;
-	this.parent = parent;
+	this.idee_id = parent.id;
 	this.httpService = httpService;
 	this.mapService = mapService;
 	this.display = {"format": "court"};

@@ -33,7 +33,7 @@
 			this.guide = new Guide(this.httpService, this.mapService);
 			this.guide.setupGuideFromURL();
 			
-			this.panier = new Panier(this.guide, this.httpService);
+			this.panier = new Panier(this.guide, this.httpService, this.mapService);
 			
 			this.loadIntroduction();
 			this.loadThesaurus();
@@ -129,16 +129,18 @@
                 reperto.guide.setup(data);
                 
 		    	reperto.guide_is_loaded = true;
-		    	
 
 		    	reperto.displayedIdeesLength = reperto.guide.idees.length;
                 
                 reperto.updateCSSClasses();
+                reperto.panier.guide.build(reperto.guide);
                 
                 window.setTimeout(function()
                 {
                     $('[data-toggle="tooltip"]').tooltip();
                 }, 500);
+                
+                reperto.reduceIntro();
 		    	
 		    }).
 		    error(function(data, status) 
@@ -234,6 +236,12 @@
 
         };
         
+        this.showExperience = function(experience)
+        {
+        	this.current_experience = experience;
+        	$("#detail-experience").modal('show');
+        };
+        
         this.switchMapDisplay = function()
         {
             if (this.mapDisplayLong)
@@ -270,22 +278,6 @@
 		this.isExpanded = function(id)
 		{
 			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
-		};
-                                    
-		
-		this.isPaginationVisible = function(index)
-		{
-			if (! this.display)
-			{
-				this.display = {};
-			}
-			if (! this.display.pager)
-			{
-				this.display.pager = {"index": 0, "offset": 6};
-			}
-			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
-			
-			return isVisible;
 		};
 		
 		
@@ -334,253 +326,6 @@
             }
         };
 		
-        
-        /***********************************************************************
-         * FILTER FUNCTIONS
-         */
-        this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
-        {
-            var finder = function(element)
-            {
-                return (element.label.toLowerCase() == filter.label.toLowerCase());
-            };
-            
-            if (reperto.availableFilters.find(finder) == undefined)
-            {
-                reperto.availableFilters.push(filter);
-            }
-        };
-        
-        this.updateMatchedFilters = function()
-        {
-            var str = this.userFilter.toLowerCase();
-            console.log(str);
-            var mapper = function(element)
-            {
-                return element.label.toLowerCase();
-            };
-            var filterer = function(element)
-            {
-                return (element.label.toLowerCase().match(str))
-            };
-            
-            if (str.length > 2)
-            {
-                this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
-            }
-            else
-            {
-                this.matchedFilters = [];
-            }
-            console.log(this.matchedFilters);
-        };
-        
-        
-        this.addFilter = function(filter)
-        {
-            var filterer = function(element)
-            {
-                if (element.geoloc.ville)
-                {
-                    return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
-                }
-                else
-                {
-                    return false;
-                }
-            };
-            var finder = function(element)
-            {
-                return (element.toLowerCase() == filter.toLowerCase());
-            };
-            
-            if (this.activeFilters.length == 0)
-            {
-               this.activeFilters.push(filter);
-            }
-            else
-            {
-                if (this.activeFilters.find(finder) == undefined)
-                {
-                    this.activeFilters.push(filter);
-                }
-            }
-            this.userFilter = "";
-            this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
-            
-            this.refreshDisplayedExperiments();
-            
-        };
-        
-        this.removeFilter = function(filter)
-        {
-            if (this.activeFilters.indexOf(filter) != -1)
-            {
-                var filterIndex = this.activeFilters.indexOf(filter);
-                this.activeFilters.splice(filterIndex, 1);
-                delete this.matchedExperiences[filter];    
-            }
-            
-            this.refreshDisplayedExperiments();
-        }
-        
-        this.refreshDisplayedExperiments = function()
-        {
-            if ( Object.keys(this.matchedExperiences).length == 0 )
-            {
-                this.display.experiences.forEach(function(experience)
-                {
-                    if (experience.marker)
-                    {
-                        experience.marker.addTo(this.reperto_carte);
-                    }
-                }, this);
-                
-                return;
-            }
-            var filteredExperiences = [];
-            this.display.experiences.forEach(function(experience)
-            {
-                if (experience.marker)
-                {
-                    this.reperto_carte.removeLayer(experience.marker);
-                }
-            }, this);
-            
-            Object.keys(this.matchedExperiences).forEach(function(filter)
-            {
-                
-                this.matchedExperiences[filter].forEach(function(experience)
-                {
-                    var finder = function(element)
-                    {
-                        return (element.id == experience.id);
-                    };
-                    
-                    if (filteredExperiences.find(finder) == undefined)
-                    {
-                        filteredExperiences.push(experience);
-                    }
-                }, this);
-            }, this);
-            
-            
-        
-            filteredExperiences.forEach(function(experience)
-            {
-                if (experience.marker)
-                {
-                    experience.marker.addTo(this.reperto_carte);
-                }
-            }, this);
-        }
-        
-		/***********************************************************************
-		 * PRINT
-		 */
-		
-		this.setupPrint = function()
-		{
-			this.printableGuide = 
-			{
-				"titre": this.thesaurus.titre,
-				"description": this.thesaurus.description,
-				"parties":
-				[
-					
-				],
-				"activeSections": [],
-				"activeChapters": [],
-				"activeInitiatives": [],
-				"initiativesByChapter": {},
-				"chaptersBySection": {},
-				"indexes": {"sections": {}, "chapters": {}, "initiatives": {}}
-			};
-		};
-		
-		
-		this.saveInitiative = function(initiative)
-		{
-			initiative.favorite = true;
-			if (this.printableGuide.activeInitiatives.indexOf(initiative) == -1)
-			{
-				this.printableGuide.activeInitiatives.push(initiative);
-				if (! this.printableGuide.initiativesByChapter[initiative.parent])
-				{
-					this.printableGuide.initiativesByChapter[initiative.parent] = [initiative];
-				}
-				else
-				{
-					this.printableGuide.initiativesByChapter[initiative.parent].push(initiative);
-				}
-			}
-		};
-		
-		this.removeSavedInitiative = function(initiative)
-		{
-			var index = this.printableGuide.activeInitiatives.indexOf(initiative);
-			var index_by_chapter = this.printableGuide.initiativesByChapter[initiative.parent].indexOf(initiative);
-			
-			delete initiative.favorite;
-			if (index >= 0)
-			{
-				this.printableGuide.activeInitiatives.splice(index, 1);
-			}
-			if (index_by_chapter >= 0)
-			{
-				this.printableGuide.initiativesByChapter[initiative.parent].splice(index_by_chapter, 1);
-				if (this.printableGuide.initiativesByChapter[initiative.parent].length == 0)
-				{
-					
-				}
-			}
-		}
-		 
-		this.refreshPrintableCatalogue = function()
-		{
-			for (var initiative of this.printableGuide.activeInitiatives)
-			{
-				if (initiative.parent)
-				{
-					var chapter = this.obtainChapterFromId(initiative.parent);
-					var section = this.obtainSectionFromId(chapter.parent);
-					
-					if (! this.printableGuide.indexes.chapters[chapter.id])
-					{
-						this.printableGuide.activeChapters.push(chapter);
-						this.printableGuide.indexes.chapters[chapter.id] = chapter;
-					}
-					
-					if (! this.printableGuide.indexes.sections[section.id])
-					{
-						this.printableGuide.activeSections.push(section);
-						this.printableGuide.indexes.sections[section.id] = section;
-					}
-				}
-			}
-			
-			this.printableGuide.parties = [];
-			
-			for (var section of this.printableGuide.activeSections)
-			{
-				this.printableGuide.parties.push(section);
-				section.chapitres = [];
-				for (var chapitre of this.printableGuide.activeChapters)
-				{
-					if (chapitre.parent == section.id)
-					{
-						section.chapitres.push(chapitre);
-						chapitre.idees = this.printableGuide.initiativesByChapter[chapitre.id];
-					}
-				}
-				
-			}
-			
-			this.navigationmode = "print";
-			
-		};
-		
-		
 		/************************************************************************/
 		this.isCategorieActive = function(categorie)
 		{
@@ -602,7 +347,7 @@
 				
 			}
 			var filteredIdees = this.idees.filter(ideesAvecMarkers);
-			console.log(filteredIdees);
+			
 			filteredIdees.forEach(function(idee)
 			{
 				var index = this.display.idees.indexOf(idee);
@@ -618,41 +363,50 @@
 			
 		};
 		
+		this.loadPanier = function()
+		{
+			this.navigationmode = "basket";
+			this.guide_source = this.guide;
+			this.switchGuide(this.panier.guide);
+			this.selectThesaurus();
+			console.log(this.guide);
+		};
 		
+		this.loadCatalogue = function()
+		{
+			this.navigationmode = "print";
+		};
 		
-		/** Utilisé lors de la sélection d'un item dans un thésaurus */
+		this.unloadPanier = function()
+		{
+			this.navigationmode = "tree";
+			this.switchGuide(this.guide_source);
+		};
+		
+		this.switchGuide = function(guide)
+		{
+			this.guide = guide;
+		};
 		
 		this.selectThesaurus = function()
 		{
-			this.displayedIdeesLength = this.guide.idees.length;
-			this.guide.idees.forEach(function(idee)
-			{
-				idee.displayed = true;
-			}, this);
+			this.displayIdees(this.guide.idees);
 		};
-		
 		
 		this.selectSection = function(section)
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
-			this.guide.idees.forEach(function(idee)
-			{
-				var is_selected = selected_idees.find(function(element){return (element == idee);});
-				if (is_selected)
-				{
-					idee.displayed = true;
-				}
-				else
-				{
-					delete idee.displayed;
-				}
-			}, this);
-			this.displayedIdeesLength = selected_idees.length;
+			this.displayIdees(selected_idees);
 		};
 		
 		this.selectChapter = function(section, chapitre)
 		{
 			var selected_idees = this.guide.findIdeesByChapitre(chapitre);
+			this.displayIdees(selected_idees);
+		};
+		
+		this.displayIdees = function(selected_idees)
+		{
 			this.guide.idees.forEach(function(idee)
 			{
 				var is_selected = selected_idees.find(function(element){return (element == idee);});
@@ -665,20 +419,14 @@
 					delete idee.displayed;
 				}
 			}, this);
-			console.log(selected_idees);
 			this.displayedIdeesLength = selected_idees.length;
-		};	
-		
-		
-		this.displaySavedInitiatives = function()
-		{
-			$(".initiative-item").hide();
-			for(var key in this.savedInitiativeList)
-			{
-				$("#initiative-" + this.savedInitiativeList[key].id).show();
-			}
 		};
         
+		
+		
+		
+		/** API SERVER */
+		
         this.submitExperience = function()
         {
             this.mail.guideid = this.guideIdentifiant;
@@ -698,24 +446,33 @@
             this.comment.gdcid = this.gdcid;
             var reperto = this;
             
-            $http.post(odass_app.api_hostname + "/api/sendrepertorecomment/", reperto.comment).success(function(data)
+            $http.post(odass_app.api_hostname + "/api/sendrepertocomment/", reperto.comment).success(function(data)
             {
             	console.log("commentaire envoyé");
             });	
         };
         
-        this.submitPanier= function()
+        
+        this.obtainPanier = function(panier_id)
         {
-            var panier = 
-            {
-            	"login": odass_app.user.name,
-            	"experiences": this.panier.experiences
-            };
-            
-            var that = this;
-            $http.post(odass_app.api_hostname + "/api/savepanier/", panier).success(function(data)
+        	var that = this;
+            $http.get(odass_app.api_hostname + "/api/loadpanier/", panier).success(function(data)
             {
             	console.log("panier sauvé");
+            	
+            	if (data.id != that.guide.id)
+            	{
+            		// reload page with guide id contained into basket.
+            	}
+            	
+            	
+            	
+            	that.panier = new Panier(that.guide, that.httpService, that.mapService);
+            	data.experiences.forEach(function(experience)
+            	{
+            		that.panier.addExperience(experience, that.guide);
+            	});
+            	that.loadPanier();
             	
             });	
         };
@@ -724,5 +481,7 @@
 
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/thesaurus.html'};});
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
+	odass.directive("catalogue", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/print.html'};});
+	odass.directive("panier", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/panier.html'};});
 	
 })();

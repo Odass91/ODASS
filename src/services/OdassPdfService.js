@@ -8,7 +8,7 @@ OdassPdfService.prototype.setup = function()
 	
 };
 
-OdassPdfService.prototype.printPdf = function(pdfFilename)
+OdassPdfService.prototype.printPdf = function(pdfFilename, printzone)
 {
 	 html2canvas(document.getElementById('printzone'), {
          onrendered: function (canvas) {

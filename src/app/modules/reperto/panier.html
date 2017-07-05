@@ -1,0 +1,77 @@
+<style>
+    
+    .added_experiments
+    {
+    	color: rgba(0,0,0,1);
+    }
+    
+    .discarded_experiments
+    {
+    	color: rgba(0,0,0,0.5);;
+    }
+    
+    .btn.pull-right
+    {
+    	font-size: 12px !important;
+    }
+    
+</style>
+
+<p class="" ng-show="reperto.navigationmode == 'basket'">
+	<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px; padding: 15px; font-weight: bold;">
+	  <li ng-click="reperto.selectThesaurus()">
+	  	
+		<span class="glyphicon glyphicon-book"></span>
+		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}}</a>
+	  </li>
+	  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.breadcrumb.section">
+	  	<a href="#">{{reperto.breadcrumb.section}}</a>
+	  </li>
+	  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.breadcrumb.chapitre">
+	  	<span>{{reperto.breadcrumb.chapitre}}</span>
+	  </li>
+	</ol>
+</p>
+
+
+<h3 class="well" style="padding-left: 15px; margin-top: 22px; margin-bottom: 0px; padding:15px; font-size:14px; color: rgba(0,0,0,0.8)">
+	<span style="">{{reperto.displayedIdeesLength}}</span>
+	action(s) sélectionnée(s)&nbsp;&nbsp;
+		
+		<span ng-click="reperto.unloadPanier()" class="btn btn-default pull-right">
+			<span class="glyphicon glyphicon-arrow-left"></span>&nbsp; retour
+		</span>
+	
+		<span ng-click="reperto.panier.updatePanierOnServer()" class="btn btn-default pull-right">
+			<span class="glyphicon glyphicon-save"></span>
+		</span>
+		
+		<span ng-click="reperto.loadCatalogue()" class="btn btn-default pull-right">
+			<span class="glyphicon glyphicon-print"></span>&nbsp; Exporter le panier en pdf
+		</span>
+		
+		<span id="partager_le_panier" ng-click="reperto.panier.sharePanier()" class="btn btn-default pull-right"
+		 data-toggle="popover" title="Envoyez ce lien à vos contact" data-content="" data-trigger="focus" data-placement="top" data-container="body">
+			<span class="glyphicon glyphicon-link"></span>&nbsp; Partager
+		</span>
+	
+</h3>
+
+<section ng-repeat="idee in reperto.panier.guide.idees" class="col-lg-12" id="initiative-panier-{{idee.id}}" 
+			ng-show="idee.displayed"
+			style="display: inline-block; margin: 1%; float:left"
+>
+	<div style="border: 1px solid black; padding: 5px;">
+		
+		<strong>{{idee.titre}}</strong>
+		<div style="padding-left: 15px" ng-repeat="experience in idee.experiences" ng-class="{'added_experiments': experience.displayed, 'discarded_experiments': ! experience.displayed}">
+			<span ng-click="reperto.panier.removeExperience(experience)" ng-show="experience.displayed" class="pull-right"><span class="glyphicon glyphicon-minus"></span></span>
+			<span ng-click="reperto.panier.addExperience(experience)" ng-hide="experience.displayed" class="pull-right"><span class="glyphicon glyphicon-plus"></span></span>
+			<span ng-click="reperto.showExperience(experience)" class="pull-right"><span class="glyphicon glyphicon-eye-open"></span></span>
+			{{experience.titre}}
+		</div>
+	</div>
+</section>
+<script>
+
+</script>

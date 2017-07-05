@@ -38,10 +38,9 @@ Idee.prototype.setup = function(data)
 	this.guide.addIdeeToThesaurus(this);
 };
 
-Idee.prototype.fetchExperimentData = function(hostname)
+Idee.prototype.fetchExperimentData = function()
 {
-	var url = hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
-	console.log("url", url);
+	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
 	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
 };
 
@@ -52,6 +51,16 @@ Idee.prototype.obtainExperimentFromId = function(id)
         return (element.id == id);
     };
     return (this.experiences.find(finder));
+};
+
+Idee.prototype.obtainExperiencesLength = function(id)
+{
+	var filterer = function(element)
+    {
+        return (element.displayed);
+    };
+    var experiences = this.experiences.filter(filterer);
+    return experiences.length;
 };
 
 var fetchExperimentDataCallback = function(data, context)

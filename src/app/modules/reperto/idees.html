@@ -20,6 +20,35 @@
     
     
 </style>
+<p class="" ng-show="reperto.navigationmode == 'tree'">
+	<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px; padding: 15px; font-weight: bold;">
+	  <li ng-click="reperto.selectThesaurus()">
+	  	
+		<span class="glyphicon glyphicon-book"></span>
+		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}}</a>
+	  </li>
+	  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.breadcrumb.section">
+	  	<a href="#">{{reperto.breadcrumb.section}}</a>
+	  </li>
+	  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.breadcrumb.chapitre">
+	  	<span>{{reperto.breadcrumb.chapitre}}</span>
+	  </li>
+	</ol>
+	<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
+</p>
+				
+
+<h3 class="well" style="padding-left: 15px; margin-top: 22px; margin-bottom: 0px; padding:15px; font-size:14px; color: rgba(0,0,0,0.8)">
+	<span style="">{{reperto.displayedIdeesLength}}</span>
+	actions possibles&nbsp;&nbsp;
+	
+	
+	<span class="pull right">
+                    <a title="Ajouter un commentaire" data-toggle="modal" data-target="#ajouter-commentaire" class="glyphicon glyphicon-comment pull-right send-mail"></a>&nbsp;&nbsp;&nbsp;
+                    <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
+                </span>
+	
+</h3>
 
 <section ng-repeat="idee in reperto.guide.idees" class="idee-item item" id="initiative-{{idee.id}}" 
 			ng-show="idee.displayed"
@@ -52,7 +81,7 @@
                     </span>
                 </p>
                 
-                <div ng-hide="reperto.panier.idees[idee.id]" class="pull-right odass-button basket" style="" ng-click="reperto.panier.addIdee(idee)">
+                <div ng-hide="reperto.panier.idees[idee.id]" class="pull-right odass-button basket" style="" ng-click="reperto.panier.addIdee(idee, reperto.guide, true)">
 	                ajouter les {{idee.experiences.length}} expériences au panier
                 </div>
                 
@@ -75,24 +104,24 @@
 			<div class="experiences-content" style="min-height: 48%; position: relative;">
                 
                 
-                <div ng-show="idee.experiences_loaded && idee.experiences.length == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
+                <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength() == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
                 </div>
                 
                 <div style="">
 				
 				
-                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1 && idee.displayLong" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+                    <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength() > 1 && idee.displayLong" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
-                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1 && idee.displayLong"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+                    <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength()  > 1 && idee.displayLong"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </div>
                 
                     <div ng-show="idee.experiences_loaded && idee.displayLong" class="experiences-list" style="position:relative; width:100%; overflow: hidden">
-                        <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.experiences.length * 100}}%; margin:0; padding:0; font-size:0;">
+                        <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.obtainExperiencesLength() * 100}}%; margin:0; padding:0; font-size:0;">
                             
                             
-                            <div ng-repeat="experience in idee.experiences track by $index" class="" style=" width:{{100 / idee.experiences.length}}%; float: left; overflow: hidden">
+                            <div ng-repeat="experience in idee.experiences track by $index" ng-show="experience.displayed" class="" style=" width:{{100 / idee.obtainExperiencesLength() }}%; float: left; overflow: hidden">
                                     
                                     <div style="height:40%;">
                                     	<h4 class="initiative-title">

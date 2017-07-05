@@ -1,0 +1,32 @@
+<section id="catalogue" class="prettyprint" ng-show="reperto.navigationmode == 'print'">
+		
+	<div class="toolbox">
+		<span class="btn btn-primary" ng-click="reperto.panier.exportPanierAsPdf()"><span class="glyphicon glyphicon-print"></span> IMPRIMER</span> &nbsp;
+		<span class="btn btn-default" ng-click="reperto.navigationmode='basket'"><span class="glyphicon glyphicon-arrow-left"></span> RETOUR</span>
+	</div>
+	
+	<div id="printzone" class="sheet A4 portrait">
+		<h1 ng-bind-html="reperto.guide.titre"></h1>
+		<p class="guide description" ng-bind-html="reperto.guide.description"></p>
+		<section class="partie" ng-repeat="partie in reperto.guide.thesaurus.parties">
+			<h2 ng-bind-html="partie.titre"></h2>
+			<p class="partie description" ng-bind-html="partie.description"></p>
+			<article ng-repeat="chapitre in partie.chapitres">
+				<h3 ng-bind-html="chapitre.titre"></h3>
+				<p class="chapitre description" ng-bind-html="chapitre.description"></p>
+				<div class="idee" ng-repeat="idee in chapitre.idees">
+					<h4 ng-bind-html="idee.titre"></h4>
+					<p class="idee description" ng-bind-html="idee.description"></p>
+					<ul class="experiences">
+						<li class="experience" ng-repeat="experience in idee.experiences">
+							<h5 ng-bind-html="experience.titre"></h5>
+							<div class="experience description"></div>
+							<div class="contact"></div>
+							<div class="localisation"></div>
+						</li>
+					</ul>
+				</div>
+			</article>
+		</section>
+	</div>
+</section>

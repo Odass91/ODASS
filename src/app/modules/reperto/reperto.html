@@ -120,39 +120,6 @@
 		    		</div>
 		  		</div>
         </section>
-        
-        <section id="catalogue" class="prettyprint" ng-show="reperto.navigationmode == 'print'">
-		
-			<div class="toolbox">
-				<span class="btn btn-primary" ng-click="reperto.exportToPdf()"><span class="glyphicon glyphicon-print"></span> IMPRIMER</span> &nbsp;
-				<span class="btn btn-default" ng-click="reperto.navigationmode='tree'"><span class="glyphicon glyphicon-arrow-left"></span> RETOUR</span>
-			</div>
-			
-			<div id="printzone" class="sheet A4 portrait">
-				<h1 ng-bind-html="reperto.printableGuide.titre"></h1>
-				<p class="guide description" ng-bind-html="reperto.printableGuide.description"></p>
-				<section class="partie" ng-repeat="partie in reperto.printableGuide.parties">
-					<h2 ng-bind-html="partie.titre"></h2>
-					<p class="partie description" ng-bind-html="partie.description"></p>
-					<article ng-repeat="chapitre in partie.chapitres">
-						<h3 ng-bind-html="chapitre.titre"></h3>
-						<p class="chapitre description" ng-bind-html="chapitre.description"></p>
-						<div class="idee" ng-repeat="idee in chapitre.idees">
-							<h4 ng-bind-html="idee.titre"></h4>
-							<p class="idee description" ng-bind-html="idee.description"></p>
-							<ul class="experiences">
-								<li class="experience" ng-repeat="experience in idee.experiences">
-									<h5 ng-bind-html="experience.titre"></h5>
-									<div class="experience description"></div>
-									<div class="contact"></div>
-									<div class="localisation"></div>
-								</li>
-							</ul>
-						</div>
-					</article>
-				</section>
-			</div>
-		</section>
 		
 		
 		<section id="annuaire-body" class="row">
@@ -170,60 +137,34 @@
 				
 				
 				
-			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree'">
+			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree' || reperto.navigationmode == 'basket'">
 				<thesaurus></thesaurus>
 				<div class="clearfix"></div>
 			</div>
 
+				
+
 
 
 			 <!--  COLONNE PRINCIPALE  -->
-			 <div class="col-md-6" id="initiatives-area" ng-show="reperto.navigationmode == 'tree'">
-				<p class="">
-					<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px; padding: 15px; font-weight: bold;">
-					  <li ng-click="reperto.selectThesaurus()">
-					  	
-						<span class="glyphicon glyphicon-book"></span>
-						<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}}</a>
-					  </li>
-					  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.breadcrumb.section">
-					  	<a href="#">{{reperto.breadcrumb.section}}</a>
-					  </li>
-					  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.breadcrumb.chapitre">
-					  	<span>{{reperto.breadcrumb.chapitre}}</span>
-					  </li>
-					</ol>
-					<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
-				</p>
-				
-				<h3 class="well" style="padding-left: 15px; margin-top: 22px; margin-bottom: 0px; padding:15px; font-size:14px; color: rgba(0,0,0,0.8)">
-					<span style="">{{reperto.displayedIdeesLength}}</span>
-					actions possibles&nbsp;&nbsp;
-					
-					
-					<span class="pull right">
-                        <a title="Ajouter un commentaire" data-toggle="modal" data-target="#ajouter-commentaire" class="glyphicon glyphicon-comment pull-right send-mail"></a>&nbsp;&nbsp;&nbsp;
-                        <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
-                    </span>
-					
-				</h3>
-                
-				   
-                <div ng-show="false && reperto.navigationmode == 'tree' && reperto.display.idees.length > 6">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-sm" style="margin-top:0;padding-top:0">
-                        <li><a href="#" ng-repeat="idee in reperto.display.pager.pagerItems track by $index" ng-click="reperto.setPagerIndex($index)">{{$index + 1}}</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                
-				<div ng-show="reperto.mapDisplayLong" class="toolbox" id="fullsize-map-wrapper" style="width: 100%"></div>
-	
+			 <div class="col-md-6" id="initiatives-area">				
 	
 				<div style="" ng-show="reperto.navigationmode == 'tree'">
 					 <idees></idees>
 				 </div>
+				 
+				 <div style="" ng-show="reperto.navigationmode == 'basket'">
+					 <panier></panier>
+				 </div>
+				 
+				 <div style="" ng-show="reperto.navigationmode == 'print'">
+					 <catalogue></catalogue>
+				 </div>
+				 
 			</div>
+			
+			
+			
 			
 			<div id="toolbox" ng-hide="reperto.navigationmode == 'print'" class="toolbox col-xs-12 col-lg-3" style="">
 				<h4>BOITE A OUTILS </h4>
@@ -269,7 +210,11 @@
 					
 					<span ng-show="reperto.panier.experiences.length > 0">
 						<p>{{reperto.panier.experiences.length}} sauvées.</p>
-						<p><span ng-click="reperto.refreshPrintableCatalogue()" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>&nbsp; Exporter la sélection en pdf</span></p>
+						<p>
+							<span ng-click="reperto.loadPanier()" class="btn btn-default">
+								<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp; Visualiser le panier
+							</span>
+						</p>
 					</span>
 				</div>
             </div>
@@ -370,7 +315,22 @@
 		</div>
 		
 		
-		
+		<div class="modal fade" id="detail-experience" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		  	<div class="modal-dialog modal-lg" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4>{{reperto.current_experience.titre}}</h4>
+					</div>
+					<div class="modal-body" style="max-height: 60vh; overflow: auto">
+					 	<span style="font-size: 11px !important;" ng-bind-html="reperto.current_experience.descriptionlongue"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+				
 		
 		
 		<div class="modal fade" id="ajouter-experience" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">

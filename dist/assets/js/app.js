@@ -1,6 +1,7 @@
-var OdassHTTPService = function(scope)
+var OdassHTTPService = function(scope, hostname)
 {
 	this.httpService = scope;
+	this.hostname = hostname;
 };
 
 OdassHTTPService.prototype.httpService = null;
@@ -15,6 +16,19 @@ OdassHTTPService.prototype.fetchJSONObject = function(url, success_callback, arg
 	error(function(data, status) 
 	{
 		console.log("Erreur lors de la recuperation du fichier json");
+	});
+};
+
+OdassHTTPService.prototype.saveJSONObject = function(url, JSONObject, success_callback, args)
+{
+	this.httpService.post(url, JSONObject).
+	success(function(data)
+	{
+		success_callback(data, args);
+	}).
+	error(function(data, status) 
+	{
+		console.log("Erreur lors de la sauvegarde du fichier json");
 	});
 };
 var OdassMapService = function()
@@ -131,7 +145,7 @@ OdassPdfService.prototype.setup = function()
 	
 };
 
-OdassPdfService.prototype.printPdf = function(pdfFilename)
+OdassPdfService.prototype.printPdf = function(pdfFilename, printzone)
 {
 	 html2canvas(document.getElementById('printzone'), {
          onrendered: function (canvas) {
@@ -150,7 +164,7 @@ OdassPdfService.prototype.printPdf = function(pdfFilename)
 
 var Chapitre = function(parent)
 {
-	this.parent = parent;
+	this.partie_id = parent.id;
 	this.idees = new Array();
 };
 
@@ -170,6 +184,15 @@ Chapitre.prototype.setup = function (data)
 	{
 		this.idees.push(node);
 	}, this);
+};
+
+Chapitre.prototype.build = function (data)
+{
+	this.id = data.id;
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+	this.idees = new Array();
 };
 
 Chapitre.prototype.obtainIdees = function()
@@ -195,7 +218,7 @@ Chapitre.prototype.addIdee = function(idee)
 var Experience = function(parent, httpService, mapService)
 {
 	this.displayed = true;
-	this.parent = parent;
+	this.idee_id = parent.id;
 	this.httpService = httpService;
 	this.mapService = mapService;
 	this.display = {"format": "court"};
@@ -245,13 +268,18 @@ if (! expindex[experience.id] && experience.label && experience.contacts)
     
 }
 */
-var Guide = function(httpService, mapService){
+/** CONSTRUCTEUR **/
+
+var Guide = function(httpService, mapService)
+{
 	this.thesaurus = new Thesaurus(this, httpService);
 	this.idees = new Array();
 	this.filtres = new Array();
 	this.httpService = httpService;
 	this.mapService = mapService;
 };
+
+/** PROPRIETES **/
 
 Guide.prototype.id = "14";
 Guide.prototype.gdcid = "";
@@ -261,7 +289,10 @@ Guide.prototype.modetest = false;
 Guide.prototype.owner = {"nom": "CAC", "href": "http://www.associations-citoyennes.net/", "logo": "images/logo-CAC.jpg", "email": "cac_repertoire@odass.org"};
 Guide.prototype.idees = new Array();
 
-Guide.prototype.setupGuideFromURL = function()
+
+/** SETUP */
+
+Guide.prototype.setupGuideFromURL = function(reperto)
 {
 	if (window.location.search.indexOf("guideid") != -1)
 	{
@@ -283,11 +314,28 @@ Guide.prototype.setupGuideFromURL = function()
 		modetestvalue = modetestvalue.split("&")[0];
 		this.modetest = modetestvalue;
 	}
+	
+	if (window.location.search.indexOf("panier") != -1)
+	{
+		var panier_id = window.location.search.split("panier=")[1];
+		panier_id = panier_id.split("&")[0];
+		reperto.obtainPanier(panier_id);
+	}
+};
+
+Guide.prototype.build = function(data)
+{
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+	this.email = data.email;
+	this.id = data.guideidvalue;
+	this.gdcid = data.guideidvalue;
+	this.modetest = data.modetestvalue;
 };
 
 Guide.prototype.setup = function(data)
 {
-	console.log("GUIDE DATA : ", data);
 	this.thesaurus.setup(data.thesaurus);
 	
 	this.idees = new Array();
@@ -305,20 +353,44 @@ Guide.prototype.setup = function(data)
 	this.email = data.thesaurus.email;
 };
 
-Guide.prototype.addIdeeToThesaurus = function(idee)
-{
-	this.thesaurus.addIdee(idee);
-};
 
 Guide.prototype.setupIntroduction = function(data)
 {
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
 };
 
-Guide.prototype.obtainGuideGdcid = function()
+/** ADD **/ 
+
+Guide.prototype.addIdee = function(idee)
 {
-	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
-}
+	if (! this.hasIdee(idee.id))
+	{
+		this.idees.push(idee);
+	}
+};
+
+Guide.prototype.addIdeeToThesaurus = function(idee)
+{
+	this.thesaurus.addIdee(idee);
+};
+
+
+Guide.prototype.addPartie = function(partie)
+{
+	this.thesaurus.addPartie(partie);
+};
+
+/** REMOVE **/
+
+/** HAS **/
+
+Guide.prototype.hasIdee = function(id)
+{
+	var idee = this.idees.find(function(element){return (element.id == id);});
+	return (idee != undefined);
+};
+
+/** FIND BY**/
 
 Guide.prototype.findExperiencesByIdee = function(idee)
 {
@@ -344,12 +416,31 @@ Guide.prototype.findIdeesByChapitre = function(chapitre)
 
 Guide.prototype.findChapitreById = function(id)
 {
-	
+	return this.thesaurus.findChapitreById(id);
 };
 
 Guide.prototype.findPartieById = function(id)
 {
+	return this.thesaurus.findPartieById(id);
 };
+
+Guide.prototype.findExperienceById = function(id)
+{
+	return this.thesaurus.findChapitreById(id);
+};
+
+Guide.prototype.findIdeeById = function(id)
+{
+	return (this.idees.find(function(idee){idee.id == id}));
+};
+
+/** UTILITAIRES */
+
+Guide.prototype.obtainGuideGdcid = function()
+{
+	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
+}
+
 
 Guide.prototype.addFilter = function(filter)
 {
@@ -362,6 +453,116 @@ Guide.prototype.removeFilter = function(filter)
 {
 	
 };
+
+
+
+
+this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
+{
+    var finder = function(element)
+    {
+        return (element.label.toLowerCase() == filter.label.toLowerCase());
+    };
+    
+    if (reperto.availableFilters.find(finder) == undefined)
+    {
+        reperto.availableFilters.push(filter);
+    }
+};
+
+this.updateMatchedFilters = function()
+{
+    var str = this.userFilter.toLowerCase();
+    console.log(str);
+    var mapper = function(element)
+    {
+        return element.label.toLowerCase();
+    };
+    var filterer = function(element)
+    {
+        return (element.label.toLowerCase().match(str))
+    };
+    
+    if (str.length > 2)
+    {
+        this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
+    }
+    else
+    {
+        this.matchedFilters = [];
+    }
+    console.log(this.matchedFilters);
+};
+
+
+this.addFilter = function(filter)
+{
+    var filterer = function(element)
+    {
+        if (element.geoloc.ville)
+        {
+            return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
+        }
+        else
+        {
+            return false;
+        }
+    };
+    var finder = function(element)
+    {
+        return (element.toLowerCase() == filter.toLowerCase());
+    };
+    
+    if (this.activeFilters.length == 0)
+    {
+       this.activeFilters.push(filter);
+    }
+    else
+    {
+        if (this.activeFilters.find(finder) == undefined)
+        {
+            this.activeFilters.push(filter);
+        }
+    }
+    this.userFilter = "";
+    this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
+    
+    this.refreshDisplayedExperiments();
+    
+};
+
+this.removeFilter = function(filter)
+{
+    if (this.activeFilters.indexOf(filter) != -1)
+    {
+        var filterIndex = this.activeFilters.indexOf(filter);
+        this.activeFilters.splice(filterIndex, 1);
+        delete this.matchedExperiences[filter];    
+    }
+    
+    this.refreshDisplayedExperiments();
+};
+
+
+this.setupPrint = function()
+{
+	this.printableGuide = 
+	{
+		"titre": this.thesaurus.titre,
+		"description": this.thesaurus.description,
+		"parties":
+		[
+			
+		],
+		"activeSections": [],
+		"activeChapters": [],
+		"activeInitiatives": [],
+		"initiativesByChapter": {},
+		"chaptersBySection": {},
+		"indexes": {"sections": {}, "chapters": {}, "initiatives": {}}
+	};
+};
+
 var Idee = function(guide, httpService, mapService)
 {
 	this.displayed = true;
@@ -402,10 +603,9 @@ Idee.prototype.setup = function(data)
 	this.guide.addIdeeToThesaurus(this);
 };
 
-Idee.prototype.fetchExperimentData = function(hostname)
+Idee.prototype.fetchExperimentData = function()
 {
-	var url = hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
-	console.log("url", url);
+	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
 	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
 };
 
@@ -416,6 +616,16 @@ Idee.prototype.obtainExperimentFromId = function(id)
         return (element.id == id);
     };
     return (this.experiences.find(finder));
+};
+
+Idee.prototype.obtainExperiencesLength = function(id)
+{
+	var filterer = function(element)
+    {
+        return (element.displayed);
+    };
+    var experiences = this.experiences.filter(filterer);
+    return experiences.length;
 };
 
 var fetchExperimentDataCallback = function(data, context)
@@ -434,20 +644,59 @@ var fetchExperimentDataCallback = function(data, context)
 		context.experiences_loaded = true;
     }
 };
-var Panier = function(guide, httpService)
+var Panier = function(source, httpService, mapService)
 {
-	this.experiences = [];
+	this.experiences = new Array();
 	this.idees = {};
-	this.guide = guide;
+	this.guide = new Guide(httpService, mapService);
+	this.guide.build(source);
+	this.httpService = httpService;
+	this.guide_id = source.id;
+	this.guide_gdcid = source.gdcid;
+	$("#partager_le_panier").popover();
 };
 
-Panier.prototype.addIdee = function(idee)
+Panier.prototype.id = "666";
+Panier.prototype.user = "";
+
+Panier.prototype.addIdee = function(idee, source, full)
 {
-	idee.experiences.forEach(function(experience)
+	if (!idee.experiences_loaded)
 	{
-		this.addExperience(experience);
-	}, this);
+		idee.fetchExperimentData();
+	}
+	if (full)
+	{
+		idee.experiences.forEach(function(experience)
+		{
+			this.addExperience(experience);
+			experience.displayed = true;
+		}, this);
+	}
+
 	this.idees[idee.id] = true;
+	
+	var chapitre_reference = source.findChapitreById(idee.chapter_id);
+	console.log("chapitre_reference", chapitre_reference);
+	var partie_reference = source.findPartieById(chapitre_reference.partie_id);
+	
+	var partie = new Partie(this.guide, this.guide.httpServices);
+	partie.build(partie_reference);
+	var chapitre = new Chapitre(partie);
+	chapitre.build(chapitre_reference);
+	console.log("chapitre", chapitre);
+	
+
+	chapitre.addIdee(idee);
+	partie.addChapitre(chapitre);
+	
+	console.log("partie", partie);
+	console.log("chapitre final", chapitre);
+	
+	this.guide.addPartie(partie);
+	this.guide.addIdee(idee);
+	console.log(this.guide);
+	
 };
 
 Panier.prototype.removeIdee = function(idee)
@@ -455,12 +704,27 @@ Panier.prototype.removeIdee = function(idee)
 	idee.experiences.forEach(function(experience)
 	{
 		this.removeExperience(experience);
+		experience.displayed = false;
 	}, this);
 	delete this.idees[idee.id];
+	
+	var chapitre = this.guide.findChapitreById(idee.chapter_id);
+	var partie = this.guide.findPartieById(chapitre.partie_id);
+	
+	chapitre.removeIdee(idee);
+	if (chapitre.idees.length == 0)
+	{
+		partie.removeChapitre(chapitre);
+		if (partie.chapitres.length == 0)
+		{
+			this.guide.removePartie(partie);
+		}
+	}
 };
 
 Panier.prototype.addExperience = function(experience)
 {
+	//console.log(experience);
 	var finder = function(element)
 	{
 		return (element.id.toLowerCase() == experience.id.toLowerCase());
@@ -469,7 +733,7 @@ Panier.prototype.addExperience = function(experience)
 	{
 		this.experiences.push(experience);
 	}
-		
+	experience.displayed = true;
 }
 
 Panier.prototype.removeExperience = function(experience)
@@ -479,6 +743,7 @@ Panier.prototype.removeExperience = function(experience)
 	{
 		this.experiences.splice(experienceIndex, 1); 
 	}
+	experience.displayed = false;
 }
 
 Panier.prototype.hasExperience = function(experience)
@@ -490,13 +755,82 @@ Panier.prototype.hasExperience = function(experience)
 	return (this.experiences.find(finder) != undefined);
 };
 
-Panier.prototype.exportPanierAsPdf = function()
+
+
+Panier.prototype.findExperience = function(experience)
 {
+	var finder = function(element)
+	{
+		return (element.id.toLowerCase() == experience.id.toLowerCase());
+	}
+	return (this.experiences.find(finder));
 };
 
+Panier.prototype.exportPanierAsPdf = function()
+{
+	html2canvas(document.getElementById('printzone'), {
+        onrendered: function (canvas) {
+            var data = canvas.toDataURL();
+            var docDefinition = {
+                content: [{
+                    image: data,
+                    width: 500,
+                }]
+            };
+            pdfMake.createPdf(docDefinition).download('guide.pdf');
+        }
+    });
+};
+
+Panier.prototype.createPanierOnServer = function()
+{
+	var that = this;
+	var createPanierCallback = function(data)
+	{
+		that.id = data.panier_id;
+	};
+	
+	var url = this.httpService.hostname + "/api/createpanier";
+	var data = {"id": this.guide_id,"experiences": this.experiences};
+	this.httpService.saveJSONObject(url, data, createPanierCallback);
+};
+
+Panier.prototype.updatePanierOnServer = function()
+{
+	if (this.id == "")
+	{
+		this.createPanierOnServer();
+	}
+	else
+	{
+		var that = this;
+		var url = this.httpService.hostname + "/api/updatepanier";
+		var data = {"id": this.guide_id, "panier_id": this.id, "experiences": this.experiences};
+		this.httpService.saveJSONObject(url, data, null);
+	}
+};
 
 Panier.prototype.sharePanier = function()
 {
+	var that = this;
+	var createPanierCallback = function(data)
+	{
+		that.id = data.panier_id;
+		that.sharePanier();
+	};
+	
+	if (this.id == "")
+	{
+		var url = this.httpService.hostname + "/api/createpanier";
+		var data = {"id": this.guide_id,"experiences": this.experiences};
+		this.httpService.saveJSONObject(url, data, createPanierCallback);
+		
+	}
+	else
+	{
+		$("#partager_le_panier").attr("data-content", "http://www.odass.org/?panier_id=" + this.id);
+		$("#partager_le_panier").popover('toggle');
+	}
 };
 var Partie = function (guide, httpService)
 {
@@ -526,6 +860,14 @@ Partie.prototype.setup = function (data)
 	}, this);
 };
 
+Partie.prototype.build = function (data)
+{
+	this.id = data.id;
+	this.titre = data.titre;
+	this.description = data.description;
+	this.descriptionlongue = data.descriptionlongue;
+};
+
 Partie.prototype.obtainIdees = function()
 {
 	var idees = new Array();
@@ -546,6 +888,16 @@ Partie.prototype.addIdee = function(idee)
 	}
 };
 
+Partie.prototype.addChapitre = function(chapitre)
+{
+	var chapitre_ref = this.findChapitreById(chapitre.id);
+	console.log("chapitre trouvé ", chapitre_ref);
+	if (! chapitre_ref)
+	{
+		this.chapitres.push(chapitre);
+	}
+};
+
 Partie.prototype.findIdeesByChapitre = function(chapitre)
 {
 	var chapitre = this.chapitres.find(function(element){return (element.id == chapitre.id);});
@@ -557,6 +909,12 @@ Partie.prototype.findIdeesByChapitre = function(chapitre)
 	{
 		return (new Array());
 	}
+};
+
+Partie.prototype.hasChapitre = function(id)
+{
+	var chapitre = this.chapitres.find(function(element){return (element.id == id);});
+	return (chapitre != undefined);
 };
 
 Partie.prototype.findChapitreById = function(id)
@@ -589,6 +947,34 @@ Thesaurus.prototype.setup = function(data)
 	}, this);
 };
 
+/** ADD **/
+
+Thesaurus.prototype.addIdee = function(idee)
+{
+	this.parties.forEach(function(partie){partie.addIdee(idee);}, this);
+};
+
+Thesaurus.prototype.addPartie = function(partie)
+{
+	if (! this.hasPartie(partie.id))
+	{
+		this.parties.push(partie);
+	}
+};
+
+/** REMOVE **/
+
+/** HAS **/
+
+Thesaurus.prototype.hasPartie = function(id)
+{
+	var partie = this.parties.find(function(element){return element.id == id});
+	return (partie != undefined);
+};
+
+/** FIND BY **/
+
+
 Thesaurus.prototype.findIdeesByPartie = function(partie)
 {
 	var partie_trouvee = (this.parties.filter(function(element){return (element.id == partie.id);}))[0];
@@ -613,9 +999,23 @@ Thesaurus.prototype.findIdeesByChapitre = function(chapitre)
 	return idees;
 };
 
-Thesaurus.prototype.addIdee = function(idee)
+Thesaurus.prototype.findChapitreById = function(id)
 {
-	this.parties.forEach(function(partie){partie.addIdee(idee);}, this);
+	var chapitre = null;
+	
+	var partie = this.parties.find(function(element){return element.hasChapitre(id)});
+	if (partie)
+	{
+		chapitre = partie.findChapitreById(id);
+	}
+	
+	return chapitre;
+};
+
+Thesaurus.prototype.findPartieById = function(id)
+{
+	var partie = this.parties.find(function(element){return element.id == id});
+	return partie;
 };
 (function()
 {
@@ -652,7 +1052,6 @@ Thesaurus.prototype.addIdee = function(idee)
 		
 		this.init = function()
 		{
-			this.httpService = new OdassHTTPService($http);
 			this.api_hostname = "http://perso.odass.org";
             if (window.location.hostname.match("odass.org"))
             {
@@ -662,6 +1061,7 @@ Thesaurus.prototype.addIdee = function(idee)
             {
                 this.node_hostname = "http://127.0.0.1:8080";
             }
+			this.httpService = new OdassHTTPService($http, this.api_hostname);
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -2770,7 +3170,7 @@ $(document).ready(function (){
 			this.guide = new Guide(this.httpService, this.mapService);
 			this.guide.setupGuideFromURL();
 			
-			this.panier = new Panier(this.guide, this.httpService);
+			this.panier = new Panier(this.guide, this.httpService, this.mapService);
 			
 			this.loadIntroduction();
 			this.loadThesaurus();
@@ -2866,16 +3266,18 @@ $(document).ready(function (){
                 reperto.guide.setup(data);
                 
 		    	reperto.guide_is_loaded = true;
-		    	
 
 		    	reperto.displayedIdeesLength = reperto.guide.idees.length;
                 
                 reperto.updateCSSClasses();
+                reperto.panier.guide.build(reperto.guide);
                 
                 window.setTimeout(function()
                 {
                     $('[data-toggle="tooltip"]').tooltip();
                 }, 500);
+                
+                reperto.reduceIntro();
 		    	
 		    }).
 		    error(function(data, status) 
@@ -2971,6 +3373,12 @@ $(document).ready(function (){
 
         };
         
+        this.showExperience = function(experience)
+        {
+        	this.current_experience = experience;
+        	$("#detail-experience").modal('show');
+        };
+        
         this.switchMapDisplay = function()
         {
             if (this.mapDisplayLong)
@@ -3007,22 +3415,6 @@ $(document).ready(function (){
 		this.isExpanded = function(id)
 		{
 			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
-		};
-                                    
-		
-		this.isPaginationVisible = function(index)
-		{
-			if (! this.display)
-			{
-				this.display = {};
-			}
-			if (! this.display.pager)
-			{
-				this.display.pager = {"index": 0, "offset": 6};
-			}
-			var isVisible = (index >= this.display.pager.index && index < (this.display.pager.index + this.display.pager.offset));
-			
-			return isVisible;
 		};
 		
 		
@@ -3071,253 +3463,6 @@ $(document).ready(function (){
             }
         };
 		
-        
-        /***********************************************************************
-         * FILTER FUNCTIONS
-         */
-        this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
-        {
-            var finder = function(element)
-            {
-                return (element.label.toLowerCase() == filter.label.toLowerCase());
-            };
-            
-            if (reperto.availableFilters.find(finder) == undefined)
-            {
-                reperto.availableFilters.push(filter);
-            }
-        };
-        
-        this.updateMatchedFilters = function()
-        {
-            var str = this.userFilter.toLowerCase();
-            console.log(str);
-            var mapper = function(element)
-            {
-                return element.label.toLowerCase();
-            };
-            var filterer = function(element)
-            {
-                return (element.label.toLowerCase().match(str))
-            };
-            
-            if (str.length > 2)
-            {
-                this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
-            }
-            else
-            {
-                this.matchedFilters = [];
-            }
-            console.log(this.matchedFilters);
-        };
-        
-        
-        this.addFilter = function(filter)
-        {
-            var filterer = function(element)
-            {
-                if (element.geoloc.ville)
-                {
-                    return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
-                }
-                else
-                {
-                    return false;
-                }
-            };
-            var finder = function(element)
-            {
-                return (element.toLowerCase() == filter.toLowerCase());
-            };
-            
-            if (this.activeFilters.length == 0)
-            {
-               this.activeFilters.push(filter);
-            }
-            else
-            {
-                if (this.activeFilters.find(finder) == undefined)
-                {
-                    this.activeFilters.push(filter);
-                }
-            }
-            this.userFilter = "";
-            this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
-            
-            this.refreshDisplayedExperiments();
-            
-        };
-        
-        this.removeFilter = function(filter)
-        {
-            if (this.activeFilters.indexOf(filter) != -1)
-            {
-                var filterIndex = this.activeFilters.indexOf(filter);
-                this.activeFilters.splice(filterIndex, 1);
-                delete this.matchedExperiences[filter];    
-            }
-            
-            this.refreshDisplayedExperiments();
-        }
-        
-        this.refreshDisplayedExperiments = function()
-        {
-            if ( Object.keys(this.matchedExperiences).length == 0 )
-            {
-                this.display.experiences.forEach(function(experience)
-                {
-                    if (experience.marker)
-                    {
-                        experience.marker.addTo(this.reperto_carte);
-                    }
-                }, this);
-                
-                return;
-            }
-            var filteredExperiences = [];
-            this.display.experiences.forEach(function(experience)
-            {
-                if (experience.marker)
-                {
-                    this.reperto_carte.removeLayer(experience.marker);
-                }
-            }, this);
-            
-            Object.keys(this.matchedExperiences).forEach(function(filter)
-            {
-                
-                this.matchedExperiences[filter].forEach(function(experience)
-                {
-                    var finder = function(element)
-                    {
-                        return (element.id == experience.id);
-                    };
-                    
-                    if (filteredExperiences.find(finder) == undefined)
-                    {
-                        filteredExperiences.push(experience);
-                    }
-                }, this);
-            }, this);
-            
-            
-        
-            filteredExperiences.forEach(function(experience)
-            {
-                if (experience.marker)
-                {
-                    experience.marker.addTo(this.reperto_carte);
-                }
-            }, this);
-        }
-        
-		/***********************************************************************
-		 * PRINT
-		 */
-		
-		this.setupPrint = function()
-		{
-			this.printableGuide = 
-			{
-				"titre": this.thesaurus.titre,
-				"description": this.thesaurus.description,
-				"parties":
-				[
-					
-				],
-				"activeSections": [],
-				"activeChapters": [],
-				"activeInitiatives": [],
-				"initiativesByChapter": {},
-				"chaptersBySection": {},
-				"indexes": {"sections": {}, "chapters": {}, "initiatives": {}}
-			};
-		};
-		
-		
-		this.saveInitiative = function(initiative)
-		{
-			initiative.favorite = true;
-			if (this.printableGuide.activeInitiatives.indexOf(initiative) == -1)
-			{
-				this.printableGuide.activeInitiatives.push(initiative);
-				if (! this.printableGuide.initiativesByChapter[initiative.parent])
-				{
-					this.printableGuide.initiativesByChapter[initiative.parent] = [initiative];
-				}
-				else
-				{
-					this.printableGuide.initiativesByChapter[initiative.parent].push(initiative);
-				}
-			}
-		};
-		
-		this.removeSavedInitiative = function(initiative)
-		{
-			var index = this.printableGuide.activeInitiatives.indexOf(initiative);
-			var index_by_chapter = this.printableGuide.initiativesByChapter[initiative.parent].indexOf(initiative);
-			
-			delete initiative.favorite;
-			if (index >= 0)
-			{
-				this.printableGuide.activeInitiatives.splice(index, 1);
-			}
-			if (index_by_chapter >= 0)
-			{
-				this.printableGuide.initiativesByChapter[initiative.parent].splice(index_by_chapter, 1);
-				if (this.printableGuide.initiativesByChapter[initiative.parent].length == 0)
-				{
-					
-				}
-			}
-		}
-		 
-		this.refreshPrintableCatalogue = function()
-		{
-			for (var initiative of this.printableGuide.activeInitiatives)
-			{
-				if (initiative.parent)
-				{
-					var chapter = this.obtainChapterFromId(initiative.parent);
-					var section = this.obtainSectionFromId(chapter.parent);
-					
-					if (! this.printableGuide.indexes.chapters[chapter.id])
-					{
-						this.printableGuide.activeChapters.push(chapter);
-						this.printableGuide.indexes.chapters[chapter.id] = chapter;
-					}
-					
-					if (! this.printableGuide.indexes.sections[section.id])
-					{
-						this.printableGuide.activeSections.push(section);
-						this.printableGuide.indexes.sections[section.id] = section;
-					}
-				}
-			}
-			
-			this.printableGuide.parties = [];
-			
-			for (var section of this.printableGuide.activeSections)
-			{
-				this.printableGuide.parties.push(section);
-				section.chapitres = [];
-				for (var chapitre of this.printableGuide.activeChapters)
-				{
-					if (chapitre.parent == section.id)
-					{
-						section.chapitres.push(chapitre);
-						chapitre.idees = this.printableGuide.initiativesByChapter[chapitre.id];
-					}
-				}
-				
-			}
-			
-			this.navigationmode = "print";
-			
-		};
-		
-		
 		/************************************************************************/
 		this.isCategorieActive = function(categorie)
 		{
@@ -3339,7 +3484,7 @@ $(document).ready(function (){
 				
 			}
 			var filteredIdees = this.idees.filter(ideesAvecMarkers);
-			console.log(filteredIdees);
+			
 			filteredIdees.forEach(function(idee)
 			{
 				var index = this.display.idees.indexOf(idee);
@@ -3355,41 +3500,50 @@ $(document).ready(function (){
 			
 		};
 		
+		this.loadPanier = function()
+		{
+			this.navigationmode = "basket";
+			this.guide_source = this.guide;
+			this.switchGuide(this.panier.guide);
+			this.selectThesaurus();
+			console.log(this.guide);
+		};
 		
+		this.loadCatalogue = function()
+		{
+			this.navigationmode = "print";
+		};
 		
-		/** Utilisé lors de la sélection d'un item dans un thésaurus */
+		this.unloadPanier = function()
+		{
+			this.navigationmode = "tree";
+			this.switchGuide(this.guide_source);
+		};
+		
+		this.switchGuide = function(guide)
+		{
+			this.guide = guide;
+		};
 		
 		this.selectThesaurus = function()
 		{
-			this.displayedIdeesLength = this.guide.idees.length;
-			this.guide.idees.forEach(function(idee)
-			{
-				idee.displayed = true;
-			}, this);
+			this.displayIdees(this.guide.idees);
 		};
-		
 		
 		this.selectSection = function(section)
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
-			this.guide.idees.forEach(function(idee)
-			{
-				var is_selected = selected_idees.find(function(element){return (element == idee);});
-				if (is_selected)
-				{
-					idee.displayed = true;
-				}
-				else
-				{
-					delete idee.displayed;
-				}
-			}, this);
-			this.displayedIdeesLength = selected_idees.length;
+			this.displayIdees(selected_idees);
 		};
 		
 		this.selectChapter = function(section, chapitre)
 		{
 			var selected_idees = this.guide.findIdeesByChapitre(chapitre);
+			this.displayIdees(selected_idees);
+		};
+		
+		this.displayIdees = function(selected_idees)
+		{
 			this.guide.idees.forEach(function(idee)
 			{
 				var is_selected = selected_idees.find(function(element){return (element == idee);});
@@ -3402,20 +3556,14 @@ $(document).ready(function (){
 					delete idee.displayed;
 				}
 			}, this);
-			console.log(selected_idees);
 			this.displayedIdeesLength = selected_idees.length;
-		};	
-		
-		
-		this.displaySavedInitiatives = function()
-		{
-			$(".initiative-item").hide();
-			for(var key in this.savedInitiativeList)
-			{
-				$("#initiative-" + this.savedInitiativeList[key].id).show();
-			}
 		};
         
+		
+		
+		
+		/** API SERVER */
+		
         this.submitExperience = function()
         {
             this.mail.guideid = this.guideIdentifiant;
@@ -3435,24 +3583,33 @@ $(document).ready(function (){
             this.comment.gdcid = this.gdcid;
             var reperto = this;
             
-            $http.post(odass_app.api_hostname + "/api/sendrepertorecomment/", reperto.comment).success(function(data)
+            $http.post(odass_app.api_hostname + "/api/sendrepertocomment/", reperto.comment).success(function(data)
             {
             	console.log("commentaire envoyé");
             });	
         };
         
-        this.submitPanier= function()
+        
+        this.obtainPanier = function(panier_id)
         {
-            var panier = 
-            {
-            	"login": odass_app.user.name,
-            	"experiences": this.panier.experiences
-            };
-            
-            var that = this;
-            $http.post(odass_app.api_hostname + "/api/savepanier/", panier).success(function(data)
+        	var that = this;
+            $http.get(odass_app.api_hostname + "/api/loadpanier/", panier).success(function(data)
             {
             	console.log("panier sauvé");
+            	
+            	if (data.id != that.guide.id)
+            	{
+            		// reload page with guide id contained into basket.
+            	}
+            	
+            	
+            	
+            	that.panier = new Panier(that.guide, that.httpService, that.mapService);
+            	data.experiences.forEach(function(experience)
+            	{
+            		that.panier.addExperience(experience, that.guide);
+            	});
+            	that.loadPanier();
             	
             });	
         };
@@ -3461,5 +3618,7 @@ $(document).ready(function (){
 
 	odass.directive("thesaurus", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/thesaurus.html'};});
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
+	odass.directive("catalogue", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/print.html'};});
+	odass.directive("panier", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/panier.html'};});
 	
 })();

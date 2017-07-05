@@ -57,7 +57,7 @@ Partie.prototype.addIdee = function(idee)
 Partie.prototype.addChapitre = function(chapitre)
 {
 	var chapitre_ref = this.findChapitreById(chapitre.id);
-	console.log("chapitre trouvé ", chapitre_ref);
+
 	if (! chapitre_ref)
 	{
 		this.chapitres.push(chapitre);

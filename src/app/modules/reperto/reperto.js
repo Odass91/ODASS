@@ -369,7 +369,6 @@
 			this.guide_source = this.guide;
 			this.switchGuide(this.panier.guide);
 			this.selectThesaurus();
-			console.log(this.guide);
 		};
 		
 		this.loadCatalogue = function()

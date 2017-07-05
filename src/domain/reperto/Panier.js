@@ -31,25 +31,19 @@ Panier.prototype.addIdee = function(idee, source, full)
 	this.idees[idee.id] = true;
 	
 	var chapitre_reference = source.findChapitreById(idee.chapter_id);
-	console.log("chapitre_reference", chapitre_reference);
-	var partie_reference = source.findPartieById(chapitre_reference.partie_id);
+		var partie_reference = source.findPartieById(chapitre_reference.partie_id);
 	
 	var partie = new Partie(this.guide, this.guide.httpServices);
 	partie.build(partie_reference);
 	var chapitre = new Chapitre(partie);
 	chapitre.build(chapitre_reference);
-	console.log("chapitre", chapitre);
 	
 
 	chapitre.addIdee(idee);
 	partie.addChapitre(chapitre);
 	
-	console.log("partie", partie);
-	console.log("chapitre final", chapitre);
-	
 	this.guide.addPartie(partie);
 	this.guide.addIdee(idee);
-	console.log(this.guide);
 	
 };
 
@@ -78,7 +72,6 @@ Panier.prototype.removeIdee = function(idee)
 
 Panier.prototype.addExperience = function(experience)
 {
-	//console.log(experience);
 	var finder = function(element)
 	{
 		return (element.id.toLowerCase() == experience.id.toLowerCase());

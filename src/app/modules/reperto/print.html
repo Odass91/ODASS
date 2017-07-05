@@ -18,7 +18,7 @@
 					<h4 ng-bind-html="idee.titre"></h4>
 					<p class="idee description" ng-bind-html="idee.description"></p>
 					<ul class="experiences">
-						<li class="experience" ng-repeat="experience in idee.experiences">
+						<li class="experience" ng-repeat="experience in idee.experiences" ng-show="experience.displayed">
 							<h5 ng-bind-html="experience.titre"></h5>
 							<div class="experience description"></div>
 							<div class="contact"></div>

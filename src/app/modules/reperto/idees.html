@@ -21,49 +21,58 @@
     
 </style>
 <p class="" ng-show="reperto.navigationmode == 'tree'">
+	<span class="pull right">
+		<a title="Visualiser les expériences sauvées" class="pull-right " style="cursor:pointer">
+      		<span class="badge" style="cursor:pointer" ng-click="reperto.loadPanier()">
+      			<span class="glyphicon glyphicon-shopping-cart send-mail" style="color: white !important"></span>{{reperto.panier.experiences.length}}
+      		</span>
+      	</a>
+      	
+       <a title="Ajouter un commentaire" data-toggle="modal" data-target="#ajouter-commentaire" class="glyphicon glyphicon-comment pull-right send-mail"></a>&nbsp;&nbsp;&nbsp;
+       <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
+       
+   </span>
+                
 	<ol class="breadcrumb well" style="display: inline-block;margin-left: 15px; padding: 15px; font-weight: bold;">
 	  <li ng-click="reperto.selectThesaurus()">
 	  	
 		<span class="glyphicon glyphicon-book"></span>
 		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}}</a>
 	  </li>
-	  <li ng-click="reperto.selectSection(reperto.display.section)" ng-show="reperto.display.breadcrumb.section">
-	  	<a href="#">{{reperto.breadcrumb.section}}</a>
+	  <li ng-click="reperto.selectSection(reperto.section)" ng-show="reperto.section">
+	  	<a href="#">{{reperto.section.titre}}</a>
 	  </li>
-	  <li ng-click="reperto.selectChapter(reperto.display.section, reperto.display.chapitre)" ng-show="reperto.display.breadcrumb.chapitre">
-	  	<span>{{reperto.breadcrumb.chapitre}}</span>
+	  <li ng-click="reperto.selectChapter(reperto.section, reperto.chapitre)" ng-show="reperto.chapitre">
+	  	<span>{{reperto.chapitre.titre}}</span>
 	  </li>
 	</ol>
+	<div class="clearfix"></div>
+	<span class="label label-success filter-matching" ng-repeat="filtre in reperto.guide.filtres" ng-click="reperto.resetFilter(filtre)" style="display:inline-block">{{filtre}} 
+         <span class="glyphicon glyphicon-minus"></span>
+     </span>
 	<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 </p>
-				
-
-<h3 class="well" style="padding-left: 15px; margin-top: 22px; margin-bottom: 0px; padding:15px; font-size:14px; color: rgba(0,0,0,0.8)">
-	<span style="">{{reperto.displayedIdeesLength}}</span>
-	actions possibles&nbsp;&nbsp;
-	
-	
-	<span class="pull right">
-                    <a title="Ajouter un commentaire" data-toggle="modal" data-target="#ajouter-commentaire" class="glyphicon glyphicon-comment pull-right send-mail"></a>&nbsp;&nbsp;&nbsp;
-                    <a title="Suggérer une expérience" data-toggle="modal" data-target="#ajouter-experience" class="glyphicon glyphicon-envelope pull-right send-mail"></a>
-                </span>
-	
-</h3>
 
 <section ng-repeat="idee in reperto.guide.idees" class="idee-item item" id="initiative-{{idee.id}}" 
-			ng-show="idee.displayed"
+			ng-show="idee.isDisplayed()"
 			style="display: inline-block; margin: 1%; float:left"
 >
 	
-	<div class="panel panel-success {{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}" style="">
+	<div class="panel panel-success {{reperto.obtainCSSClassForIdee(idee)}}" style="">
 		<div class="panel-heading" style="">
             <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
-				<span class="{{idee.id}}" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}}</span>
+				<span class="{{idee.id}}" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}} <span style="color: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.6em !important; display: none">(displ. : {{idee.isDisplayed()}})</span></span>
 			</h4>
 		</div>
 		<div class="panel-body">
 			<div class="idee-content" style="min-height: 50%; padding: 5px;">
+                
+                <p ng-hide="true">
+                	is filtered : {{idee.filtered}}<br/>
+                	is displayd : {{idee.displayed}}<br/>
+                	func return : {{idee.isDisplayed()}}
+                </p>
                 
                 <p style="" ng-hide="idee.displayLong">
                     <span ng-bind-html="idee.description"></span>
@@ -147,8 +156,8 @@
                                         
                                             <span class="glyphicon glyphicon-tag">&nbsp;</span> 
                                             
-                                            <span class="tag" ng-repeat="keyword in experience.keywords" title="{{keyword}}" > 
-                                                <span class="label label-info">{{keyword | limitTo:10}}{{keyword.length > 10 ? "..." : ""}}</span>&nbsp;
+                                            <span class="tag" ng-repeat="keyword in experience.keywords" title="{{keyword}}" ng-click="reperto.addFilter(keyword, idee)"> 
+                                                <span class="label label-info">{{keyword | limitTo:35}}{{keyword.length > 35 ? "..." : ""}}</span>&nbsp;
                                             </span>
                                         </p>
                                     </div>   

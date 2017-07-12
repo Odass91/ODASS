@@ -218,6 +218,7 @@ Chapitre.prototype.addIdee = function(idee)
 var Experience = function(parent, httpService, mapService)
 {
 	this.displayed = true;
+	this.filters = new Array();;
 	this.idee_id = parent.id;
 	this.httpService = httpService;
 	this.mapService = mapService;
@@ -232,6 +233,8 @@ Experience.prototype.descriptionlongue = "";
 Experience.prototype.geolocation = {};
 Experience.prototype.contacts = {};
 Experience.prototype.category = "";
+Experience.prototype.keywords = [];
+Experience.prototype.displayed = true;
 
 Experience.prototype.setup = function(data)
 {
@@ -243,7 +246,89 @@ Experience.prototype.setup = function(data)
 	
 	this.geoloc = data.geoloc ? data.geoloc : null;
 	this.contacts = data.contacts ? data.contacts : null;
+
+	this.keywords = data.keywords;
 };
+
+/** IS **/
+
+Experience.prototype.isFiltered = function ()
+{
+	return (this.filters.length > 0);
+};
+
+/** APPLY **/
+
+Experience.prototype.applyFilter = function (filter)
+{
+	if (! this.hasFilter(filter))
+	{
+		var shouldBeFiltered = (this.hasGeolocation(filter) || this.hasKeyword(filter));
+		if (shouldBeFiltered)
+		{
+			this.filters.push(filter);
+		}
+	}
+};
+
+
+/** HAS **/
+Experience.prototype.hasFilter = function (filter)
+{
+	var filter_ = this.filters.find(function(element){return (element == filter)});
+	return (filter_ != undefined);
+};
+
+Experience.prototype.hasGeolocation = function (filter)
+{
+	if (! this.geoloc)
+	{
+		return false;
+	}
+	if (this.geoloc.nomdept == filter)
+	{
+		return true;
+	}
+	if (this.geoloc.nomregion == filter)
+	{
+		return true;
+	}
+	if (this.geoloc.ville == filter)
+	{
+		return true;
+	}
+	if (this.geoloc.codepostal == filter)
+	{
+		return true;
+	}
+	return false;
+};
+
+Experience.prototype.hasKeyword = function (filter)
+{
+	if (! this.keywords)
+	{
+		return false;
+	}
+	return (this.keywords.indexOf(filter) != -1);
+};
+
+/** RESET **/
+Experience.prototype.resetFilters = function ()
+{
+	this.filters = new Array();
+};
+
+Experience.prototype.resetFilter = function (filter)
+{
+	if (this.hasFilter(filter))
+	{
+		var indexOfFilter = this.filters.indexOf(filter);
+		this.filters.splice(indexOfFilter, 1);
+	}
+};
+
+/** API **/
 
 Experience.prototype.fetchExperimentData = function()
 {
@@ -268,6 +353,14 @@ if (! expindex[experience.id] && experience.label && experience.contacts)
     
 }
 */
+/** PAS ENCORE IMPLEMENTE **/
+
+var Filter = function(name, type)
+{
+	this.name = name;
+	this.type = type;
+	
+};
 /** CONSTRUCTEUR **/
 
 var Guide = function(httpService, mapService)
@@ -315,9 +408,9 @@ Guide.prototype.setupGuideFromURL = function(reperto)
 		this.modetest = modetestvalue;
 	}
 	
-	if (window.location.search.indexOf("panier") != -1)
+	if (window.location.search.indexOf("panier_id") != -1)
 	{
-		var panier_id = window.location.search.split("panier=")[1];
+		var panier_id = window.location.search.split("panier_id=")[1];
 		panier_id = panier_id.split("&")[0];
 		reperto.obtainPanier(panier_id);
 	}
@@ -380,7 +473,39 @@ Guide.prototype.addPartie = function(partie)
 	this.thesaurus.addPartie(partie);
 };
 
-/** REMOVE **/
+
+Guide.prototype.addFilter = function(filter)
+{
+	if (! this.hasFilter(filter))
+	{
+		this.filtres.push(filter);
+		this.applyFilter(filter);
+	}
+};
+
+
+/** RESET **/
+
+
+Guide.prototype.resetFilter = function(filter)
+{
+	console.log("GUIDE RESET FILTER");
+	if (this.hasFilter(filter))
+	{
+		var indexOfFilter = this.filtres.indexOf(filter);
+		this.filtres.splice(indexOfFilter, 1);
+	}
+	this.idees.forEach(function(idee){idee.resetFilter(filter)}, this);
+};
+
+/** APPLY **/
+Guide.prototype.applyFilter = function(filter)
+{
+	this.idees.forEach(function(idee)
+	{
+		idee.applyFilter(filter);
+	}, this);
+};
 
 /** HAS **/
 
@@ -388,6 +513,16 @@ Guide.prototype.hasIdee = function(id)
 {
 	var idee = this.idees.find(function(element){return (element.id == id);});
 	return (idee != undefined);
+};
+
+Guide.prototype.hasFilter = function(filter)
+{
+	return (this.filtres.indexOf(filter) != -1);
+};
+
+Guide.prototype.hasFilters = function()
+{
+	return (this.filtres.length > 0);
 };
 
 /** FIND BY**/
@@ -439,108 +574,63 @@ Guide.prototype.findIdeeById = function(id)
 Guide.prototype.obtainGuideGdcid = function()
 {
 	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
-}
-
-
-Guide.prototype.addFilter = function(filter)
-{
-	
 };
 
-
-
-Guide.prototype.removeFilter = function(filter)
+Guide.prototype.obtainFilteredExperiencesCount = function(selectedIdees)
 {
-	
+	var count = 0;
+	return count;
 };
 
-
-
-
-this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
+Guide.prototype.obtainFilteredIdeesCount = function(selectedIdees)
 {
-    var finder = function(element)
-    {
-        return (element.label.toLowerCase() == filter.label.toLowerCase());
-    };
-    
-    if (reperto.availableFilters.find(finder) == undefined)
-    {
-        reperto.availableFilters.push(filter);
-    }
+	var count = 0;
+	var selection = selectedIdees ? selectedIdees : this.idees;
+	selection.forEach(function(idee)
+	{
+		if (idee.filtered)
+		{
+			count++;
+		};
+	}, this);
+	return count;
 };
 
-this.updateMatchedFilters = function()
+Guide.prototype.obtainFilteredExperiencesCountByFilter = function(filter, selectedIdees)
 {
-    var str = this.userFilter.toLowerCase();
-    console.log(str);
-    var mapper = function(element)
-    {
-        return element.label.toLowerCase();
-    };
-    var filterer = function(element)
-    {
-        return (element.label.toLowerCase().match(str))
-    };
-    
-    if (str.length > 2)
-    {
-        this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
-    }
-    else
-    {
-        this.matchedFilters = [];
-    }
-    console.log(this.matchedFilters);
+	var count = 0;
+	this.idees.forEach(function(idee)
+	{
+		count += idee.obtainExperiencesCountFiltered(filter);
+	}, this);
+	return count;
 };
 
-
-this.addFilter = function(filter)
+Guide.prototype.obtainFilteredIdeesCountByFilter = function(filter, selectedIdees)
 {
-    var filterer = function(element)
-    {
-        if (element.geoloc.ville)
-        {
-            return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
-        }
-        else
-        {
-            return false;
-        }
-    };
-    var finder = function(element)
-    {
-        return (element.toLowerCase() == filter.toLowerCase());
-    };
-    
-    if (this.activeFilters.length == 0)
-    {
-       this.activeFilters.push(filter);
-    }
-    else
-    {
-        if (this.activeFilters.find(finder) == undefined)
-        {
-            this.activeFilters.push(filter);
-        }
-    }
-    this.userFilter = "";
-    this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
-    
-    this.refreshDisplayedExperiments();
-    
+	var count = 0;
+	var selection = selectedIdees ? selectedIdees : this.idees;
+	selection.forEach(function(idee)
+	{
+		if (idee.obtainExperiencesCountFiltered(filter) > 0)
+		{
+			count++;
+		};
+	}, this);
+	return count;
 };
 
-this.removeFilter = function(filter)
+Guide.prototype.fetchAllData = function()
 {
-    if (this.activeFilters.indexOf(filter) != -1)
-    {
-        var filterIndex = this.activeFilters.indexOf(filter);
-        this.activeFilters.splice(filterIndex, 1);
-        delete this.matchedExperiences[filter];    
-    }
-    
-    this.refreshDisplayedExperiments();
+	$("#loading-data").show();
+	this.idees.forEach(function(idee)
+	{
+		if (! idee.experiences_loaded)
+		{
+			idee.fetchExperimentData();
+		}
+	}, this);
+	$("#loading-data").hide();
 };
 
 
@@ -566,6 +656,7 @@ this.setupPrint = function()
 var Idee = function(guide, httpService, mapService)
 {
 	this.displayed = true;
+	this.filtered = false;
 	this.experiences_loaded = false;
 	this.experiences = new Array();
 	this.httpService = httpService;
@@ -579,6 +670,10 @@ Idee.prototype.chapter_id = "";
 Idee.prototype.titre = "";
 Idee.prototype.description = "";
 Idee.prototype.descriptionlongue = "";
+
+Idee.prototype.displayed = true;
+Idee.prototype.filtered = false;
+Idee.prototype.experiences_loaded = false;
 
 Idee.prototype.setup = function(data)
 {	
@@ -603,13 +698,50 @@ Idee.prototype.setup = function(data)
 	this.guide.addIdeeToThesaurus(this);
 };
 
-Idee.prototype.fetchExperimentData = function()
+/** IS */
+
+Idee.prototype.isDisplayed = function()
 {
-	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
-	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
+	return (this.displayed && this.isFiltered());
 };
 
-Idee.prototype.obtainExperimentFromId = function(id)
+Idee.prototype.isFiltered = function()
+{
+	if (this.guide.hasFilters())
+	{
+		this.filtered = false;
+		this.experiences.forEach(function(experience)
+		{
+			this.filtered = this.filtered || experience.isFiltered();
+		}, this);
+		return this.filtered;
+	}
+	else
+	{
+		return true;
+	}
+};
+
+/** ADD **/
+
+/** REMOVE **/
+
+/** RESET **/
+Idee.prototype.resetFilter = function(filter)
+{
+	console.log("IDEE RESET FILTER");
+	this.filtered = false;
+	this.experiences.forEach(function(experience)
+	{
+		experience.resetFilter(filter);
+		this.filtered = this.filtered || experience.isFiltered();
+	}, this);
+};
+
+/** HAS **/
+
+/** FIND BY **/
+Idee.prototype.findByExperimentId = function(id)
 {
 	var finder = function(element)
     {
@@ -617,6 +749,9 @@ Idee.prototype.obtainExperimentFromId = function(id)
     };
     return (this.experiences.find(finder));
 };
+
+/** UTILS */
+
 
 Idee.prototype.obtainExperiencesLength = function(id)
 {
@@ -628,13 +763,47 @@ Idee.prototype.obtainExperiencesLength = function(id)
     return experiences.length;
 };
 
+Idee.prototype.obtainExperiencesCountFiltered = function(id)
+{
+	var count = 0;
+    this.experiences.forEach(function(experience)
+    {
+    	if (experiences.hasFilter(filter))
+    	{
+    		count++;
+    	}
+    }, this);
+    return count;
+};
+
+
+Idee.prototype.applyFilter = function(filter)
+{
+	this.filtered = false;
+	this.experiences.forEach(function(experience)
+	{
+		experience.applyFilter(filter);
+		this.filtered = this.filtered || experience.isFiltered();
+	}, this);
+};
+
+/** API */
+
+
+Idee.prototype.fetchExperimentData = function()
+{
+	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
+	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
+};
+
+
 var fetchExperimentDataCallback = function(data, context)
 {
 	if (data.experiences)
     {
 		data.experiences.forEach(function(experimentData)
 		{
-			var experience = context.obtainExperimentFromId(experimentData.id);
+			var experience = context.findByExperimentId(experimentData.id);
 			// give data
 			if (experience != undefined)
 			{
@@ -677,25 +846,19 @@ Panier.prototype.addIdee = function(idee, source, full)
 	this.idees[idee.id] = true;
 	
 	var chapitre_reference = source.findChapitreById(idee.chapter_id);
-	console.log("chapitre_reference", chapitre_reference);
 	var partie_reference = source.findPartieById(chapitre_reference.partie_id);
 	
 	var partie = new Partie(this.guide, this.guide.httpServices);
 	partie.build(partie_reference);
 	var chapitre = new Chapitre(partie);
 	chapitre.build(chapitre_reference);
-	console.log("chapitre", chapitre);
 	
 
 	chapitre.addIdee(idee);
 	partie.addChapitre(chapitre);
 	
-	console.log("partie", partie);
-	console.log("chapitre final", chapitre);
-	
 	this.guide.addPartie(partie);
 	this.guide.addIdee(idee);
-	console.log(this.guide);
 	
 };
 
@@ -724,7 +887,6 @@ Panier.prototype.removeIdee = function(idee)
 
 Panier.prototype.addExperience = function(experience)
 {
-	//console.log(experience);
 	var finder = function(element)
 	{
 		return (element.id.toLowerCase() == experience.id.toLowerCase());
@@ -791,7 +953,7 @@ Panier.prototype.createPanierOnServer = function()
 	};
 	
 	var url = this.httpService.hostname + "/api/createpanier";
-	var data = {"id": this.guide_id,"experiences": this.experiences};
+	var data = {"guide_id": this.guide_id, "guide_gdcid": this.guide_gdcid, "experiences": this.experiences};
 	this.httpService.saveJSONObject(url, data, createPanierCallback);
 };
 
@@ -805,7 +967,7 @@ Panier.prototype.updatePanierOnServer = function()
 	{
 		var that = this;
 		var url = this.httpService.hostname + "/api/updatepanier";
-		var data = {"id": this.guide_id, "panier_id": this.id, "experiences": this.experiences};
+		var data = {"guide_id": this.guide_id, "guide_gdcid": this.guide_gdcid, "panier_id": this.id, "experiences": this.experiences};
 		this.httpService.saveJSONObject(url, data, null);
 	}
 };
@@ -891,7 +1053,7 @@ Partie.prototype.addIdee = function(idee)
 Partie.prototype.addChapitre = function(chapitre)
 {
 	var chapitre_ref = this.findChapitreById(chapitre.id);
-	console.log("chapitre trouvé ", chapitre_ref);
+
 	if (! chapitre_ref)
 	{
 		this.chapitres.push(chapitre);
@@ -1012,6 +1174,21 @@ Thesaurus.prototype.findChapitreById = function(id)
 	return chapitre;
 };
 
+Thesaurus.prototype.findSectionByChapitreId = function(id)
+{
+	var chapitre = this.findChapitreById(id);
+	if (chapitre)
+	{
+		var partie = this.findPartieById(chapitre.partie_id);
+		if (partie)
+		{
+			return partie;
+		}
+		return null;
+	}
+	return null;
+};
+
 Thesaurus.prototype.findPartieById = function(id)
 {
 	var partie = this.parties.find(function(element){return element.id == id});
@@ -1083,9 +1260,10 @@ Thesaurus.prototype.findPartieById = function(id)
 				this.changeModule("annuaire");
 			}
 			else
-            {this.user.loggedIn = true;
-			this.user.name = "cac";
-			this.changeModule("annuaire");
+            {
+				this.user.loggedIn = true;
+				this.user.name = "cac";
+				this.changeModule("annuaire");
             }
             
             /* DEMO */
@@ -3222,7 +3400,9 @@ $(document).ready(function (){
                     "tel": ""
                 },
                 "commentaire":""
-            }
+            };
+            
+            this.filters = {};
         };
         
         this.changeNavigationMode = function(mode)
@@ -3264,7 +3444,7 @@ $(document).ready(function (){
 		    {
                 reperto.markerCount = 0;
                 reperto.guide.setup(data);
-                
+                reperto.guide.fetchAllData();
 		    	reperto.guide_is_loaded = true;
 
 		    	reperto.displayedIdeesLength = reperto.guide.idees.length;
@@ -3344,6 +3524,20 @@ $(document).ready(function (){
                 }
             }, this);
             
+            this.cssColors["PARTIE_DEFAULT"] = "#ddeeaa";
+        };
+        
+        this.obtainCSSClassForIdee = function(idee)
+        {
+        	var section = this.guide.thesaurus.findSectionByChapitreId(idee.chapter_id);
+        	if (section)
+        	{
+        		return this.cssClasses[section.id];
+        	}
+        	else
+        	{
+        		return "PARTIE_DEFAULT";
+        	}
         };
         
         this.switchDisplay = function(displaylong, idee)
@@ -3367,7 +3561,6 @@ $(document).ready(function (){
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
                 $(".odass-overlay").removeClass("focus");
             }
-            
             
             $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
 
@@ -3417,6 +3610,20 @@ $(document).ready(function (){
 			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
 		};
 		
+		this.addFilter = function(filter, idee)
+		{
+			this.guide.addFilter(filter);
+			this.switchDisplay(false, idee);
+			this.updateIdeesCount();
+		};
+
+		
+		this.resetFilter = function(filter)
+		{
+			console.log("REPERTO RESET FILTER", filter);
+			this.guide.resetFilter(filter);
+			this.updateIdeesCount();
+		};
 		
 		
         /** GESTION DU SLIDESHOW */
@@ -3506,7 +3713,6 @@ $(document).ready(function (){
 			this.guide_source = this.guide;
 			this.switchGuide(this.panier.guide);
 			this.selectThesaurus();
-			console.log(this.guide);
 		};
 		
 		this.loadCatalogue = function()
@@ -3528,35 +3734,67 @@ $(document).ready(function (){
 		this.selectThesaurus = function()
 		{
 			this.displayIdees(this.guide.idees);
+			this.section = null;
+			this.chapitre = null;
 		};
 		
 		this.selectSection = function(section)
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
+			this.section = section;
 		};
 		
 		this.selectChapter = function(section, chapitre)
 		{
 			var selected_idees = this.guide.findIdeesByChapitre(chapitre);
 			this.displayIdees(selected_idees);
+			this.chapitre = chapitre;
+			this.section = section;
 		};
 		
 		this.displayIdees = function(selected_idees)
 		{
+			this.currentIdeesSelection = selected_idees;
+			
 			this.guide.idees.forEach(function(idee)
 			{
 				var is_selected = selected_idees.find(function(element){return (element == idee);});
+				
 				if (is_selected)
 				{
 					idee.displayed = true;
 				}
 				else
 				{
-					delete idee.displayed;
+					idee.displayed = false;
 				}
+				
 			}, this);
-			this.displayedIdeesLength = selected_idees.length;
+			
+			this.updateIdeesCount();
+		};
+		
+		this.updateIdeesCount = function()
+		{
+			var selected_idees = null;
+			
+			if (this.currentIdeesSelection)
+			{
+				selected_idees = this.currentIdeesSelection;
+			}
+			else
+			{
+				selected_idees = this.guide.idees;
+			}
+			if (this.guide.hasFilters())
+			{
+				this.displayedIdeesLength = this.guide.obtainFilteredIdeesCount();
+			}
+			else
+			{
+				this.displayedIdeesLength = this.guide.idees.length;
+			}
 		};
         
 		
@@ -3620,5 +3858,6 @@ $(document).ready(function (){
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
 	odass.directive("catalogue", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/print.html'};});
 	odass.directive("panier", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/panier.html'};});
+	odass.directive("filtres", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/filtres.html'};});
 	
 })();

@@ -85,7 +85,9 @@
                     "tel": ""
                 },
                 "commentaire":""
-            }
+            };
+            
+            this.filters = {};
         };
         
         this.changeNavigationMode = function(mode)
@@ -127,7 +129,7 @@
 		    {
                 reperto.markerCount = 0;
                 reperto.guide.setup(data);
-                
+                reperto.guide.fetchAllData();
 		    	reperto.guide_is_loaded = true;
 
 		    	reperto.displayedIdeesLength = reperto.guide.idees.length;
@@ -207,6 +209,20 @@
                 }
             }, this);
             
+            this.cssColors["PARTIE_DEFAULT"] = "#ddeeaa";
+        };
+        
+        this.obtainCSSClassForIdee = function(idee)
+        {
+        	var section = this.guide.thesaurus.findSectionByChapitreId(idee.chapter_id);
+        	if (section)
+        	{
+        		return this.cssClasses[section.id];
+        	}
+        	else
+        	{
+        		return "PARTIE_DEFAULT";
+        	}
         };
         
         this.switchDisplay = function(displaylong, idee)
@@ -230,7 +246,6 @@
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
                 $(".odass-overlay").removeClass("focus");
             }
-            
             
             $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
 
@@ -280,6 +295,20 @@
 			return ($("#" + id).parents(".panel").find(".panel-collapse").hasClass("collapse"));
 		};
 		
+		this.addFilter = function(filter, idee)
+		{
+			this.guide.addFilter(filter);
+			this.switchDisplay(false, idee);
+			this.updateIdeesCount();
+		};
+
+		
+		this.resetFilter = function(filter)
+		{
+			console.log("REPERTO RESET FILTER", filter);
+			this.guide.resetFilter(filter);
+			this.updateIdeesCount();
+		};
 		
 		
         /** GESTION DU SLIDESHOW */
@@ -390,35 +419,67 @@
 		this.selectThesaurus = function()
 		{
 			this.displayIdees(this.guide.idees);
+			this.section = null;
+			this.chapitre = null;
 		};
 		
 		this.selectSection = function(section)
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
+			this.section = section;
 		};
 		
 		this.selectChapter = function(section, chapitre)
 		{
 			var selected_idees = this.guide.findIdeesByChapitre(chapitre);
 			this.displayIdees(selected_idees);
+			this.chapitre = chapitre;
+			this.section = section;
 		};
 		
 		this.displayIdees = function(selected_idees)
 		{
+			this.currentIdeesSelection = selected_idees;
+			
 			this.guide.idees.forEach(function(idee)
 			{
 				var is_selected = selected_idees.find(function(element){return (element == idee);});
+				
 				if (is_selected)
 				{
 					idee.displayed = true;
 				}
 				else
 				{
-					delete idee.displayed;
+					idee.displayed = false;
 				}
+				
 			}, this);
-			this.displayedIdeesLength = selected_idees.length;
+			
+			this.updateIdeesCount();
+		};
+		
+		this.updateIdeesCount = function()
+		{
+			var selected_idees = null;
+			
+			if (this.currentIdeesSelection)
+			{
+				selected_idees = this.currentIdeesSelection;
+			}
+			else
+			{
+				selected_idees = this.guide.idees;
+			}
+			if (this.guide.hasFilters())
+			{
+				this.displayedIdeesLength = this.guide.obtainFilteredIdeesCount();
+			}
+			else
+			{
+				this.displayedIdeesLength = this.guide.idees.length;
+			}
 		};
         
 		
@@ -482,5 +543,6 @@
 	odass.directive("idees", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/idees.html'};});
 	odass.directive("catalogue", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/print.html'};});
 	odass.directive("panier", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/panier.html'};});
+	odass.directive("filtres", function(){return{restrict: 'E', templateUrl: 'src/app/modules/reperto/filtres.html'};});
 	
 })();

@@ -372,6 +372,11 @@ p.red
     background-color: rgba(244,118,182,0.9) !important;
 }
 
+.popup.PARTIE_DEFAULT
+{
+    background-color: rgba(200,225,75,0.9) !important;
+}
+
 .infozone.PARTIE_A
 {
 	background-color: rgba(90,180,243,0.9) !important;
@@ -392,6 +397,12 @@ p.red
 	background-color: rgba(244,118,182,0.9) !important;
 	color: rgba(184,58,122,1) !important;
 }
+
+.infozone.PARTIE_DEFAULT
+{
+    background-color: rgba(200,225,75,0.9) !important;
+}
+
 
 
 .PARTIE_A>.panel-heading
@@ -418,6 +429,12 @@ p.red
 	color: rgba(184,58,122,1) !important;
 }
 
+.PARTIE_DEFAULT>.panel-heading
+{
+	background-color: rgba(200,225,75,0.9) !important;
+	color: rgba(184,58,122,1) !important;
+}
+
 .PARTIE_A>.panel-body
 {
 	border-color: rgba(90,180,243,0.9) !important;
@@ -434,6 +451,11 @@ p.red
 }
 
 .PARTIE_D>.panel-body
+{
+	border-color: rgba(244,118,182,0.90) !important;
+}
+
+.PARTIE_DEFAULT>.panel-body
 {
 	border-color: rgba(244,118,182,0.90) !important;
 }
@@ -456,6 +478,12 @@ p.red
 {
     color: rgba(244,118,182,0.90) !important;
 }
+
+.PARTIE_DEFAULT .slick-prev:before, .PARTIE_DEFAULT .slick-next:before
+{
+    color: #DDEEAA !important;
+}
+
 .experiences-wrapper
 {
 	position: absolute !important;

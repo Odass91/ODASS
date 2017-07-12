@@ -1,6 +1,7 @@
 var Idee = function(guide, httpService, mapService)
 {
 	this.displayed = true;
+	this.filtered = false;
 	this.experiences_loaded = false;
 	this.experiences = new Array();
 	this.httpService = httpService;
@@ -14,6 +15,10 @@ Idee.prototype.chapter_id = "";
 Idee.prototype.titre = "";
 Idee.prototype.description = "";
 Idee.prototype.descriptionlongue = "";
+
+Idee.prototype.displayed = true;
+Idee.prototype.filtered = false;
+Idee.prototype.experiences_loaded = false;
 
 Idee.prototype.setup = function(data)
 {	
@@ -38,13 +43,50 @@ Idee.prototype.setup = function(data)
 	this.guide.addIdeeToThesaurus(this);
 };
 
-Idee.prototype.fetchExperimentData = function()
+/** IS */
+
+Idee.prototype.isDisplayed = function()
 {
-	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
-	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
+	return (this.displayed && this.isFiltered());
 };
 
-Idee.prototype.obtainExperimentFromId = function(id)
+Idee.prototype.isFiltered = function()
+{
+	if (this.guide.hasFilters())
+	{
+		this.filtered = false;
+		this.experiences.forEach(function(experience)
+		{
+			this.filtered = this.filtered || experience.isFiltered();
+		}, this);
+		return this.filtered;
+	}
+	else
+	{
+		return true;
+	}
+};
+
+/** ADD **/
+
+/** REMOVE **/
+
+/** RESET **/
+Idee.prototype.resetFilter = function(filter)
+{
+	console.log("IDEE RESET FILTER");
+	this.filtered = false;
+	this.experiences.forEach(function(experience)
+	{
+		experience.resetFilter(filter);
+		this.filtered = this.filtered || experience.isFiltered();
+	}, this);
+};
+
+/** HAS **/
+
+/** FIND BY **/
+Idee.prototype.findByExperimentId = function(id)
 {
 	var finder = function(element)
     {
@@ -52,6 +94,9 @@ Idee.prototype.obtainExperimentFromId = function(id)
     };
     return (this.experiences.find(finder));
 };
+
+/** UTILS */
+
 
 Idee.prototype.obtainExperiencesLength = function(id)
 {
@@ -63,13 +108,47 @@ Idee.prototype.obtainExperiencesLength = function(id)
     return experiences.length;
 };
 
+Idee.prototype.obtainExperiencesCountFiltered = function(id)
+{
+	var count = 0;
+    this.experiences.forEach(function(experience)
+    {
+    	if (experiences.hasFilter(filter))
+    	{
+    		count++;
+    	}
+    }, this);
+    return count;
+};
+
+
+Idee.prototype.applyFilter = function(filter)
+{
+	this.filtered = false;
+	this.experiences.forEach(function(experience)
+	{
+		experience.applyFilter(filter);
+		this.filtered = this.filtered || experience.isFiltered();
+	}, this);
+};
+
+/** API */
+
+
+Idee.prototype.fetchExperimentData = function()
+{
+	var url = this.httpService.hostname + "/api/getjsonexp/" + this.id + this.guide.obtainGuideGdcid();
+	this.httpService.fetchJSONObject(url, fetchExperimentDataCallback, this);
+};
+
+
 var fetchExperimentDataCallback = function(data, context)
 {
 	if (data.experiences)
     {
 		data.experiences.forEach(function(experimentData)
 		{
-			var experience = context.obtainExperimentFromId(experimentData.id);
+			var experience = context.findByExperimentId(experimentData.id);
 			// give data
 			if (experience != undefined)
 			{

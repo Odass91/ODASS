@@ -64,9 +64,10 @@
 				this.changeModule("annuaire");
 			}
 			else
-            {this.user.loggedIn = true;
-			this.user.name = "cac";
-			this.changeModule("annuaire");
+            {
+				this.user.loggedIn = true;
+				this.user.name = "cac";
+				this.changeModule("annuaire");
             }
             
             /* DEMO */

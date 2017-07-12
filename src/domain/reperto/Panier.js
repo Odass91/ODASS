@@ -31,7 +31,7 @@ Panier.prototype.addIdee = function(idee, source, full)
 	this.idees[idee.id] = true;
 	
 	var chapitre_reference = source.findChapitreById(idee.chapter_id);
-		var partie_reference = source.findPartieById(chapitre_reference.partie_id);
+	var partie_reference = source.findPartieById(chapitre_reference.partie_id);
 	
 	var partie = new Partie(this.guide, this.guide.httpServices);
 	partie.build(partie_reference);
@@ -138,7 +138,7 @@ Panier.prototype.createPanierOnServer = function()
 	};
 	
 	var url = this.httpService.hostname + "/api/createpanier";
-	var data = {"id": this.guide_id,"experiences": this.experiences};
+	var data = {"guide_id": this.guide_id, "guide_gdcid": this.guide_gdcid, "experiences": this.experiences};
 	this.httpService.saveJSONObject(url, data, createPanierCallback);
 };
 
@@ -152,7 +152,7 @@ Panier.prototype.updatePanierOnServer = function()
 	{
 		var that = this;
 		var url = this.httpService.hostname + "/api/updatepanier";
-		var data = {"id": this.guide_id, "panier_id": this.id, "experiences": this.experiences};
+		var data = {"guide_id": this.guide_id, "guide_gdcid": this.guide_gdcid, "panier_id": this.id, "experiences": this.experiences};
 		this.httpService.saveJSONObject(url, data, null);
 	}
 };

@@ -87,21 +87,6 @@
 
 	<div ng-controller="RepertoController as reperto" id="repertoControllerWrapper">
 
-
-		<section id="annuaire-header" class="row">
-			<div class="col-md-4">
-				<p ng-show="reperto.activeFilters.keywords.length > 0">
-					Filtres actifs :
-					<span ng-show="reperto.activeFilters.keywords.length > 0">
-						<span ng-repeat="filter in reperto.activeFilters.keywords"> 
-							<span class="label label-info"> {{filter}} 
-								<span style="cursor: pointer" class="glyphicon glyphicon-remove" ng-click="reperto.removeFilter('keywords', filter)"> </span>
-							</span> &nbsp;
-						</span>
-					</span>
-				</p>
-			</div>
-		</section>
 		
 		<section id="guide-intro">
 			<div class="panel panel-default">
@@ -129,17 +114,72 @@
 				guide en cours de chargement...<br/><br/>
 				<img style="margin: auto; display: block;" src="images/chargement.gif" width=75 height=75></img>
 			</div>
+				
 			
 			
-			
-				<!-- THESAURUS NAVIGATION ARBORESCENTE   -->
 				
 				
+			<div ng-show="reperto.navigationmode == 'tree' || reperto.navigationmode == 'basket'" class="col-md-4">
 				
-				
-			<div class="col-md-3" ng-show="reperto.navigationmode == 'tree' || reperto.navigationmode == 'basket'">
-				<thesaurus></thesaurus>
+				<!--  LOGO   -->
+				<div class="panel panel-default">
+		  			<div class="panel-body" style="padding: 2px 20px 2px 2px">
+					  	<a href="{{reperto.guide.owner.href}}" target="_blank"> 
+							<img src="{{reperto.guide.owner.logo}}" alt="logo association citoyennes - http://www.associations-citoyennes.net/" class="img-responsive"> </img>
+						</a>
+						
+						<a ng-hide="true" href="mailto:{{reperto.guide.owner.email}}" title="Envoyez vos commentaires sur le guide" class="glyphicon glyphicon-envelope pull-right send-mail" style="margin-right: -7px"></a>
+					</div>
+				</div>
+					
+					
+					
+					
 				<div class="clearfix"></div>
+				
+				
+				
+				<!--  INFO   -->
+				<div ng-hide="true || reperto.navigationmode == 'print'" 
+						class="{{reperto.cssClasses[reperto.display.section.id]}} infozone col-md-12" 
+						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
+				>
+					<h4>INFO </h4>
+					<p ng-show="reperto.section">
+						<h3 ng-show="reperto.section" ng-bind-html="reperto.section.titre"></h3>
+					</p>
+					
+					<p ng-show="reperto.display.chapitre">
+						<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
+						
+						<span ng-hide="reperto.hapitre.displaylong" ng-bind-html="reperto.chapitre.description"></span>
+						<span ng-show="reperto.chapitre.displaylong" ng-bind-html="reperto.chapitre.descriptionlongue"></span>
+						
+						<a href="" ng-show="reperto.chapitre && ! reperto.chapitre.displaylong" ng-click="reperto.chapitre.displaylong = true">voir plus</a>
+						<a href="" ng-show="reperto.chapitre && reperto.chapitre.displaylong" ng-click="reperto.chapitre.displaylong = false">voir moins</a>
+					</p>
+					
+					<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
+				</div>
+				
+				
+				
+				
+				
+				<div class="clearfix"></div>
+				
+				
+				
+				
+				<thesaurus></thesaurus>
+				
+				
+				
+				
+				
+				<div class="clearfix"></div>
+				
+				
 			</div>
 
 				
@@ -147,7 +187,7 @@
 
 
 			 <!--  COLONNE PRINCIPALE  -->
-			 <div class="col-md-6" id="initiatives-area">				
+			 <div class="col-md-8" id="initiatives-area">				
 	
 				<div style="" ng-show="reperto.navigationmode == 'tree'">
 					 <idees></idees>
@@ -164,100 +204,11 @@
 			</div>
 			
 			
-			
-			
-			<div id="toolbox" ng-hide="reperto.navigationmode == 'print'" class="toolbox col-xs-12 col-lg-3" style="">
-				<h4>BOITE A OUTILS </h4>
-				<div>
-                    <div id="map-tools-zone">
-                        <div id="map-tools-wrapper">
-                            
-                            <div style="" ng-show="reperto.userFilter.length > 2"> 
-                                <span class="label label-default filter-matching" ng-repeat="matchedFilter in reperto.matchedFilters" ng-click="reperto.addFilter(matchedFilter)">
-                                    {{matchedFilter | limitTo: 8}} {{matchedFilter.length > 6 ? "..." : ""}} 
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </span>
-                            </div>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="filter-experiences" placeholder="Amiens, Paris, ..." ng-model="reperto.userFilter" ng-change="reperto.updateMatchedFilters()"> 
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-                                </input>
-                            </div>
-                            
-                            
-                            
-                            
-                            <div id="repertomap" style="height:0px;margin-top: 12px;">
-                            </div>
-                            
-                            <div>
-                                <span class="label label-success filter-matching" ng-repeat="activeFilter in reperto.activeFilters" ng-click="reperto.removeFilter(activeFilter)" style="display:inline-block">{{activeFilter}} 
-                                    <span class="glyphicon glyphicon-minus"></span>
-                                </span>
-                            </div>
-                            
-                            <p ng-hide="true">
-                                {{reperto.markerCount}} experience<span ng-show="reperto.markerCount>1">s</span> chargée<span ng-show="reperto.markerCount>1">s</span>.
-                                <a ng-hide="reperto.mapDisplayLong" href="" ng-click="reperto.switchMapDisplay()">agrandir la carte </a>
-                                <a ng-show="reperto.mapDisplayLong" href="" ng-click="reperto.switchMapDisplay()">réduire la carte </a>
-                            </p>
-                        </div>
-					</div>
-					
-					<span ng-show="reperto.panier.experiences.length == 0">
-						<p>Vous n'avez pas encore ajouté d'expériences à votre panier.</p>
-					</span>
-					
-					<span ng-show="reperto.panier.experiences.length > 0">
-						<p>{{reperto.panier.experiences.length}} sauvées.</p>
-						<p>
-							<span ng-click="reperto.loadPanier()" class="btn btn-default">
-								<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp; Visualiser le panier
-							</span>
-						</p>
-					</span>
-				</div>
-            </div>
-            
-            
-			
-			<div ng-hide="reperto.navigationmode == 'print'" 
-						class="col-lg-3 {{reperto.cssClasses[reperto.display.section.id]}} infozone" 
-						style="float: right;  background-color: rgba(25,25,50,0.3); border-radius: 5px; padding: 15px; margin-right: -15px; color: white"
-			>
-				<h4>INFO </h4>
-				<p ng-show="reperto.display.section">
-					<h3 ng-show="reperto.display.section" ng-bind-html="reperto.display.section.titre"></h3>
-				</p>
-				
-				<p ng-show="reperto.display.chapitre">
-					<h3 ng-show="reperto.display.chapitre" ng-bind-html="reperto.display.chapitre.titre"></h3>
-					
-					<span ng-hide="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.description"></span>
-					<span ng-show="reperto.display.chapitre.displaylong" ng-bind-html="reperto.display.chapitre.descriptionlongue"></span>
-					
-					<a href="" ng-show="reperto.display.chapitre && ! reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = true">voir plus</a>
-					<a href="" ng-show="reperto.display.chapitre && reperto.display.chapitre.displaylong" ng-click="reperto.display.chapitre.displaylong = false">voir moins</a>
-				</p>
-				
-				<p ng-show="reperto.display.idee" ng-bind-html="reperto.display.idee.description"></p>
-				<p ng-show="reperto.display.intro" ng-bind-html="reperto.thesaurus.description"></p>
-			</div>
-			
-			
-			
 	
             <div class="clearfix"></div>
          
 			
 		</section>
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		<div class="modal fade" id="ajouter-commentaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">

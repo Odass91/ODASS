@@ -45,9 +45,9 @@ Guide.prototype.setupGuideFromURL = function(reperto)
 		this.modetest = modetestvalue;
 	}
 	
-	if (window.location.search.indexOf("panier") != -1)
+	if (window.location.search.indexOf("panier_id") != -1)
 	{
-		var panier_id = window.location.search.split("panier=")[1];
+		var panier_id = window.location.search.split("panier_id=")[1];
 		panier_id = panier_id.split("&")[0];
 		reperto.obtainPanier(panier_id);
 	}
@@ -110,7 +110,39 @@ Guide.prototype.addPartie = function(partie)
 	this.thesaurus.addPartie(partie);
 };
 
-/** REMOVE **/
+
+Guide.prototype.addFilter = function(filter)
+{
+	if (! this.hasFilter(filter))
+	{
+		this.filtres.push(filter);
+		this.applyFilter(filter);
+	}
+};
+
+
+/** RESET **/
+
+
+Guide.prototype.resetFilter = function(filter)
+{
+	console.log("GUIDE RESET FILTER");
+	if (this.hasFilter(filter))
+	{
+		var indexOfFilter = this.filtres.indexOf(filter);
+		this.filtres.splice(indexOfFilter, 1);
+	}
+	this.idees.forEach(function(idee){idee.resetFilter(filter)}, this);
+};
+
+/** APPLY **/
+Guide.prototype.applyFilter = function(filter)
+{
+	this.idees.forEach(function(idee)
+	{
+		idee.applyFilter(filter);
+	}, this);
+};
 
 /** HAS **/
 
@@ -118,6 +150,16 @@ Guide.prototype.hasIdee = function(id)
 {
 	var idee = this.idees.find(function(element){return (element.id == id);});
 	return (idee != undefined);
+};
+
+Guide.prototype.hasFilter = function(filter)
+{
+	return (this.filtres.indexOf(filter) != -1);
+};
+
+Guide.prototype.hasFilters = function()
+{
+	return (this.filtres.length > 0);
 };
 
 /** FIND BY**/
@@ -169,108 +211,63 @@ Guide.prototype.findIdeeById = function(id)
 Guide.prototype.obtainGuideGdcid = function()
 {
 	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
-}
-
-
-Guide.prototype.addFilter = function(filter)
-{
-	
 };
 
-
-
-Guide.prototype.removeFilter = function(filter)
+Guide.prototype.obtainFilteredExperiencesCount = function(selectedIdees)
 {
-	
+	var count = 0;
+	return count;
 };
 
-
-
-
-this.addToAvailableFilter = function(filter)    //filter: {"category": titi, "label": toto}
+Guide.prototype.obtainFilteredIdeesCount = function(selectedIdees)
 {
-    var finder = function(element)
-    {
-        return (element.label.toLowerCase() == filter.label.toLowerCase());
-    };
-    
-    if (reperto.availableFilters.find(finder) == undefined)
-    {
-        reperto.availableFilters.push(filter);
-    }
+	var count = 0;
+	var selection = selectedIdees ? selectedIdees : this.idees;
+	selection.forEach(function(idee)
+	{
+		if (idee.filtered)
+		{
+			count++;
+		};
+	}, this);
+	return count;
 };
 
-this.updateMatchedFilters = function()
+Guide.prototype.obtainFilteredExperiencesCountByFilter = function(filter, selectedIdees)
 {
-    var str = this.userFilter.toLowerCase();
-    console.log(str);
-    var mapper = function(element)
-    {
-        return element.label.toLowerCase();
-    };
-    var filterer = function(element)
-    {
-        return (element.label.toLowerCase().match(str))
-    };
-    
-    if (str.length > 2)
-    {
-        this.matchedFilters = reperto.availableFilters.filter(filterer).map(mapper);
-    }
-    else
-    {
-        this.matchedFilters = [];
-    }
-    console.log(this.matchedFilters);
+	var count = 0;
+	this.idees.forEach(function(idee)
+	{
+		count += idee.obtainExperiencesCountFiltered(filter);
+	}, this);
+	return count;
 };
 
-
-this.addFilter = function(filter)
+Guide.prototype.obtainFilteredIdeesCountByFilter = function(filter, selectedIdees)
 {
-    var filterer = function(element)
-    {
-        if (element.geoloc.ville)
-        {
-            return (element.geoloc.ville.toLowerCase() == filter.toLowerCase());
-        }
-        else
-        {
-            return false;
-        }
-    };
-    var finder = function(element)
-    {
-        return (element.toLowerCase() == filter.toLowerCase());
-    };
-    
-    if (this.activeFilters.length == 0)
-    {
-       this.activeFilters.push(filter);
-    }
-    else
-    {
-        if (this.activeFilters.find(finder) == undefined)
-        {
-            this.activeFilters.push(filter);
-        }
-    }
-    this.userFilter = "";
-    this.matchedExperiences[filter] = this.display.experiences.filter(filterer);
-    
-    this.refreshDisplayedExperiments();
-    
+	var count = 0;
+	var selection = selectedIdees ? selectedIdees : this.idees;
+	selection.forEach(function(idee)
+	{
+		if (idee.obtainExperiencesCountFiltered(filter) > 0)
+		{
+			count++;
+		};
+	}, this);
+	return count;
 };
 
-this.removeFilter = function(filter)
+Guide.prototype.fetchAllData = function()
 {
-    if (this.activeFilters.indexOf(filter) != -1)
-    {
-        var filterIndex = this.activeFilters.indexOf(filter);
-        this.activeFilters.splice(filterIndex, 1);
-        delete this.matchedExperiences[filter];    
-    }
-    
-    this.refreshDisplayedExperiments();
+	$("#loading-data").show();
+	this.idees.forEach(function(idee)
+	{
+		if (! idee.experiences_loaded)
+		{
+			idee.fetchExperimentData();
+		}
+	}, this);
+	$("#loading-data").hide();
 };
 
 

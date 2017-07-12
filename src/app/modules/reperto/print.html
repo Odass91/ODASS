@@ -6,9 +6,9 @@
 	</div>
 	
 	<div id="printzone" class="sheet A4 portrait">
-		<h1 ng-bind-html="reperto.guide.titre"></h1>
-		<p class="guide description" ng-bind-html="reperto.guide.description"></p>
-		<section class="partie" ng-repeat="partie in reperto.guide.thesaurus.parties">
+		<h1 ng-bind-html="reperto.panier.guide.titre"></h1>
+		<p class="guide description" ng-bind-html="reperto.panier.guide.description"></p>
+		<section class="partie" ng-repeat="partie in reperto.panier.guide.thesaurus.parties">
 			<h2 ng-bind-html="partie.titre"></h2>
 			<p class="partie description" ng-bind-html="partie.description"></p>
 			<article ng-repeat="chapitre in partie.chapitres">

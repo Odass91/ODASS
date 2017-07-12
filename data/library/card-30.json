@@ -1,1 +1,1 @@
-{}
+{"id":"30","intitule":{"texte":"question 3","image":"data/upload/card-body-default.png","video":""},"choix":[{"id":"1","intitule":"A"},{"id":"2","intitule":"B"},{"id":"3","intitule":"C"},{"id":"4","intitule":"D"}],"reponse":"2","reponseCourte":"Explication courte","reponseLongue":"Explication longue","references":[],"categorie":"","theme":{"header":{"backgroundColor":"rgba(0,56,15,0.4)","color":"rgba(0,0,0,1)","animation":""},"imagehref":"data/upload/card-body-default.png"}}

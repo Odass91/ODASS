@@ -18,7 +18,6 @@
         -webkit-transition: all 1s ease-out;
     }
     
-    
 </style>
 <p class="" ng-show="reperto.navigationmode == 'tree'">
 	<span class="pull right">
@@ -37,13 +36,13 @@
 	  <li ng-click="reperto.selectThesaurus()">
 	  	
 		<span class="glyphicon glyphicon-book"></span>
-		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}}</a>
+		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}} - <span class="badge">{{reperto.guide.countIdees(true)}}</span></a>
 	  </li>
 	  <li ng-click="reperto.selectSection(reperto.section)" ng-show="reperto.section">
-	  	<a href="#">{{reperto.section.titre}}</a>
+	  	<a href="#">{{reperto.section.titre}} - <span class="badge">{{reperto.guide.countIdeesBySection(reperto.section, true)}}</span></a>
 	  </li>
 	  <li ng-click="reperto.selectChapter(reperto.section, reperto.chapitre)" ng-show="reperto.chapitre">
-	  	<span>{{reperto.chapitre.titre}}</span>
+	  	<a href="#">{{reperto.chapitre.titre}}</span> - <span class="badge">{{reperto.guide.countIdeesByChapitre(reperto.chapitre, true)}}</span></a>
 	  </li>
 	</ol>
 	<div class="clearfix"></div>
@@ -60,23 +59,31 @@
 	
 	<div class="panel panel-success {{reperto.obtainCSSClassForIdee(idee)}}" style="">
 		<div class="panel-heading" style="">
+			
+			
+				
+                
+                
             <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="{{idee.id}}" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}} <span style="color: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.6em !important; display: none">(displ. : {{idee.isDisplayed()}})</span></span>
 			</h4>
 		</div>
-		<div class="panel-body">
+		<div class="panel-body" style="background-color: rgba(0,0,0,0.1)">
 			<div class="idee-content" style="min-height: 50%; padding: 5px;">
-                
-                <p ng-hide="true">
-                	is filtered : {{idee.filtered}}<br/>
-                	is displayd : {{idee.displayed}}<br/>
-                	func return : {{idee.isDisplayed()}}
-                </p>
                 
                 <p style="" ng-hide="idee.displayLong">
                     <span ng-bind-html="idee.description"></span>
-                    <a href="" ng-click="reperto.switchDisplay(true, idee)">Voir plus ({{idee.experiences.length}} experiences)</a>
+	                <span ng-hide="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white badge" style="margin: 5px; cursor:pointer;color:white;" ng-click="reperto.panier.addIdee(idee, reperto.guide, true)">
+		                {{idee.experiences.length}}
+	                </span>
+	                
+	                <span ng-show="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white remove badge" style="margin: 5px; cursor:pointer;color:white;" ng-click="reperto.panier.removeIdee(idee)">
+		                {{idee.experiences.length}}
+	                </span>
+                    <span class="odass-button pull-left badge" style="padding-left:5px;margin: 5px; cursor:pointer;color:white;" ng-click="reperto.switchDisplay(true, idee)">
+                    	<span class="glyphicon glyphicon-new-window"></span>&nbsp;Afficher les {{idee.experiences.length}} experiences
+                    </span>
                 </p>
                 
                 <p style="" ng-show="idee.displayLong">
@@ -90,13 +97,7 @@
                     </span>
                 </p>
                 
-                <div ng-hide="reperto.panier.idees[idee.id]" class="pull-right odass-button basket" style="" ng-click="reperto.panier.addIdee(idee, reperto.guide, true)">
-	                ajouter les {{idee.experiences.length}} expériences au panier
-                </div>
                 
-                <div ng-show="reperto.panier.idees[idee.id]" class="pull-right odass-button basket remove" style="" ng-click="reperto.panier.removeIdee(idee)">
-	                enlever les {{idee.experiences.length}} expériences du panier
-                </div>
                 
                 <p ng-show="idee.keywords.length > 0">
                     <span class="glyphicon glyphicon-tag">&nbsp;</span> 
@@ -109,6 +110,10 @@
                 </p>
                 
 			</div>
+			
+			<h3 ng-show="idee.obtainExperiencesLength() > 1 && idee.displayLong">Découvrez les {{idee.obtainExperiencesLength()}} expériences associées</h3>
+			<h3 ng-show="idee.obtainExperiencesLength() == 1 && idee.displayLong">Découvrez l'expérience associée</h3>
+			<h3 ng-show="idee.obtainExperiencesLength() == 0 && idee.displayLong">Il n'y a pas d'expérience associée à cette action</h3>
 			
 			<div class="experiences-content" style="min-height: 48%; position: relative;">
                 
@@ -130,7 +135,10 @@
                         <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.obtainExperiencesLength() * 100}}%; margin:0; padding:0; font-size:0;">
                             
                             
-                            <div ng-repeat="experience in idee.experiences track by $index" ng-show="experience.displayed" class="" style=" width:{{100 / idee.obtainExperiencesLength() }}%; float: left; overflow: hidden">
+                            <div 
+                            	ng-repeat="experience in idee.experiences track by $index" ng-show="experience.displayed" class="" 
+                            	style=" width:{{100 / idee.obtainExperiencesLength() }}%; float: left; overflow: hidden; padding: 15px; background-color:white; border-radius: 15px;"
+                            >
                                     
                                     <div style="height:40%;">
                                     	<h4 class="initiative-title">

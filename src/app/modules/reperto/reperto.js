@@ -1,3 +1,5 @@
+/* TODO : rajouter les chiffres (nombre d'expériences par partie / chapitre / idee */
+
 (function()
 {
 	
@@ -428,6 +430,13 @@
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
 			this.section = section;
+			this.chapitre = null;
+			
+			
+			if (this.isExpanded('h4-' + section.id))
+			{
+				this.toggleExpandedZone('h4-' + section.id);
+			}
 		};
 		
 		this.selectChapter = function(section, chapitre)

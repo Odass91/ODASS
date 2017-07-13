@@ -33,6 +33,16 @@ Thesaurus.prototype.addPartie = function(partie)
 
 /** REMOVE **/
 
+Thesaurus.prototype.removePartie = function(id)
+{
+	var partie = this.parties.find(function(element){return element.id == id});
+	if (partie)
+	{
+		var indexOfPartie = this.parties.indexOf(partie);
+		this.parties.splice(indexOfPartie, 1);
+	}
+};
+
 /** HAS **/
 
 Thesaurus.prototype.hasPartie = function(id)

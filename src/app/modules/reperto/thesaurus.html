@@ -1,12 +1,25 @@
+<style>
+	
+    
+    .item-selected
+    {
+    	font-weight: bold;
+    }
+    
+</style>
+
 <section>
 	<div class="panel-group" id="thesaurus-tree" role="tablist" aria-multiselectable="true">
+	  	
 	  	<div ng-repeat="item in reperto.guide.thesaurus.parties" class="panel panel-default {{reperto.cssClasses[item.id]}} {{item.id}}">
 			<div class="panel-heading" role="tab" id="headingOne">
 		      	
-	        	<a class="pull-right" role="button" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">replier</a>
-	        	<a class="pull-right" role="button" ng-show="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)">déplier</a>
-		      	<h4 class="panel-title" href="#{{item.id}}" id="h4-{{item.id}}">
-		      		<a ng-click="reperto.selectSection(item)">{{item.titre}}</a>
+	        	<h4 class="panel-title" href="#{{item.id}}" id="h4-{{item.id}}" ng-class="{'item-selected': (reperto.section && reperto.section.id == item.id)}">
+		      		<span style="cursor:pointer" class="glyphicon glyphicon-plus" ng-show="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)"></span>
+		      		<span style="cursor:pointer" class="glyphicon glyphicon-minus" ng-hide="reperto.isExpanded('h4-' + item.id)" ng-click="reperto.toggleExpandedZone('h4-' + item.id)"></span>
+		      		<a ng-click="reperto.selectSection(item)" style="cursor:pointer">
+		      			{{item.titre}}
+		      		</a>
 		      	</h4>
 		      	
 		    </div>
@@ -16,7 +29,7 @@
 		        	<ol>
 			        	<li ng-repeat="subItem in item.chapitres">
 			          		<div>
-			            		<a class="tree-chapter-item" id="tree-chapter-item-{{subItem.id}}" href="" ng-click="reperto.selectChapter(item, subItem)">{{subItem.titre}}</a>
+			            		<a ng-class="{'item-selected': (reperto.chapitre && (reperto.chapitre.id == subItem.id))}" class="tree-chapter-item" id="tree-chapter-item-{{subItem.id}}" href="" ng-click="reperto.selectChapter(item, subItem)">{{subItem.titre}}</a>
 			          		</div>
 			        	</li>
 			      	</ol>

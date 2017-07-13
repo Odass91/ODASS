@@ -215,6 +215,16 @@ Chapitre.prototype.addIdee = function(idee)
 		}
 	}
 };
+
+Chapitre.prototype.removeIdee = function(idee)
+{
+	var old_idee = this.idees.find(function(element){return (element.id == idee.id);});
+	if (old_idee)
+	{
+		var indexOfOldIdee = this.idees.indexOf(old_idee);
+		this.idees.splice(indexOfOldIdee);
+	}
+};
 var Experience = function(parent, httpService, mapService)
 {
 	this.displayed = true;
@@ -483,6 +493,12 @@ Guide.prototype.addFilter = function(filter)
 	}
 };
 
+/** REMOVE **/
+
+Guide.prototype.removePartie = function(partie)
+{
+	this.thesaurus.removePartie(partie);
+};
 
 /** RESET **/
 
@@ -534,6 +550,7 @@ Guide.prototype.findExperiencesByIdee = function(idee)
 	return result;
 };
 
+/***/
 Guide.prototype.findIdeesByPartie = function(partie)
 {
 	var idees = new Array();
@@ -541,6 +558,15 @@ Guide.prototype.findIdeesByPartie = function(partie)
 	return idees;
 	
 };
+
+Guide.prototype.findIdeesBySection = function(section)
+{
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByPartie(section);
+	return idees;
+	
+};
+/***/
 
 Guide.prototype.findIdeesByChapitre = function(chapitre)
 {
@@ -567,6 +593,79 @@ Guide.prototype.findExperienceById = function(id)
 Guide.prototype.findIdeeById = function(id)
 {
 	return (this.idees.find(function(idee){idee.id == id}));
+};
+
+/** COUNT **/
+
+Guide.prototype.countIdees = function(filter)
+{
+	var count = 0;
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = this.idees.filter(filterer).length;
+	return count;
+};
+
+Guide.prototype.countIdeesBySection = function(section, filter)
+{
+	if (! section)
+	{
+		return 0;
+	}
+	var count = 0;
+	
+	var idees = this.findIdeesBySection(section);
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = idees.filter(filterer).length;
+	
+	return count;
+};
+
+Guide.prototype.countIdeesByChapitre = function(chapitre, filter)
+{
+	if (! chapitre)
+	{
+		return 0;
+	}
+	var count = 0;
+	
+	var idees = this.findIdeesByChapitre(chapitre);
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = idees.filter(filterer).length;
+	
+	return count;
 };
 
 /** UTILITAIRES */
@@ -1060,6 +1159,16 @@ Partie.prototype.addChapitre = function(chapitre)
 	}
 };
 
+Partie.prototype.removeChapitre = function(chapitre)
+{
+	var chapitre_ref = this.findChapitreById(chapitre.id);
+	if (chapitre_ref)
+	{
+		var indexOfChapitre = this.chapitres.indexOf(chapitre_ref);
+		this.chapitres.splice(indexOfChapitre, 1);
+	}
+};
+
 Partie.prototype.findIdeesByChapitre = function(chapitre)
 {
 	var chapitre = this.chapitres.find(function(element){return (element.id == chapitre.id);});
@@ -1125,6 +1234,16 @@ Thesaurus.prototype.addPartie = function(partie)
 };
 
 /** REMOVE **/
+
+Thesaurus.prototype.removePartie = function(id)
+{
+	var partie = this.parties.find(function(element){return element.id == id});
+	if (partie)
+	{
+		var indexOfPartie = this.parties.indexOf(partie);
+		this.parties.splice(indexOfPartie, 1);
+	}
+};
 
 /** HAS **/
 
@@ -3313,6 +3432,8 @@ $(document).ready(function (){
 	odass.directive("quizTheme", function(){return{restrict: 'E', templateUrl: 'src/app/modules/dubito-wizard/quiz-theme.html'};});
 })();
 
+/* TODO : rajouter les chiffres (nombre d'expériences par partie / chapitre / idee */
+
 (function()
 {
 	
@@ -3743,6 +3864,13 @@ $(document).ready(function (){
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
 			this.section = section;
+			this.chapitre = null;
+			
+			
+			if (this.isExpanded('h4-' + section.id))
+			{
+				this.toggleExpandedZone('h4-' + section.id);
+			}
 		};
 		
 		this.selectChapter = function(section, chapitre)

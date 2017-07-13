@@ -51,3 +51,13 @@ Chapitre.prototype.addIdee = function(idee)
 		}
 	}
 };
+
+Chapitre.prototype.removeIdee = function(idee)
+{
+	var old_idee = this.idees.find(function(element){return (element.id == idee.id);});
+	if (old_idee)
+	{
+		var indexOfOldIdee = this.idees.indexOf(old_idee);
+		this.idees.splice(indexOfOldIdee);
+	}
+};

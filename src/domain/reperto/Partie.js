@@ -64,6 +64,16 @@ Partie.prototype.addChapitre = function(chapitre)
 	}
 };
 
+Partie.prototype.removeChapitre = function(chapitre)
+{
+	var chapitre_ref = this.findChapitreById(chapitre.id);
+	if (chapitre_ref)
+	{
+		var indexOfChapitre = this.chapitres.indexOf(chapitre_ref);
+		this.chapitres.splice(indexOfChapitre, 1);
+	}
+};
+
 Partie.prototype.findIdeesByChapitre = function(chapitre)
 {
 	var chapitre = this.chapitres.find(function(element){return (element.id == chapitre.id);});

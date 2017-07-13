@@ -631,6 +631,21 @@ p.red
 	background-size: 20px 20px;
 	background-position: 5px 2px;
 }
+
+.odass-button.basket-white
+{
+	background-image: url('../images/module-reperto-add-basket-white.png');
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	background-position: 5px 2px;
+}
+.odass-button.basket-white.remove
+{
+	background-image: url('../images/module-reperto-remove-basket-white.png');
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	background-position: 5px 2px;
+}
  
 .odass-button:hover
 {

@@ -120,6 +120,12 @@ Guide.prototype.addFilter = function(filter)
 	}
 };
 
+/** REMOVE **/
+
+Guide.prototype.removePartie = function(partie)
+{
+	this.thesaurus.removePartie(partie);
+};
 
 /** RESET **/
 
@@ -171,6 +177,7 @@ Guide.prototype.findExperiencesByIdee = function(idee)
 	return result;
 };
 
+/***/
 Guide.prototype.findIdeesByPartie = function(partie)
 {
 	var idees = new Array();
@@ -178,6 +185,15 @@ Guide.prototype.findIdeesByPartie = function(partie)
 	return idees;
 	
 };
+
+Guide.prototype.findIdeesBySection = function(section)
+{
+	var idees = new Array();
+	idees = this.thesaurus.findIdeesByPartie(section);
+	return idees;
+	
+};
+/***/
 
 Guide.prototype.findIdeesByChapitre = function(chapitre)
 {
@@ -204,6 +220,79 @@ Guide.prototype.findExperienceById = function(id)
 Guide.prototype.findIdeeById = function(id)
 {
 	return (this.idees.find(function(idee){idee.id == id}));
+};
+
+/** COUNT **/
+
+Guide.prototype.countIdees = function(filter)
+{
+	var count = 0;
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = this.idees.filter(filterer).length;
+	return count;
+};
+
+Guide.prototype.countIdeesBySection = function(section, filter)
+{
+	if (! section)
+	{
+		return 0;
+	}
+	var count = 0;
+	
+	var idees = this.findIdeesBySection(section);
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = idees.filter(filterer).length;
+	
+	return count;
+};
+
+Guide.prototype.countIdeesByChapitre = function(chapitre, filter)
+{
+	if (! chapitre)
+	{
+		return 0;
+	}
+	var count = 0;
+	
+	var idees = this.findIdeesByChapitre(chapitre);
+	var that = this;
+	var filterer = function(element)
+	{
+		if (that.hasFilters())
+		{
+			return (element.filtered == filter);
+		}
+		else
+		{
+			return true;
+		}
+	};
+	count = idees.filter(filterer).length;
+	
+	return count;
 };
 
 /** UTILITAIRES */

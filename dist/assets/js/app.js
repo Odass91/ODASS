@@ -929,6 +929,7 @@ Panier.prototype.user = "";
 
 Panier.prototype.addIdee = function(idee, source, full)
 {
+	console.log("avant", this.idees);
 	if (!idee.experiences_loaded)
 	{
 		idee.fetchExperimentData();
@@ -963,17 +964,19 @@ Panier.prototype.addIdee = function(idee, source, full)
 
 Panier.prototype.removeIdee = function(idee)
 {
+	console.log("avant", this.idees);
+
 	idee.experiences.forEach(function(experience)
 	{
 		this.removeExperience(experience);
 		experience.displayed = false;
 	}, this);
-	delete this.idees[idee.id];
 	
 	var chapitre = this.guide.findChapitreById(idee.chapter_id);
 	var partie = this.guide.findPartieById(chapitre.partie_id);
-	
+
 	chapitre.removeIdee(idee);
+
 	if (chapitre.idees.length == 0)
 	{
 		partie.removeChapitre(chapitre);
@@ -982,6 +985,8 @@ Panier.prototype.removeIdee = function(idee)
 			this.guide.removePartie(partie);
 		}
 	}
+	delete (this.idees[idee.id]);
+	console.log("apres", this.idees);
 };
 
 Panier.prototype.addExperience = function(experience)
@@ -1235,12 +1240,12 @@ Thesaurus.prototype.addPartie = function(partie)
 
 /** REMOVE **/
 
-Thesaurus.prototype.removePartie = function(id)
+Thesaurus.prototype.removePartie = function(partie)
 {
-	var partie = this.parties.find(function(element){return element.id == id});
-	if (partie)
+	var old_partie = this.parties.find(function(element){return element.id == partie.id});
+	if (old_partie)
 	{
-		var indexOfPartie = this.parties.indexOf(partie);
+		var indexOfPartie = this.parties.indexOf(old_partie);
 		this.parties.splice(indexOfPartie, 1);
 	}
 };

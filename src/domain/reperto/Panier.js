@@ -15,6 +15,7 @@ Panier.prototype.user = "";
 
 Panier.prototype.addIdee = function(idee, source, full)
 {
+	console.log("avant", this.idees);
 	if (!idee.experiences_loaded)
 	{
 		idee.fetchExperimentData();
@@ -49,17 +50,19 @@ Panier.prototype.addIdee = function(idee, source, full)
 
 Panier.prototype.removeIdee = function(idee)
 {
+	console.log("avant", this.idees);
+
 	idee.experiences.forEach(function(experience)
 	{
 		this.removeExperience(experience);
 		experience.displayed = false;
 	}, this);
-	delete this.idees[idee.id];
 	
 	var chapitre = this.guide.findChapitreById(idee.chapter_id);
 	var partie = this.guide.findPartieById(chapitre.partie_id);
-	
+
 	chapitre.removeIdee(idee);
+
 	if (chapitre.idees.length == 0)
 	{
 		partie.removeChapitre(chapitre);
@@ -68,6 +71,8 @@ Panier.prototype.removeIdee = function(idee)
 			this.guide.removePartie(partie);
 		}
 	}
+	delete (this.idees[idee.id]);
+	console.log("apres", this.idees);
 };
 
 Panier.prototype.addExperience = function(experience)

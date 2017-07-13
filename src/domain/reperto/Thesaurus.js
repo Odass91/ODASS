@@ -33,12 +33,12 @@ Thesaurus.prototype.addPartie = function(partie)
 
 /** REMOVE **/
 
-Thesaurus.prototype.removePartie = function(id)
+Thesaurus.prototype.removePartie = function(partie)
 {
-	var partie = this.parties.find(function(element){return element.id == id});
-	if (partie)
+	var old_partie = this.parties.find(function(element){return element.id == partie.id});
+	if (old_partie)
 	{
-		var indexOfPartie = this.parties.indexOf(partie);
+		var indexOfPartie = this.parties.indexOf(old_partie);
 		this.parties.splice(indexOfPartie, 1);
 	}
 };

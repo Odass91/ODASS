@@ -111,134 +111,142 @@
                 
 			</div>
 			
-			<h3 ng-show="idee.obtainExperiencesLength() > 1 && idee.displayLong">Découvrez les {{idee.obtainExperiencesLength()}} expériences associées</h3>
-			<h3 ng-show="idee.obtainExperiencesLength() == 1 && idee.displayLong">Découvrez l'expérience associée</h3>
-			<h3 ng-show="idee.obtainExperiencesLength() == 0 && idee.displayLong">Il n'y a pas d'expérience associée à cette action</h3>
 			
-			<div class="experiences-content" style="min-height: 48%; position: relative;">
-                
-                
-                <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength() == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
-                </div>
-                
-                <div style="">
+			<div ng-show="idee.displayLong">
+				<h3 ng-show="idee.experiences.length > 1 && idee.displayLong">Découvrez les {{idee.experiences.length}} expériences associées</h3>
+				<h3 ng-show="idee.experiences.length == 1 && idee.displayLong">Découvrez l'expérience associée</h3>
+				<h3 ng-show="idee.experiences.length == 0 && idee.displayLong">Il n'y a pas d'expérience associée à cette action</h3>
 				
-				
-                    <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength() > 1 && idee.displayLong" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </div>
-                    <div ng-show="idee.experiences_loaded && idee.obtainExperiencesLength()  > 1 && idee.displayLong"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </div>
-                
-                    <div ng-show="idee.experiences_loaded && idee.displayLong" class="experiences-list" style="position:relative; width:100%; overflow: hidden">
-                        <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.obtainExperiencesLength() * 100}}%; margin:0; padding:0; font-size:0;">
-                            
-                            
-                            <div 
-                            	ng-repeat="experience in idee.experiences track by $index" ng-show="experience.displayed" class="" 
-                            	style=" width:{{100 / idee.obtainExperiencesLength() }}%; float: left; overflow: hidden; padding: 15px; background-color:white; border-radius: 15px;"
-                            >
-                                    
-                                    <div style="height:40%;">
-                                    	<h4 class="initiative-title">
-                                            <strong><span class="" ng-bind-html="experience.titre"></span></strong>
-                                            <span ng-hide="reperto.panier.hasExperience(experience)" ng-click="reperto.panier.addExperience(experience)" class="pull-right odass-button basket"></span>
-                                            <span ng-show="reperto.panier.hasExperience(experience)" ng-click="reperto.panier.removeExperience(experience)" class="pull-right odass-button basket remove"></span>
-                                        </h4>
-                                        
-                                            
-                                        <p style="font-size: 12px !important;" ng-hide="experience.displayLong">
-                                            <span style="font-size: 12px !important;" ng-bind-html="experience.description"></span>
-                                            <a style="font-size: 12px !important;" href="" ng-click="experience.displayLong=true">Voir plus</a>
-                                        </p>
-                                        
-                                        <p style="font-size: 12px !important;" ng-show="experience.displayLong">
-                                            <span style="font-size: 11px !important;" ng-bind-html="experience.descriptionlongue"></span>
-                                            
-                                            <a style="font-size: 12px !important;" ng-show="experience.displayLong" href="" ng-click="experience.displayLong=false">Voir moins</a>
-                                        </p>
-                            
-                            
-                                        <p ng-show="experience.keywords.length > 0">
-                                        
-                                            <span class="glyphicon glyphicon-tag">&nbsp;</span> 
-                                            
-                                            <span class="tag" ng-repeat="keyword in experience.keywords" title="{{keyword}}" ng-click="reperto.addFilter(keyword, idee)"> 
-                                                <span class="label label-info">{{keyword | limitTo:35}}{{keyword.length > 35 ? "..." : ""}}</span>&nbsp;
-                                            </span>
-                                        </p>
-                                    </div>   
-                                        
-                                    <div style="height:60%; position: relative">
-                                     	<div class="footer-content row" style="height:60%;">
-                                            <div id="contacts-{{experience.id}}" class="col-lg-12 info-block contact" style="height: 100%; padding: 7px;background-color: rgba(90,180,243,0.9);">
-                                                <p ng-show="experience.contacts && experience.contacts.length > 0"  style="padding: 7px;  min-height: 60px; display: inline-block; min-width: 150px">
-                                                    <span ng-repeat="contact in experience.contacts">
-                                                        
-                                                        <span class="glyphicon glyphicon-user"> </span> {{contact.nom}}<br />
-                                                        <a ng-show="contact.mail && contact.mail!=''" href="mailto:{{contact.mail}}">
-                                                            <span class="glyphicon glyphicon-envelope"> </span> {{contact.mail}}
-                                                        </a>
-                                                        <span class="glyphicon glyphicon-phone"> </span> {{contact.tel}}
-                                                        <br />
-                                                    </span>
-                                                </p>
-                                                <p ng-hide="experience.contacts && experience.contacts.length > 0" style="padding: 7px;  min-height: 60px;">
-                                                     <span class="glyphicon glyphicon-user"></span>&nbsp; Il n'y a pas de contact associé à cette expérience.
-                                                </p>
-                                            </div>
-                                            <div id="geoloc-{{experience.id}}" class="col-lg-12 info-block geoloc" style="min-height: 60px;height: 100%; text-align: center; padding: 7px; background-color: rgba(244,118,182,0.90);">
-                                                
-                                                <span ng-show="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national && ! experience.geoloc.latitude && ! experience.geoloc.ville ">
-                                                    Nous n'avons pas d'information de géolocalisation au sujet de cette expérience
-                                                </span>
-                                                <a ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.latitude">
-                                                    <span class="glyphicon glyphicon-screenshot"> </span> Centrer la carte
-                                                </a>
-                                                
-                                                <div ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.ville">
-                                                    {{experience.geoloc.ville}}
-                                                    <br />
-                                                </div>
-                                                <span ng-hide="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">portée 
-                                                    <strong>
-                                                        <span ng-show="experience.geoloc.national">nationale</span>
-                                                        <span ng-show="experience.geoloc.departemental && ! experience.geoloc.national">départementale</span>
-                                                        <span ng-show="experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">locale</span>
-                                                    </strong>
-                                                </span>
-                                            </div>
-                                            <div id="references-{{experience.id}}" class="col-lg-12 info-block references" style="height: 100%; padding: 7px; background-color: rgba(255,225,136,0.90);">
-                                                <p ng-show="experience.references && experience.references.length > 0"  style="padding: 7px;  min-height: 60px;">
-                                                    <span class="glyphicon glyphicon glyphicon-link"></span>&nbsp; 
-                                                    <span ng-repeat="lien in experience.references">
-                                                        <a target="_" href="{{lien.lien}}">{{lien.nom}}</a><br />
-                                                    </span>
-                                                </p>
-                                                <p ng-hide="experience.references && experience.references.length > 0"  style="padding: 7px;  min-height: 60px;">
-                                                    Il n'y a pas de lien enregistré pour cette expérience
-                                                </p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="footer-tabs row" style="height:40%;">
-                                            <div id="tab-contacts-{{experience.id}}" class="col-lg-4 footer-tab contact" ng-click="reperto.toggleDetails(experience.id, 'contacts')">
-                                                <span class="glyphicon glyphicon-user"></span> Contacts
-                                            </div>
-                                            <div id="tab-geoloc-{{experience.id}}"  class="col-lg-4 footer-tab geoloc" ng-click="reperto.toggleDetails(experience.id, 'geoloc')">
-                                                <span class="geoloc"><span class="glyphicon glyphicon-globe"></span> Géoloc</span><br/>
-                                            </div>
-                                            <div id="tab-references-{{experience.id}}" class="col-lg-4 footer-tab references" ng-click="reperto.toggleDetails(experience.id, 'references')">
-                                                <span class="glyphicon glyphicon-link"></span> liens
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<div class="experiences-content" style="min-height: 48%; position: relative;">
+	                
+	                
+	                <div ng-show="idee.experiences_loaded && idee.experiences.length == 0" style="margin: -15px; height: 200px; background-size: cover; background-image: url('images/placeholder-{{reperto.cssClasses[reperto.sectionByChapterId[idee.parent].id]}}.jpg')">
+	                </div>
+	                
+	                <div style="">
+					
+					
+	                    <div ng-show="idee.experiences_loaded && idee.experiences.length > 1 && idee.displayLong" class="experience-nav left" style="position: absolute" ng-click="reperto.previousExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+	                        <span class="glyphicon glyphicon-chevron-left"></span>
+	                    </div>
+	                    <div ng-show="idee.experiences_loaded && idee.experiences.length  > 1 && idee.displayLong"  class="experience-nav right" style="position: absolute" ng-click="reperto.nextExperience('experiences-list-carrousel-' + idee.id, idee.experiences.length)">
+	                        <span class="glyphicon glyphicon-chevron-right"></span>
+	                    </div>
+	                
+	                    <div ng-show="idee.experiences_loaded && idee.displayLong" class="experiences-list" style="position:relative; width:100%; overflow: hidden">
+	                        <div id="experiences-list-carrousel-{{idee.id}}" style="position: relative; width:{{idee.experiences.length * 100}}%; margin:0; padding:0; font-size:0;">
+	                            
+	                            
+	                            <div 
+	                            	ng-repeat="experience in idee.experiences track by $index" class="" 
+	                            	style=" width:{{100 / idee.experiences.length }}%; float: left; overflow: hidden; padding: 15px; background-color:white; border-radius: 15px;"
+	                            >
+	                                    
+	                                    <div style="height:40%;">
+	                                    	<h4 class="initiative-title">
+	                                            <strong><span class="" ng-bind-html="experience.titre"></span></strong>
+	                                            <span ng-hide="reperto.panier.hasExperience(experience)" ng-click="reperto.panier.addExperience(experience)" class="pull-right odass-button basket"></span>
+	                                            <span ng-show="reperto.panier.hasExperience(experience)" ng-click="reperto.panier.removeExperience(experience)" class="pull-right odass-button basket remove"></span>
+	                                        </h4>
+	                                        
+	                                            
+	                                        <p style="font-size: 12px !important;" ng-hide="experience.displayLong">
+	                                            <span style="font-size: 12px !important;" ng-bind-html="experience.description"></span>
+	                                            <a style="font-size: 12px !important;" href="" ng-click="experience.displayLong=true">Voir plus</a>
+	                                        </p>
+	                                        
+	                                        <p style="font-size: 12px !important;" ng-show="experience.displayLong">
+	                                            <span style="font-size: 11px !important;" ng-bind-html="experience.descriptionlongue"></span>
+	                                            
+	                                            <a style="font-size: 12px !important;" ng-show="experience.displayLong" href="" ng-click="experience.displayLong=false">Voir moins</a>
+	                                        </p>
+	                            
+	                            
+	                                        <p ng-show="experience.keywords.length > 0">
+	                                        
+	                                            <span class="glyphicon glyphicon-tag">&nbsp;</span> 
+	                                            
+	                                            <span class="tag" ng-repeat="keyword in experience.keywords" title="{{keyword}}" ng-click="reperto.addFilter(keyword, idee)"> 
+	                                                <span class="label label-info">{{keyword | limitTo:35}}{{keyword.length > 35 ? "..." : ""}}</span>&nbsp;
+	                                            </span>
+	                                        </p>
+	                                    </div>   
+	                                        
+	                                    <div style="height:60%; position: relative">
+	                                     	<div class="footer-content row" style="height:60%;">
+	                                            <div id="contacts-{{experience.id}}" class="col-lg-12 info-block contact" style="height: 100%; padding: 7px;background-color: rgba(90,180,243,0.9);">
+	                                                <p ng-show="experience.contacts && experience.contacts.length > 0"  style="padding: 7px;  min-height: 60px; display: inline-block; min-width: 150px">
+	                                                    <span ng-repeat="contact in experience.contacts">
+	                                                        
+	                                                        <span class="glyphicon glyphicon-user"> </span> {{contact.nom}}<br />
+	                                                        <a ng-show="contact.mail && contact.mail!=''" href="mailto:{{contact.mail}}">
+	                                                            <span class="glyphicon glyphicon-envelope"> </span> {{contact.mail}}
+	                                                        </a>
+	                                                        <span class="glyphicon glyphicon-phone"> </span> {{contact.tel}}
+	                                                        <br />
+	                                                    </span>
+	                                                </p>
+	                                                <p ng-hide="experience.contacts && experience.contacts.length > 0" style="padding: 7px;  min-height: 60px;">
+	                                                     <span class="glyphicon glyphicon-user"></span>&nbsp; Il n'y a pas de contact associé à cette expérience.
+	                                                </p>
+	                                            </div>
+	                                            <div id="geoloc-{{experience.id}}" class="col-lg-12 info-block geoloc" style="min-height: 60px;height: 100%; text-align: center; padding: 7px; background-color: rgba(244,118,182,0.90);">
+	                                                
+	                                                <span ng-show="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national && ! experience.geoloc.latitude && ! experience.geoloc.ville ">
+	                                                    Nous n'avons pas d'information de géolocalisation au sujet de cette expérience
+	                                                </span>
+	                                                <a ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.latitude">
+	                                                    <span class="glyphicon glyphicon-screenshot"> </span> Centrer la carte
+	                                                </a>
+	                                                
+	                                                <div ng-click="reperto.centerMap(experience)" ng-show="experience.geoloc.ville">
+	                                                    {{experience.geoloc.ville}}
+	                                                    <br />
+	                                                </div>
+	                                                <span ng-hide="! experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">portée 
+	                                                    <strong>
+	                                                        <span ng-show="experience.geoloc.national">nationale</span>
+	                                                        <span ng-show="experience.geoloc.departemental && ! experience.geoloc.national">départementale</span>
+	                                                        <span ng-show="experience.geoloc.local && ! experience.geoloc.departemental && ! experience.geoloc.national">locale</span>
+	                                                    </strong>
+	                                                </span>
+	                                            </div>
+	                                            <div id="references-{{experience.id}}" class="col-lg-12 info-block references" style="height: 100%; padding: 7px; background-color: rgba(255,225,136,0.90);">
+	                                                <p ng-show="experience.references && experience.references.length > 0"  style="padding: 7px;  min-height: 60px;">
+	                                                    <span class="glyphicon glyphicon glyphicon-link"></span>&nbsp; 
+	                                                    <span ng-repeat="lien in experience.references">
+	                                                        <a target="_" href="{{lien.lien}}">{{lien.nom}}</a><br />
+	                                                    </span>
+	                                                </p>
+	                                                <p ng-hide="experience.references && experience.references.length > 0"  style="padding: 7px;  min-height: 60px;">
+	                                                    Il n'y a pas de lien enregistré pour cette expérience
+	                                                </p>
+	                                            </div>
+	                                        </div>
+	                                        
+	                                        <div class="footer-tabs row" style="height:40%;">
+	                                            <div id="tab-contacts-{{experience.id}}" class="col-lg-4 footer-tab contact" ng-click="reperto.toggleDetails(experience.id, 'contacts')">
+	                                                <span class="glyphicon glyphicon-user"></span> Contacts
+	                                            </div>
+	                                            <div id="tab-geoloc-{{experience.id}}"  class="col-lg-4 footer-tab geoloc" ng-click="reperto.toggleDetails(experience.id, 'geoloc')">
+	                                                <span class="geoloc"><span class="glyphicon glyphicon-globe"></span> Géoloc</span><br/>
+	                                            </div>
+	                                            <div id="tab-references-{{experience.id}}" class="col-lg-4 footer-tab references" ng-click="reperto.toggleDetails(experience.id, 'references')">
+	                                                <span class="glyphicon glyphicon-link"></span> liens
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+		
+			</div>
+			
+		
+		
+		
 		</div>
 	</div>
 </section>

@@ -14,6 +14,7 @@
 			<article ng-repeat="chapitre in partie.chapitres">
 				<h3 ng-bind-html="chapitre.titre"></h3>
 				<p class="chapitre description" ng-bind-html="chapitre.description"></p>
+				{{chapitre.idees.length}}
 				<div class="idee" ng-repeat="idee in chapitre.idees">
 					<h4 ng-bind-html="idee.titre"></h4>
 					<p class="idee description" ng-bind-html="idee.description"></p>
@@ -22,7 +23,7 @@
 							<h5 ng-bind-html="experience.titre"></h5>
 							<p class="experience description" ng-bind-html="experience.descriptionlongue"></p>
 							<div class="contact" ng-hide="experience.contacts && experience.contacts.length > 0" >
-								contact : 
+								contact : {{contact}}
 									<span ng-repeat="contact in experience.contacts">    
                                          <span class="glyphicon glyphicon-user"> </span> {{contact.nom}}&nbsp;&nbsp;.&nbsp;&nbsp;
                                          <span>
@@ -32,7 +33,7 @@
                                      </span>
 							</div>
 							<div class="localisation">
-								{{experience.geoloc.ville}}
+								Localisation : {{experience.geoloc.ville}}
 							</div>
 						</li>
 					</ul>

@@ -34,16 +34,25 @@ Panier.prototype.addIdee = function(idee, source, full)
 	var chapitre_reference = source.findChapitreById(idee.chapter_id);
 	var partie_reference = source.findPartieById(chapitre_reference.partie_id);
 	
-	var partie = new Partie(this.guide, this.guide.httpServices);
-	partie.build(partie_reference);
-	var chapitre = new Chapitre(partie);
-	chapitre.build(chapitre_reference);
-	
+	var partie, chapitre = null;
+	chapitre = this.guide.findChapitreById(chapitre_reference.id);
+	if (! chapitre)
+	{
+		partie = new Partie(this.guide, this.guide.httpServices);
+		partie.build(partie_reference);
+		chapitre = new Chapitre(partie);
+		chapitre.build(chapitre_reference);
 
-	chapitre.addIdee(idee);
-	partie.addChapitre(chapitre);
+		partie.addChapitre(chapitre);
+		chapitre.addIdee(idee);
+		this.guide.addPartie(partie);
+	}
+	else
+	{
+		partie = this.guide.findPartieById(partie_reference.id);
+		chapitre.addIdee(idee);
+	}
 	
-	this.guide.addPartie(partie);
 	this.guide.addIdee(idee);
 	
 };

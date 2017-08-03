@@ -90,6 +90,7 @@
             };
             
             this.filters = {};
+            this.options = {"affichage": {"motclefs": false}};
         };
         
         this.changeNavigationMode = function(mode)
@@ -143,7 +144,7 @@
                 {
                     $('[data-toggle="tooltip"]').tooltip();
                 }, 500);
-                
+                reperto.bootKeywords();
                 reperto.reduceIntro();
 		    	
 		    }).
@@ -157,6 +158,27 @@
 		this.fetchExperimentDataForIdee = function(idee)
 		{
 			idee.fetchExperimentData(odass_app.api_hostname);
+		};
+		
+		this.bootKeywords = function()
+		{
+			console.log("tick");
+			var reperto = this;
+			
+			var obtainKeywords = function()
+			{
+				reperto.guide.buildKeywordsMap();
+				if (reperto.guide.keywords.length == 0)
+				{
+					window.setTimeout(function()
+	                {
+						obtainKeywords();
+	                }, 500);
+				}
+			};
+			
+			
+			obtainKeywords();
 		};
 		
 		
@@ -300,7 +322,10 @@
 		this.addFilter = function(filter, idee)
 		{
 			this.guide.addFilter(filter);
-			this.switchDisplay(false, idee);
+			if (idee)
+			{
+				this.switchDisplay(false, idee);
+			}
 			this.updateIdeesCount();
 		};
 

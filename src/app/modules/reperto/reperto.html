@@ -81,6 +81,18 @@
     {
         height: 550px !important;
     }
+    
+    .keyword
+    {
+    	cursor:pointer;
+    	display: inline-block !important;
+    	margin-right: 5px;
+    	font-size: 10px !important;
+    }
+    .keyword .badge
+    {
+    	font-size: 10px !important;
+    }
 </style>
 
 <div ng-show="odass.isModule('annuaire')">
@@ -179,6 +191,30 @@
 				
 				<div class="clearfix"></div>
 				
+				
+				<section>
+					<div class="" id="keywords-list" role="tablist" aria-multiselectable="true" ng-show="reperto.guide.keywords.length > 0">
+						<h4 class="label label-default" style="display:block"><span class="glyphicon glyphicon-tag"> </span> Mots-clefs</h4>
+						
+						<span ng-show="! reperto.options.affichage.motclefs" class="label label-info keyword" ng-repeat="item in reperto.guide.keywords | limitTo:7" ng-click="reperto.addFilter(item.keyword)">
+							{{item.keyword| limitTo:14}}{{item.keyword.length > 14 ? "..." : ""}}<span class="badge">{{item.count}}</span>
+						</span>
+						
+						<br/>
+						
+						<span ng-show="! reperto.options.affichage.motclefs && reperto.guide.keywords.length > 7" ng-click="reperto.options.affichage.motclefs = true">
+							<a>voir tous les mots clefs</a>
+						</span>
+						
+						<span ng-show="reperto.options.affichage.motclefs" class="label label-info keyword" ng-repeat="item in reperto.guide.keywords" ng-click="reperto.addFilter(item.keyword)">
+							{{item.keyword}}<span class="badge">{{item.count}}</span>
+						</span>
+						
+						<br/>
+						
+						<span ng-show="reperto.options.affichage.motclefs" ng-click="reperto.options.affichage.motclefs = false"><a>voir moins</a></span>
+					</div>
+				</section>
 				
 			</div>
 

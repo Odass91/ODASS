@@ -97,6 +97,17 @@ Idee.prototype.findByExperimentId = function(id)
 
 /** UTILS */
 
+Idee.prototype.obtainKeywords = function()
+{
+	var keywords = [];
+	
+	this.experiences.forEach(function(experience)
+	{
+		keywords = keywords.concat(experience.keywords);
+	}, this);
+	
+	return keywords;
+};
 
 Idee.prototype.obtainExperiencesLength = function(id)
 {

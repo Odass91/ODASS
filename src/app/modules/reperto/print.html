@@ -20,9 +20,20 @@
 					<ul class="experiences">
 						<li class="experience" ng-repeat="experience in idee.experiences" ng-show="experience.displayed">
 							<h5 ng-bind-html="experience.titre"></h5>
-							<div class="experience description"></div>
-							<div class="contact"></div>
-							<div class="localisation"></div>
+							<p class="experience description" ng-bind-html="experience.descriptionlongue"></p>
+							<div class="contact" ng-hide="experience.contacts && experience.contacts.length > 0" >
+								contact : 
+									<span ng-repeat="contact in experience.contacts">    
+                                         <span class="glyphicon glyphicon-user"> </span> {{contact.nom}}&nbsp;&nbsp;.&nbsp;&nbsp;
+                                         <span>
+                                             <span class="glyphicon glyphicon-envelope"> </span> {{contact.mail}}
+                                         </span>&nbsp;&nbsp;.&nbsp;&nbsp;
+                                         <span class="glyphicon glyphicon-phone"> </span> {{contact.tel}}
+                                     </span>
+							</div>
+							<div class="localisation">
+								{{experience.geoloc.ville}}
+							</div>
 						</li>
 					</ul>
 				</div>

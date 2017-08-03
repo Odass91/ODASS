@@ -64,6 +64,36 @@ Guide.prototype.build = function(data)
 	this.modetest = data.modetestvalue;
 };
 
+Guide.prototype.buildKeywordsMap = function()
+{
+	var keywords = this.obtainKeywords();
+	
+	var keywordsMap = {};
+	keywords.forEach(function(keyword)
+	{
+		if (keyword)
+		{
+			if (keywordsMap[keyword] == undefined)
+			{
+				keywordsMap[keyword] = 0;
+			}
+			keywordsMap[keyword]++;
+		}
+	}, this);
+	
+	this.keywords = [];
+	
+	var sortFunction = function(a, b)
+	{
+		return (b.count - a.count);
+	}
+	
+	Object.keys(keywordsMap).forEach(function (key){
+		this.keywords.push({"keyword": key, "count": keywordsMap[key]});
+	}, this);
+	
+	this.keywords.sort(sortFunction);
+};
 Guide.prototype.setup = function(data)
 {
 	this.thesaurus.setup(data.thesaurus);
@@ -297,6 +327,19 @@ Guide.prototype.countIdeesByChapitre = function(chapitre, filter)
 
 /** UTILITAIRES */
 
+Guide.prototype.obtainKeywords = function()
+{
+	var keywords = [];
+	
+	this.idees.forEach(function(idee)
+	{
+		keywords = keywords.concat(idee.obtainKeywords());
+	}, this);
+	
+	return keywords;
+	
+};
+
 Guide.prototype.obtainGuideGdcid = function()
 {
 	return (this.gdcid != "" ? ("/" + this.gdcid) : "");
@@ -356,6 +399,7 @@ Guide.prototype.fetchAllData = function()
 			idee.fetchExperimentData();
 		}
 	}, this);
+	
 	$("#loading-data").hide();
 };
 

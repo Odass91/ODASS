@@ -38,10 +38,10 @@ var OdassMapService = function()
 	
 };
 
-OdassMapService.prototype.setup = function(domElementId)
+OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zoom)
 {
-	// reperto map
-	var mymap = L.map(domElementId).setView([48.712, 2.24], 6);
+	// reperto map 48.712, 2.24 6
+	var mymap = L.map(domElementId).setView([latitude, longitude], zoom);
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	    maxZoom: 18,
@@ -380,6 +380,7 @@ var Guide = function(httpService, mapService)
 	this.filtres = new Array();
 	this.httpService = httpService;
 	this.mapService = mapService;
+	this.keywords = new Array();
 };
 
 /** PROPRIETES **/
@@ -391,7 +392,7 @@ Guide.prototype.description = "";
 Guide.prototype.modetest = false;
 Guide.prototype.owner = {"nom": "CAC", "href": "http://www.associations-citoyennes.net/", "logo": "images/logo-CAC.jpg", "email": "cac_repertoire@odass.org"};
 Guide.prototype.idees = new Array();
-
+Guide.prototype.keywords = new Array();
 
 /** SETUP */
 
@@ -466,6 +467,7 @@ Guide.prototype.buildKeywordsMap = function()
 	}, this);
 	
 	this.keywords.sort(sortFunction);
+	
 };
 Guide.prototype.setup = function(data)
 {
@@ -3508,7 +3510,7 @@ $(document).ready(function (){
 	
 	/** 
 	 * */
-	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", function($http, $location, $scope)
+	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", "$timeout", function($http, $location, $scope, $timeout)
 	{
 		var reperto = this;
 		
@@ -3665,23 +3667,23 @@ $(document).ready(function (){
 		
 		this.bootKeywords = function()
 		{
-			console.log("tick");
 			var reperto = this;
-			
-			var obtainKeywords = function()
+			var buildKeywords = function()
 			{
 				reperto.guide.buildKeywordsMap();
 				if (reperto.guide.keywords.length == 0)
 				{
-					window.setTimeout(function()
-	                {
-						obtainKeywords();
-	                }, 500);
+					$timeout(function()
+					{
+						buildKeywords();
+					}, 1000);
 				}
-			};
-			
-			
-			obtainKeywords();
+				else
+				{
+					reperto.keywords = reperto.guide.keywords;
+				}
+			}
+			buildKeywords();
 		};
 		
 		

@@ -5,10 +5,10 @@ var OdassMapService = function()
 	
 };
 
-OdassMapService.prototype.setup = function(domElementId)
+OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zoom)
 {
-	// reperto map
-	var mymap = L.map(domElementId).setView([48.712, 2.24], 6);
+	// reperto map 48.712, 2.24 6
+	var mymap = L.map(domElementId).setView([latitude, longitude], zoom);
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	    maxZoom: 18,

@@ -7,6 +7,7 @@ var Guide = function(httpService, mapService)
 	this.filtres = new Array();
 	this.httpService = httpService;
 	this.mapService = mapService;
+	this.keywords = new Array();
 };
 
 /** PROPRIETES **/
@@ -18,7 +19,7 @@ Guide.prototype.description = "";
 Guide.prototype.modetest = false;
 Guide.prototype.owner = {"nom": "CAC", "href": "http://www.associations-citoyennes.net/", "logo": "images/logo-CAC.jpg", "email": "cac_repertoire@odass.org"};
 Guide.prototype.idees = new Array();
-
+Guide.prototype.keywords = new Array();
 
 /** SETUP */
 
@@ -93,6 +94,7 @@ Guide.prototype.buildKeywordsMap = function()
 	}, this);
 	
 	this.keywords.sort(sortFunction);
+	
 };
 Guide.prototype.setup = function(data)
 {

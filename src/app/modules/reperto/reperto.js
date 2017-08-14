@@ -5,7 +5,7 @@
 	
 	/** 
 	 * */
-	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", function($http, $location, $scope)
+	var odass = angular.module("odass").controller('RepertoController', ['$http', '$location', "$scope", "$timeout", function($http, $location, $scope, $timeout)
 	{
 		var reperto = this;
 		
@@ -162,23 +162,23 @@
 		
 		this.bootKeywords = function()
 		{
-			console.log("tick");
 			var reperto = this;
-			
-			var obtainKeywords = function()
+			var buildKeywords = function()
 			{
 				reperto.guide.buildKeywordsMap();
 				if (reperto.guide.keywords.length == 0)
 				{
-					window.setTimeout(function()
-	                {
-						obtainKeywords();
-	                }, 500);
+					$timeout(function()
+					{
+						buildKeywords();
+					}, 1000);
 				}
-			};
-			
-			
-			obtainKeywords();
+				else
+				{
+					reperto.keywords = reperto.guide.keywords;
+				}
+			}
+			buildKeywords();
 		};
 		
 		

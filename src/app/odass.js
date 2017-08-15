@@ -43,6 +43,7 @@
                 this.node_hostname = "http://127.0.0.1:8080";
             }
 			this.httpService = new OdassHTTPService($http, this.api_hostname);
+			this.mapService = new OdassMapService($http, this.api_hostname);
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			

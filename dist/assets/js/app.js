@@ -31,7 +31,7 @@ OdassHTTPService.prototype.saveJSONObject = function(url, JSONObject, success_ca
 		console.log("Erreur lors de la sauvegarde du fichier json");
 	});
 };
-var OdassMapService = function()
+var OdassMapService = function($http, apiHostname)
 {
 	this.markerList = new Array();
 	this.carte = null;
@@ -40,7 +40,6 @@ var OdassMapService = function()
 
 OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zoom)
 {
-	// reperto map 48.712, 2.24 6
 	var mymap = L.map(domElementId).setView([latitude, longitude], zoom);
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGF2aWRsZXJheSIsImEiOiJjaXgxdTJua3cwMDBiMnRwYjV3MGZuZTAxIn0.9Y6c9J5ArknMqcFNtn4skw', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -52,40 +51,60 @@ OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zo
 	this.carte = mymap;
 };
 
-OdassMapService.prototype.addMarker = function(object)
+OdassMapService.prototype.createMarker = function(id, latLong)
 {
-	var latitude_pos = experience.geoloc.latitude;
-    var longitude_pos = experience.geoloc.longitude;
-    var icon = L.icon({
-        'iconUrl': 'images/markers/' + this.markerIcons[experience.category]
-    });
-    var marker = L.marker([latitude_pos, longitude_pos], {"icon": icon});
-    
-    marker.addTo(this.reperto_carte);
-    
-    
-    this.markerCount++;
-    this.activeMarker = null;
-    
-    experience.marker = marker;
-    marker.experience = experience;
-    var reperto = this;
-    marker.on("click", function(event)
-    {
-    	event.preventDefault();
-    }, this);
-    
-    this.markerMap[experience.id] = experience;
+	var marker = this.markerList.find(function(marker){return marker.id == id});
+	if (marker == undefined)
+	{
+		var marker = L.marker(latLong);
+		this.markerList.push({"id": id, "object": marker});
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 };
 
-OdassMapService.prototype.removeMarker = function(object)
+
+OdassMapService.prototype.addMarker = function(id)
 {
-	
+	var marker = this.markerList.find(function(marker){return marker.id == id});
+	if (marker != undefined)
+	{
+		marker.object.addTo(this.carte);
+		
+		
+	}
 };
 
-OdassMapService.prototype.toggleMarker = function(object)
+OdassMapService.prototype.removeMarker = function(id)
 {
-	
+	var marker = this.markerList.find(function(marker){return marker.id == id});
+	if (marker != undefined)
+	{
+		marker.object.remove();
+		
+	}
+};
+
+OdassMapService.prototype.showOnMap = function(array_of_id)
+{
+	this.markerList.forEach(function(item)
+	{
+//		console.log("item stored", item, "array_of_id", array_of_id);
+		if (array_of_id.indexOf(item.id) != -1)
+		{
+//			console.log("found it !");
+			this.addMarker(item.id);
+		}
+		else
+		{
+
+//			console.log("Didn't found it !");
+			this.removeMarker(item.id);
+		}
+	}, this);
 };
 
 OdassMapService.prototype.refreshMap = function(object)
@@ -492,6 +511,25 @@ Guide.prototype.setup = function(data)
 Guide.prototype.setupIntroduction = function(data)
 {
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
+};
+
+Guide.prototype.setupMap = function(data)
+{
+	var guide = this;
+	this.idees.forEach(function(idee)
+	{
+		idee.experiences.forEach(function(experience)
+		{
+			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
+			{
+				var marker = guide.mapService.createMarker(experience.id, [experience.geoloc.latitude, experience.geoloc.longitude]);
+				if (marker)
+				{
+					guide.mapService.addMarker(experience.id);
+				}
+			}
+		}, this);
+	}, this);
 };
 
 /** ADD **/ 
@@ -1429,6 +1467,7 @@ Thesaurus.prototype.findPartieById = function(id)
                 this.node_hostname = "http://127.0.0.1:8080";
             }
 			this.httpService = new OdassHTTPService($http, this.api_hostname);
+			this.mapService = new OdassMapService($http, this.api_hostname);
 			this.user = {"name": "", "modules": ["dashboard", "dubito"]};
 			this.module = "page-accueil";
 			
@@ -3650,6 +3689,8 @@ $(document).ready(function (){
                     $('[data-toggle="tooltip"]').tooltip();
                 }, 500);
                 reperto.bootKeywords();
+                reperto.bootMap();
+                
                 reperto.reduceIntro();
 		    	
 		    }).
@@ -3663,6 +3704,25 @@ $(document).ready(function (){
 		this.fetchExperimentDataForIdee = function(idee)
 		{
 			idee.fetchExperimentData(odass_app.api_hostname);
+		};
+		
+		this.bootMap = function()
+		{
+			var reperto = this;
+            reperto.mapService.setup("repertomap", 48.712, 2.24, 6);
+            
+            var spoolMap = function()
+            {
+            	reperto.guide.setupMap();
+            	
+            	setTimeout(function()
+            	{
+            		spoolMap();
+            	}, 1000);
+            };
+            
+            spoolMap();
+            
 		};
 		
 		this.bootKeywords = function()
@@ -3959,6 +4019,7 @@ $(document).ready(function (){
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
+			
 			this.section = section;
 			this.chapitre = null;
 			
@@ -3997,6 +4058,13 @@ $(document).ready(function (){
 			}, this);
 			
 			this.updateIdeesCount();
+			
+			var selected_experiences = [];
+			selected_idees.forEach(function(idee){selected_experiences = selected_experiences.concat(idee.experiences)});
+			
+			var idArray = selected_experiences.map(function(experience){return (experience.id);});
+			console.log("idArray",idArray );
+			this.mapService.showOnMap(idArray);
 		};
 		
 		this.updateIdeesCount = function()

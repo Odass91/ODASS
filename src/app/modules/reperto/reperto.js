@@ -145,6 +145,8 @@
                     $('[data-toggle="tooltip"]').tooltip();
                 }, 500);
                 reperto.bootKeywords();
+                reperto.bootMap();
+                
                 reperto.reduceIntro();
 		    	
 		    }).
@@ -158,6 +160,25 @@
 		this.fetchExperimentDataForIdee = function(idee)
 		{
 			idee.fetchExperimentData(odass_app.api_hostname);
+		};
+		
+		this.bootMap = function()
+		{
+			var reperto = this;
+            reperto.mapService.setup("repertomap", 48.712, 2.24, 6);
+            
+            var spoolMap = function()
+            {
+            	reperto.guide.setupMap();
+            	
+            	setTimeout(function()
+            	{
+            		spoolMap();
+            	}, 1000);
+            };
+            
+            spoolMap();
+            
 		};
 		
 		this.bootKeywords = function()
@@ -454,6 +475,7 @@
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
 			this.displayIdees(selected_idees);
+			
 			this.section = section;
 			this.chapitre = null;
 			
@@ -492,6 +514,13 @@
 			}, this);
 			
 			this.updateIdeesCount();
+			
+			var selected_experiences = [];
+			selected_idees.forEach(function(idee){selected_experiences = selected_experiences.concat(idee.experiences)});
+			
+			var idArray = selected_experiences.map(function(experience){return (experience.id);});
+			console.log("idArray",idArray );
+			this.mapService.showOnMap(idArray);
 		};
 		
 		this.updateIdeesCount = function()

@@ -121,6 +121,25 @@ Guide.prototype.setupIntroduction = function(data)
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
 };
 
+Guide.prototype.setupMap = function(data)
+{
+	var guide = this;
+	this.idees.forEach(function(idee)
+	{
+		idee.experiences.forEach(function(experience)
+		{
+			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
+			{
+				var marker = guide.mapService.createMarker(experience.id, [experience.geoloc.latitude, experience.geoloc.longitude]);
+				if (marker)
+				{
+					guide.mapService.addMarker(experience.id);
+				}
+			}
+		}, this);
+	}, this);
+};
+
 /** ADD **/ 
 
 Guide.prototype.addIdee = function(idee)

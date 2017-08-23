@@ -8,6 +8,7 @@ var Guide = function(httpService, mapService)
 	this.httpService = httpService;
 	this.mapService = mapService;
 	this.keywords = new Array();
+	this.icons = new Array();
 };
 
 /** PROPRIETES **/
@@ -52,6 +53,7 @@ Guide.prototype.setupGuideFromURL = function(reperto)
 		panier_id = panier_id.split("&")[0];
 		reperto.obtainPanier(panier_id);
 	}
+	
 };
 
 Guide.prototype.build = function(data)
@@ -128,9 +130,11 @@ Guide.prototype.setupMap = function(data)
 	{
 		idee.experiences.forEach(function(experience)
 		{
+			var section = this.thesaurus.findSectionByIdee(idee);
 			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
 			{
-				var marker = guide.mapService.createMarker(experience.id, [experience.geoloc.latitude, experience.geoloc.longitude]);
+				var icon = this.icons[this.thesaurus.findSectionByIdee(idee)];
+				var marker = guide.mapService.createMarker(experience.id, [experience.geoloc.latitude, experience.geoloc.longitude], experience.titre, experience.description, section.id);
 				if (marker)
 				{
 					guide.mapService.addMarker(experience.id);

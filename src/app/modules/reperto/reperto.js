@@ -255,6 +255,7 @@
             }, this);
             
             this.cssColors["PARTIE_DEFAULT"] = "#ddeeaa";
+            this.guide.icons = this.markerIcons;
         };
         
         this.obtainCSSClassForIdee = function(idee)
@@ -496,6 +497,7 @@
 		
 		this.displayIdees = function(selected_idees)
 		{
+			var guide = this.guide;
 			this.currentIdeesSelection = selected_idees;
 			
 			this.guide.idees.forEach(function(idee)
@@ -516,10 +518,14 @@
 			this.updateIdeesCount();
 			
 			var selected_experiences = [];
-			selected_idees.forEach(function(idee){selected_experiences = selected_experiences.concat(idee.experiences)});
+			selected_idees.forEach(function(idee)
+			{
+				
+					selected_experiences = selected_experiences.concat(idee.experiences);
+				
+			});
 			
 			var idArray = selected_experiences.map(function(experience){return (experience.id);});
-			console.log("idArray",idArray );
 			this.mapService.showOnMap(idArray);
 		};
 		
@@ -535,6 +541,8 @@
 			{
 				selected_idees = this.guide.idees;
 			}
+			
+			
 			if (this.guide.hasFilters())
 			{
 				this.displayedIdeesLength = this.guide.obtainFilteredIdeesCount();

@@ -91,6 +91,21 @@ Thesaurus.prototype.findChapitreById = function(id)
 	return chapitre;
 };
 
+Thesaurus.prototype.findSectionByIdee = function(idee)
+{
+	var chapitre = this.findChapitreById(idee.chapter_id);
+	if (chapitre)
+	{
+		var section = this.findSectionByChapitreId(chapitre.id);
+		if (section)
+		{
+			return section
+		}
+	}
+	return null;
+};
+
+
 Thesaurus.prototype.findSectionByChapitreId = function(id)
 {
 	var chapitre = this.findChapitreById(id);

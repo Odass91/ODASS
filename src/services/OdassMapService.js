@@ -1,6 +1,8 @@
 var OdassMapService = function($http, apiHostname)
 {
 	this.markerList = new Array();
+	this.iconList  = ["marker-e34cb8.png", "marker-00aadd.png", "marker-ffc932.png", "marker-5db026.png"];
+	this.iconIndex  = {};
 	this.carte = null;
 	
 };
@@ -18,12 +20,31 @@ OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zo
 	this.carte = mymap;
 };
 
-OdassMapService.prototype.createMarker = function(id, latLong)
+OdassMapService.prototype.createMarker = function(id, latLong, titre, contenu, icon_category)
 {
 	var marker = this.markerList.find(function(marker){return marker.id == id});
-	if (marker == undefined)
+	var icon = "icon_category";
+	if (this.iconIndex[icon_category] == undefined)
 	{
-		var marker = L.marker(latLong);
+		this.iconIndex[icon_category] = this.iconList.pop();
+	}
+	if (marker == undefined)
+	{	console.log(this.iconIndex[icon_category]);
+		icon = L.icon({"iconUrl": 'images/markers/' + this.iconIndex[icon_category]});
+		var marker = L.marker(latLong, {"icon": icon});
+		if (icon)
+		{
+			
+		}
+		if (titre)
+		{
+			marker.bindTooltip(titre).openTooltip();
+			var popupContent = "<div class='MarkerCarte'>" +
+					"<h3 class='MarkerTitre'>" + titre + "</h3>" +
+					"<div class='MarkerContenu'>" + contenu + "</div>" +
+					"</div>"; 
+			marker.bindPopup(popupContent).openPopup();
+		}
 		this.markerList.push({"id": id, "object": marker});
 		return true;
 	}
@@ -80,6 +101,15 @@ OdassMapService.prototype.refreshMap = function(object)
     window.setTimeout(function(){
         map.invalidateSize();
     },timeout);
+};
+
+
+
+OdassMapService.prototype.centerMap = function(id, coordonnees)
+{
+	var marker = this.markerList.find(function(marker){return marker.id == id});
+	this.carte.setView(coordonnees, 13);
+    this.carte.openPopup(marker);
 };
 
 /*

@@ -10,7 +10,9 @@
 
 <section>
 	<div class="panel-group" id="thesaurus-tree" role="tablist" aria-multiselectable="true">
-	  	<h4 class="label label-default" style="display:block"><span class="glyphicon glyphicon-tag"> </span> Exploration thématique</h4>
+	  	<h4 class="label label-default" style="display:block; background-color:rgba(125,125,125,0.6)">
+	  		<span class="glyphicon glyphicon-list" style="font-size: 18px !important"> </span> Exploration thématique
+	  	</h4>
 		
 	  	<div ng-repeat="item in reperto.guide.thesaurus.parties" class="panel panel-default {{reperto.cssClasses[item.id]}} {{item.id}}">
 			<div class="panel-heading" role="tab" id="headingOne">

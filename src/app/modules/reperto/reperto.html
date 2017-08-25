@@ -194,7 +194,7 @@
 				
 				<section>
 					<div class="" id="keywords-list" role="tablist" aria-multiselectable="true">
-						<h4 class="label label-default" style="display:block"><span class="glyphicon glyphicon-tag"> </span> Mots-clefs</h4>
+						<h4 class="label label-default" style="display:block; background-color:rgba(125,125,125,0.6)"><span class="glyphicon glyphicon-tags" style="font-size: 18px !important"> </span> Mots-clefs</h4>
 						
 						<span class="label label-info keyword" ng-repeat="item in reperto.keywords | limitTo:7" ng-click="reperto.addFilter(item.keyword)">
 							{{item.keyword| limitTo:14}}{{item.keyword.length > 14 ? "..." : ""}}<span class="badge">{{item.count}}</span>
@@ -221,9 +221,8 @@
 				
 				<section>
 					<div class="" id="keywords-list" role="tablist" aria-multiselectable="true">
-						<h4 class="label label-default" style="display:block"><span class="glyphicon glyphicon-tag"> </span> Carte</h4>
+						<h4 class="label label-default" style="display:block; background-color:rgba(125,125,125,0.6)"><span class="glyphicon glyphicon-map-marker" style="font-size: 18px !important"> </span> Carte</h4>
 						<div id="repertomap" style="height:300px;margin-top: 12px;"></div>
-						
 					</div>
 				</section>
 				

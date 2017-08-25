@@ -52,67 +52,58 @@
 	<!-- a class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> ouvrir un autre repertoire</a-->
 </p>
 
-<section ng-repeat="idee in reperto.guide.idees" class="idee-item item" id="initiative-{{idee.id}}" 
+<section ng-repeat="idee in reperto.guide.idees" class="idee-item item col-lg-6" id="initiative-{{idee.id}}" 
 			ng-show="idee.isDisplayed()"
 			style="display: inline-block; margin: 1%; float:left"
 >
 	
 	<div class="panel panel-success {{reperto.obtainCSSClassForIdee(idee)}}" style="">
 		<div class="panel-heading" style="">
-			
-			
-				
-                
                 
             <button ng-click="reperto.switchDisplay(false, idee)" ng-show="idee.displayLong" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button ng-click="reperto.switchDisplay(true,  idee)" ng-hide="idee.displayLong" type="button" class="close" aria-label="Expand">
+            	<span class="glyphicon glyphicon-resize-full"> </span>
+            </button>
+            
+            <span ng-hide="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white badge" style="margin: 0px 5px; cursor:pointer;color:white;" ng-click="reperto.panier.addIdee(idee, reperto.guide, true)">
+              	{{idee.experiences.length}}
+            </span>
+               
+            <span ng-show="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white remove badge" style="margin: 0px 5px; cursor:pointer;color:white;" ng-click="reperto.panier.removeIdee(idee)">
+            	{{idee.experiences.length}}
+            </span>
+              
+			
+			
+			
 			<h4 class="panel-title initiative-title" ng-mouseenter="idee.displaybody = true"> 
 				<span class="{{idee.id}}" data-toggle="tooltip" data-placement="top" title="{{idee.titre}}">{{idee.titre}} <span style="color: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.6em !important; display: none">(displ. : {{idee.isDisplayed()}})</span></span>
 			</h4>
 		</div>
-		<div class="panel-body" style="background-color: rgba(0,0,0,0.1)">
+		
+		
+		<div class="panel-body" style="background-color: rgba(0,0,0,0.1); padding:0px;">
 			<div class="idee-content" style="min-height: 50%; padding: 5px;">
                 
                 <p style="" ng-hide="idee.displayLong">
                     <span ng-bind-html="idee.description"></span>
-	                <span ng-hide="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white badge" style="margin: 5px; cursor:pointer;color:white;" ng-click="reperto.panier.addIdee(idee, reperto.guide, true)">
-		                {{idee.experiences.length}}
-	                </span>
 	                
-	                <span ng-show="reperto.panier.idees[idee.id]" class="pull-left odass-button basket-white remove badge" style="margin: 5px; cursor:pointer;color:white;" ng-click="reperto.panier.removeIdee(idee)">
-		                {{idee.experiences.length}}
-	                </span>
-                    <span class="odass-button pull-left badge" style="padding-left:5px;margin: 5px; cursor:pointer;color:white;" ng-click="reperto.switchDisplay(true, idee)">
-                    	<span class="glyphicon glyphicon-new-window"></span>&nbsp;Afficher les {{idee.experiences.length}} experiences
-                    </span>
-                </p>
+                    
                 
                 <p style="" ng-show="idee.displayLong">
                     <span ng-bind-html="idee.descriptionlongue"></span>
                 </p>
                 
-                <p ng-show="idee.references && idee.references.length > 0">
-                    <span class="glyphicon glyphicon-globe"></span>&nbsp; 
-                    <span ng-repeat="lien in idee.references">
-                        <a href="{{lien.href}}">{{lien.label}}</a><br />
-                    </span>
-                </p>
-                
-                
-                
-                <p ng-show="idee.keywords.length > 0">
-                    <span class="glyphicon glyphicon-tag">&nbsp;</span> 
-                    <span class="tag" ng-repeat="keyword in idee.keywords"> 
-                        <span class="label label-info">{{keyword}}</span>&nbsp;
-                    </span>
-                    <span class="tag"> 
-                        <span class="label label-default">{{idee.geoloc}}</span>&nbsp;
-                    </span>
-                </p>
-                
 			</div>
 			
+			<div ng-hide="idee.displayLong" style="background-color:rgba(0,0,0,0.1); padding:0px 5px 5px 5px">
+				<h4 style="background-color:rgba(0,0,0,0.1); padding:5px;">Les experiences</h4>
+				<span class="badge" style="padding-left:5px;margin: 5px; color:white;" ng-repeat="experience in idee.experiences">
+                  	<span class="glyphicon glyphicon-info-sign"> </span>&nbsp;{{experience.titre}}
+                </span>
+			</div>
 			
-			<div ng-show="idee.displayLong">
+			<div ng-show="idee.displayLong" style="padding:5px 15px 5px 15px">
 				<h3 ng-show="idee.experiences.length > 1 && idee.displayLong">Découvrez les {{idee.experiences.length}} expériences associées</h3>
 				<h3 ng-show="idee.experiences.length == 1 && idee.displayLong">Découvrez l'expérience associée</h3>
 				<h3 ng-show="idee.experiences.length == 0 && idee.displayLong">Il n'y a pas d'expérience associée à cette action</h3>

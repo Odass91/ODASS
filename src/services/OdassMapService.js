@@ -20,7 +20,7 @@ OdassMapService.prototype.setup = function(domElementId, latitude, longitude, zo
 	this.carte = mymap;
 };
 
-OdassMapService.prototype.createMarker = function(id, latLong, titre, contenu, icon_category)
+OdassMapService.prototype.createMarker = function(reperto, id, latLong, titre, contenu, icon_category)
 {
 	var marker = this.markerList.find(function(marker){return marker.id == id});
 	var icon = "icon_category";
@@ -44,9 +44,10 @@ OdassMapService.prototype.createMarker = function(id, latLong, titre, contenu, i
 					"<div class='MarkerContenu'>" + contenu + "</div>" +
 					"</div>"; 
 			marker.bindPopup(popupContent).openPopup();
+			
 		}
 		this.markerList.push({"id": id, "object": marker});
-		return true;
+		return marker;
 	}
 	else
 	{

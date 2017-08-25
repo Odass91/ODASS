@@ -169,7 +169,7 @@
             
             var spoolMap = function()
             {
-            	reperto.guide.setupMap();
+            	reperto.guide.setupMap(reperto);
             	
             	setTimeout(function()
             	{
@@ -278,19 +278,14 @@
             
             if (displaylong == true)
             {
-                $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-6");
                 $("#initiative-" + idee.id).addClass("col-lg-12");
-                $("#initiative-" + idee.id).addClass("focus");
-                $(".odass-overlay").addClass("focus");
             }
             else
             {
                 
-                $(".idee-item").removeClass("focus");
                 $("#initiative-" + idee.id).removeClass("col-lg-12");
                 $("#initiative-" + idee.id).addClass("col-lg-6");  
-                $(".odass-overlay").removeClass("focus");
             }
             
             $("#experiences-list-carrousel-" + idee.id).animate( {left: "0"}, 1000, function() {});
@@ -472,6 +467,16 @@
 			this.chapitre = null;
 		};
 		
+		this.selectIdee = function(idee)
+		{
+			this.displayIdees([idee]);
+			var section = this.guide.thesaurus.findSectionByIdee(idee);
+			var chapitre = this.guide.thesaurus.findChapitreById(idee.chapter_id);
+			
+			this.section = section;
+			this.chapitre = chapitre;
+		};
+		
 		this.selectSection = function(section)
 		{
 			var selected_idees = this.guide.findIdeesByPartie(section);
@@ -520,9 +525,7 @@
 			var selected_experiences = [];
 			selected_idees.forEach(function(idee)
 			{
-				
-					selected_experiences = selected_experiences.concat(idee.experiences);
-				
+				selected_experiences = selected_experiences.concat(idee.experiences);
 			});
 			
 			var idArray = selected_experiences.map(function(experience){return (experience.id);});

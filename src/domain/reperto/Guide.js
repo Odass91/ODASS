@@ -123,7 +123,7 @@ Guide.prototype.setupIntroduction = function(data)
 	this.introduction = {"titre": data.titre, "contenu": data.introduction};
 };
 
-Guide.prototype.setupMap = function(data)
+Guide.prototype.setupMap = function(reperto)
 {
 	var guide = this;
 	this.idees.forEach(function(idee)
@@ -131,13 +131,19 @@ Guide.prototype.setupMap = function(data)
 		idee.experiences.forEach(function(experience)
 		{
 			var section = this.thesaurus.findSectionByIdee(idee);
+			
 			if (experience.geoloc && experience.geoloc.latitude && experience.geoloc.longitude)
 			{
 				var icon = this.icons[this.thesaurus.findSectionByIdee(idee)];
-				var marker = guide.mapService.createMarker(experience.id, [experience.geoloc.latitude, experience.geoloc.longitude], experience.titre, experience.description, section.id);
+				var marker = guide.mapService.createMarker(reperto, experience.id, [experience.geoloc.latitude, experience.geoloc.longitude], experience.titre, experience.description, section.id);
+				
 				if (marker)
 				{
 					guide.mapService.addMarker(experience.id);
+					marker.on("click", function(){
+						reperto.selectIdee(idee);
+					}, this);
+					
 				}
 			}
 		}, this);

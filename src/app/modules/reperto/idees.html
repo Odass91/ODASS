@@ -36,13 +36,13 @@
 	  <li ng-click="reperto.selectThesaurus()">
 	  	
 		<span class="glyphicon glyphicon-book"></span>
-		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}} - <span class="badge">{{reperto.guide.countIdees(true)}}</span></a>
+		<a href="#" style="font-size: 16px !important">{{reperto.guide.titre}} - <span class="badge" title="Nombre d'idées affichées">{{reperto.guide.countIdees(true)}}</span></a>
 	  </li>
 	  <li ng-click="reperto.selectSection(reperto.section)" ng-show="reperto.section">
-	  	<a href="#">{{reperto.section.titre}} - <span class="badge">{{reperto.guide.countIdeesBySection(reperto.section, true)}}</span></a>
+	  	<a href="#">{{reperto.section.titre}} - <span class="badge" title="Nombre d'idées affichées dans cette partie">{{reperto.guide.countIdeesBySection(reperto.section, true)}}</span></a>
 	  </li>
 	  <li ng-click="reperto.selectChapter(reperto.section, reperto.chapitre)" ng-show="reperto.chapitre">
-	  	<a href="#">{{reperto.chapitre.titre}}</span> - <span class="badge">{{reperto.guide.countIdeesByChapitre(reperto.chapitre, true)}}</span></a>
+	  	<a href="#">{{reperto.chapitre.titre}}</span> - <span class="badge" title="Nombre d'idées affichées dans ce chapitre">{{reperto.guide.countIdeesByChapitre(reperto.chapitre, true)}}</span></a>
 	  </li>
 	</ol>
 	<div class="clearfix"></div>

@@ -196,7 +196,7 @@
 					<div class="" id="keywords-list" role="tablist" aria-multiselectable="true">
 						<h4 class="label label-default" style="display:block; background-color:rgba(125,125,125,0.6)"><span class="glyphicon glyphicon-tags" style="font-size: 18px !important"> </span> Mots-clefs</h4>
 						
-						<span class="label label-info keyword" ng-repeat="item in reperto.keywords | limitTo:7" ng-click="reperto.addFilter(item.keyword)">
+						<span ng-hide="reperto.options.affichage.motclefs" class="label label-info keyword" ng-repeat="item in reperto.keywords | limitTo:7" ng-click="reperto.addFilter(item.keyword)">
 							{{item.keyword| limitTo:14}}{{item.keyword.length > 14 ? "..." : ""}}<span class="badge">{{item.count}}</span>
 						</span>
 						
@@ -213,6 +213,7 @@
 						<br/>
 						
 						<span ng-show="reperto.options.affichage.motclefs" ng-click="reperto.options.affichage.motclefs = false"><a>voir moins</a></span>
+						<h5 style="color:rgba(0,0,0,0.3)"><i><span class="badge">123</span> : Expériences par mot clef</i></h5>
 					</div>
 				</section>
 				
